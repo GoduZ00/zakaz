@@ -70,7 +70,7 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-gray-400" />
-                <span className="font-semibold text-gray-900">8 (800) 200-31-91</span>
+                <span className="font-semibold text-gray-900">8-701-309-9969</span>
               </div>
               <Link to="/zvonok" className="text-[#ef7d00] border-b border-dashed border-[#ef7d00] hover:border-solid">ЗАКАЗАТЬ ЗВОНОК</Link>
             </div>
@@ -78,7 +78,7 @@ export default function Header() {
           <div className="flex items-center gap-6 hidden sm:flex">
             <div className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-gray-400" />
-              <span>г. Москва, ул. Свободы, д. 35, стр. 5</span>
+              <span>Алматы қ. Асыл-Арман 20</span>
             </div>
             <Link to="/login" className="flex items-center gap-1.5 hover:text-orange-500">
               <User className="w-4 h-4 text-gray-400" />
