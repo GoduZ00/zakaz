@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 
 export interface ViewedItem {
   id: string;
@@ -56,11 +55,4 @@ export function trackViewed(product: ViewedItem) {
     if (viewed.length > 10) viewed = viewed.slice(0, 10);
     localStorage.setItem('viewedItems', JSON.stringify(viewed));
   } catch {}
-
-  supabase.from('page_views').insert({
-    product_id: product.id,
-    product_name: product.name,
-    url: product.url,
-    viewed_at: new Date().toISOString(),
-  }).then(() => {}, () => {});
 }
