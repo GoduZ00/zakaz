@@ -8,18 +8,60 @@ interface Banner {
   is_active: boolean;
 }
 
+interface RouteOption {
+  label: string;
+  path: string;
+}
+
+const routeGroups: { group: string; routes: RouteOption[] }[] = [
+  {
+    group: 'Основные',
+    routes: [
+      { label: 'Главная', path: '/' },
+      { label: 'Каталог', path: '/catalog' },
+      { label: 'Акции', path: '/aktsii' },
+      { label: 'Как заказать', path: '/kak-zakazat' },
+      { label: 'Клиентам', path: '/klientam' },
+      { label: 'О компании', path: '/o-kompanii' },
+      { label: 'Контакты', path: '/kontakty' },
+    ],
+  },
+  {
+    group: 'Механические торговые автоматы',
+    routes: [
+      { label: 'Торговые автоматы', path: '/catalog/mekhanicheskie_torgovye_avtomaty_catalog' },
+    ],
+  },
+  {
+    group: 'Наполнители для торговых автоматов',
+    routes: [
+      { label: 'Наполнители', path: '/catalog/napolniteli-dlya-torgovykh-avtomatov' },
+    ],
+  },
+];
+
 export default function AdminBanners() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [edit, setEdit] = useState<Partial<Banner> | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showRoutes, setShowRoutes] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const routeRef = useRef<HTMLDivElement>(null);
 
   const fetch = () => supabase.from('banners').select('*').order('id').then(({ data }) => {
     if (data) setBanners(data);
   });
 
   useEffect(() => { fetch(); }, []);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (routeRef.current && !routeRef.current.contains(e.target as Node)) setShowRoutes(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const uploadFile = async (file: File) => {
     setUploading(true);
@@ -97,10 +139,35 @@ export default function AdminBanners() {
                   </button>
                 )}
               </div>
-              <div>
+              <div ref={routeRef} className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">Куда направляет</label>
-                <input placeholder="/catalog/igrushki" value={edit.button_link || ''} onChange={(e) => setEdit({ ...edit, button_link: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+                <div className="relative">
+                  <input placeholder="Выберите или введите путь" value={edit.button_link || ''}
+                    onChange={(e) => setEdit({ ...edit, button_link: e.target.value })}
+                    onFocus={() => setShowRoutes(true)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 pr-8 text-sm focus:outline-none focus:border-[#ef7d00]" />
+                  <button type="button" onClick={() => setShowRoutes((v) => !v)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <svg className={`w-4 h-4 transition-transform ${showRoutes ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+                </div>
+                {showRoutes && (
+                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                    {routeGroups.map((g) => (
+                      <div key={g.group}>
+                        <div className="px-3 py-1.5 text-[11px] text-gray-400 font-medium uppercase tracking-wider bg-gray-50">{g.group}</div>
+                        {g.routes.map((r) => (
+                          <button key={r.path} type="button"
+                            className={`w-full text-left px-3 py-2 text-sm hover:bg-orange-50 transition-colors ${edit.button_link === r.path ? 'text-[#ef7d00] font-medium bg-orange-50' : 'text-gray-700'}`}
+                            onClick={() => { setEdit({ ...edit, button_link: r.path }); setShowRoutes(false); }}>
+                            {r.label}
+                            <span className="text-xs text-gray-400 ml-2">{r.path}</span>
+                          </button>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={edit.is_active ?? true} onChange={(e) => setEdit({ ...edit, is_active: e.target.checked })} />
