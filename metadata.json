@@ -1,0 +1,6 @@
+{
+  "name": "TorgAvtomat Clone",
+  "description": "E-commerce catalog for vending machines and ingredients.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
