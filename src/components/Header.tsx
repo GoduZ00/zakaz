@@ -38,15 +38,15 @@ function DropdownItem({ label, children }: { label: React.ReactNode; children: R
   return (
     <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       {label}
-      {open && (
-        <div
-          className="absolute top-full left-0 z-50 pt-0"
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
-        >
-          {children}
-        </div>
-      )}
+      <div
+        className={`absolute top-full left-0 z-50 pt-0 transition-all duration-200 ${
+          open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-1 pointer-events-none'
+        }`}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
+        {children}
+      </div>
     </div>
   );
 }
