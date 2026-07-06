@@ -65,10 +65,10 @@ export default function Header() {
       <div className="bg-[#f8f8f8] border-b border-gray-200 py-1.5 text-[13px] text-gray-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-1.5 cursor-pointer hover:text-orange-500">
+            <a href="https://go.2gis.com/O6tAe" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-orange-500">
               <MapPin className="w-4 h-4 text-gray-400" />
               <span>Алматы</span>
-            </div>
+            </a>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-gray-400" />
@@ -79,8 +79,10 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-6 hidden sm:flex">
             <div className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-gray-400" />
-              <span>Алматы қ. Асыл-Арман 20</span>
+              <a href="https://go.2gis.com/O6tAe" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-orange-500">
+                <MapPin className="w-4 h-4 text-gray-400" />
+                <span>Алматы қ. Асыл-Арман 20</span>
+              </a>
             </div>
             <Link to="/login" className="flex items-center gap-1.5 hover:text-orange-500">
               <User className="w-4 h-4 text-gray-400" />
