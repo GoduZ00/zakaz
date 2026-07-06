@@ -70,12 +70,12 @@ const subIcons: Record<string, string> = {
   'detali-i-chasti': '/images/categories/torgovye-avtomaty.png',
   'stoyki-kronshteyny-shvellery': '/images/categories/stoyki-kronshteyny-shvellery.png',
   'nakleyki': '/images/categories/raspredeliteli.png',
-  'zhevatelnaya-rezinka': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Жвачка',
-  'konfety': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Конфеты',
-  'myachi-pryguny': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Мячи',
-  'igrushki': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Игрушки',
-  'bakhily-v-kapsulakh': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Бахилы',
-  'kapsuly-pustye': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Капсулы',
+  'zhevatelnaya-rezinka': '/images/categories/1.jfif',
+  'konfety': '/images/categories/2.jfif',
+  'myachi-pryguny': '/images/categories/3.jfif',
+  'igrushki': '/images/categories/4.jfif',
+  'bakhily-v-kapsulakh': '/images/categories/5.png',
+  'kapsuly-pustye': '/images/categories/6.png',
 };
 
 const faqItems = [
