@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
 
 const catalogItems = [
-  { name: 'Кофе и чай', items: ['Зерновой кофе', 'Молотый кофе', 'Растворимый кофе', 'Чай в пакетиках', 'Листовой чай'] },
-  { name: 'Снэки', items: ['Чипсы', 'Сухарики', 'Орехи', 'Семечки', 'Попкорн'] },
-  { name: 'Батончики', items: ['Шоколадные', 'Мюсли', 'Протеиновые', 'Злаковые'] },
-  { name: 'Кондитерка', items: ['Печенье', 'Шоколад', 'Вафли', 'Пряники', 'Зефир'] },
-  { name: 'Напитки', items: ['Газировка', 'Соки', 'Вода', 'Энергетики', 'Молочные коктейли'] },
-  { name: 'Молочка', items: ['Молоко', 'Сливки', 'Йогурты', 'Сгущенка'] },
+  {
+    name: 'Механические торговые автоматы',
+    items: ['Торговые автоматы', 'Монетоприемники и пластины к ним', 'Распределители', 'Детали и части', 'Стойки, кронштейны, швеллеры', 'Наклейки'],
+  },
+  {
+    name: 'Наполнители для торговых автоматов',
+    items: ['Жевательная резинка', 'Конфеты', 'Мячи-прыгуны', 'Игрушки', 'Бахилы в капсулах', 'Капсулы пустые'],
+  },
 ];
 
 const howToOrderItems = [
@@ -152,8 +154,8 @@ export default function Header() {
                   </a>
                 }
               >
-                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
-                  <div className="grid grid-cols-3 gap-5">
+                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[500px] p-5">
+                  <div className="grid grid-cols-2 gap-8">
                     {catalogItems.map((section) => (
                       <div key={section.name}>
                         <h3 className="font-bold text-sm text-gray-900 mb-2 uppercase">{section.name}</h3>
