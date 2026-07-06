@@ -15,27 +15,27 @@ interface RouteOption {
 
 const routeGroups: { group: string; routes: RouteOption[] }[] = [
   {
-    group: 'Основные',
-    routes: [
-      { label: 'Главная', path: '/' },
-      { label: 'Каталог', path: '/catalog' },
-      { label: 'Акции', path: '/aktsii' },
-      { label: 'Как заказать', path: '/kak-zakazat' },
-      { label: 'Клиентам', path: '/klientam' },
-      { label: 'О компании', path: '/o-kompanii' },
-      { label: 'Контакты', path: '/kontakty' },
-    ],
-  },
-  {
     group: 'Механические торговые автоматы',
     routes: [
-      { label: 'Торговые автоматы', path: '/catalog/mekhanicheskie_torgovye_avtomaty_catalog' },
+      { label: 'Все товары категории', path: '/catalog/mekhanicheskie_torgovye_avtomaty_catalog' },
+      { label: 'Торговые автоматы', path: '/catalog/torgovye-avtomaty' },
+      { label: 'Монетоприемники и пластины к ним', path: '/catalog/monetopriemniki' },
+      { label: 'Распределители', path: '/catalog/raspredeliteli' },
+      { label: 'Детали и части', path: '/catalog/detali-i-chasti' },
+      { label: 'Стойки, кронштейны, швеллеры', path: '/catalog/stoyki-kronshteyny-shvellery' },
+      { label: 'Наклейки', path: '/catalog/nakleyki' },
     ],
   },
   {
     group: 'Наполнители для торговых автоматов',
     routes: [
-      { label: 'Наполнители', path: '/catalog/napolniteli-dlya-torgovykh-avtomatov' },
+      { label: 'Все товары категории', path: '/catalog/napolniteli-dlya-torgovykh-avtomatov' },
+      { label: 'Жевательная резинка', path: '/catalog/zhevatelnaya-rezinka' },
+      { label: 'Конфеты', path: '/catalog/konfety' },
+      { label: 'Мячи-прыгуны', path: '/catalog/myachi-pryguny' },
+      { label: 'Игрушки', path: '/catalog/igrushki' },
+      { label: 'Бахилы в капсулах', path: '/catalog/bakhily-v-kapsulakh' },
+      { label: 'Капсулы пустые', path: '/catalog/kapsuly-pustye' },
     ],
   },
 ];
