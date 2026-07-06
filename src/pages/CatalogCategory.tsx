@@ -26,12 +26,12 @@ const categoryData: Record<string, CategoryData> = {
   'napolniteli-dlya-torgovykh-avtomatov': {
     name: 'Наполнители для торговых автоматов',
     subcategories: [
-      { name: 'Жвачки и конфеты', slug: 'zhvachki' },
-      { name: 'Бросай-шары', slug: 'brosaj-shary' },
+      { name: 'Жевательная резинка', slug: 'zhevatelnaya-rezinka' },
+      { name: 'Конфеты', slug: 'konfety' },
+      { name: 'Мячи-прыгуны', slug: 'myachi-pryguny' },
       { name: 'Игрушки', slug: 'igrushki' },
-      { name: 'Капсулы', slug: 'kapsuly' },
-      { name: 'Бахилы и зонты', slug: 'bakhily-zonty' },
-      { name: 'Сувениры', slug: 'suveniry' },
+      { name: 'Бахилы в капсулах', slug: 'bakhily-v-kapsulakh' },
+      { name: 'Капсулы пустые', slug: 'kapsuly-pustye' },
     ],
   },
 };
@@ -53,12 +53,12 @@ const sidebarMenu = [
     name: 'Наполнители для торговых автоматов',
     slug: 'napolniteli-dlya-torgovykh-avtomatov',
     children: [
-      'Жвачки и конфеты',
-      'Бросай-шары',
+      'Жевательная резинка',
+      'Конфеты',
+      'Мячи-прыгуны',
       'Игрушки',
-      'Капсулы',
-      'Бахилы и зонты',
-      'Сувениры',
+      'Бахилы в капсулах',
+      'Капсулы пустые',
     ],
   },
 ];
@@ -70,6 +70,12 @@ const subIcons: Record<string, string> = {
   'detali-i-chasti': '/images/categories/torgovye-avtomaty.png',
   'stoyki-kronshteyny-shvellery': '/images/categories/stoyki-kronshteyny-shvellery.png',
   'nakleyki': '/images/categories/raspredeliteli.png',
+  'zhevatelnaya-rezinka': '/images/categories/torgovye-avtomaty.png',
+  'konfety': '/images/categories/monetopriemniki.png',
+  'myachi-pryguny': '/images/categories/raspredeliteli.png',
+  'igrushki': '/images/categories/detali-i-chasti.png',
+  'bakhily-v-kapsulakh': '/images/categories/stoyki-kronshteyny-shvellery.png',
+  'kapsuly-pustye': '/images/categories/nakleyki.png',
 };
 
 const faqItems = [
