@@ -8,6 +8,7 @@ import Features from './components/Features';
 import Reviews from './components/Reviews';
 import Footer from './components/Footer';
 import ViewedItems from './components/ViewedItems';
+import ScrollToTop from './components/ScrollToTop';
 import Catalog from './pages/Catalog';
 import Aktsii from './pages/Aktsii';
 import KakZakazat from './pages/KakZakazat';
@@ -23,6 +24,7 @@ function Layout({children}: {children: React.ReactNode}) {
       <Header />
       <main className="flex-grow">{children}</main>
       <ViewedItems />
+      <ScrollToTop />
       <Footer />
     </div>
   );
