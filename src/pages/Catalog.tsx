@@ -4,12 +4,12 @@ const categories = [
   {
     id: 'mekhanicheskie_torgovye_avtomaty_catalog',
     name: 'Механические торговые автоматы',
-    img: '/images/categories/7.png',
+    img: '/images/categories/8.png',
   },
   {
     id: 'napolniteli-dlya-torgovykh-avtomatov',
     name: 'Наполнители для торговых автоматов',
-    img: '/images/categories/8.png',
+    img: '/images/categories/7.png',
   },
 ];
 

@@ -6,13 +6,13 @@ const catalogItems = [
   {
     id: 'mekhanicheskie_torgovye_avtomaty_catalog',
     name: 'Механические торговые автоматы',
-    img: '/images/categories/7.png',
+    img: '/images/categories/8.png',
     items: ['Торговые автоматы', 'Монетоприемники и пластины к ним', 'Распределители', 'Детали и части', 'Стойки, кронштейны, швеллеры', 'Наклейки'],
   },
   {
     id: 'napolniteli-dlya-torgovykh-avtomatov',
     name: 'Наполнители для торговых автоматов',
-    img: '/images/categories/8.png',
+    img: '/images/categories/7.png',
     items: ['Жевательная резинка', 'Конфеты', 'Мячи-прыгуны', 'Игрушки', 'Бахилы в капсулах', 'Капсулы пустые'],
   },
 ];
