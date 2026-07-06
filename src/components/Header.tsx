@@ -1,5 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
+
+const catalogItems = [
+  { name: 'Кофе и чай', items: ['Зерновой кофе', 'Молотый кофе', 'Растворимый кофе', 'Чай в пакетиках', 'Листовой чай'] },
+  { name: 'Снэки', items: ['Чипсы', 'Сухарики', 'Орехи', 'Семечки', 'Попкорн'] },
+  { name: 'Батончики', items: ['Шоколадные', 'Мюсли', 'Протеиновые', 'Злаковые'] },
+  { name: 'Кондитерка', items: ['Печенье', 'Шоколад', 'Вафли', 'Пряники', 'Зефир'] },
+  { name: 'Напитки', items: ['Газировка', 'Соки', 'Вода', 'Энергетики', 'Молочные коктейли'] },
+  { name: 'Молочка', items: ['Молоко', 'Сливки', 'Йогурты', 'Сгущенка'] },
+];
+
+const howToOrderItems = [
+  { title: 'Оформление заказа', desc: 'Добавьте товары в корзину и оформите заказ' },
+  { title: 'Способы оплаты', desc: 'Наличные, банковская карта, безналичный расчет' },
+  { title: 'Доставка', desc: 'Бесплатная доставка по России от 10 000 ₽' },
+  { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе' },
+];
+
+const clientsItems = [
+  { title: 'Бонусная программа', desc: 'Копите бонусы и получайте скидки до 10%' },
+  { title: 'Оптовым клиентам', desc: 'Специальные условия для корпоративных клиентов' },
+  { title: 'Дилерам', desc: 'Станьте дилером и получайте лучшие цены' },
+  { title: 'Акции', desc: 'Действующие акции и специальные предложения' },
+  { title: 'Возврат товара', desc: 'Условия возврата и обмена товара' },
+];
+
+const aboutItems = [
+  { title: 'О нас', desc: 'Ведущий поставщик оборудования для вендинга' },
+  { title: 'Новости', desc: 'Последние новости компании и отрасли' },
+  { title: 'Вакансии', desc: 'Присоединяйтесь к нашей команде' },
+  { title: 'Реквизиты', desc: 'Юридическая информация и документы' },
+  { title: 'Отзывы', desc: 'Что говорят о нас клиенты' },
+];
+
+function DropdownItem({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      {label}
+      {open && (
+        <div
+          className="absolute top-full left-0 z-50 pt-0"
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Header() {
   return (
@@ -92,27 +142,110 @@ export default function Header() {
       <div className="bg-[#ef7d00] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-x-auto whitespace-nowrap hide-scrollbar">
+            {/* Каталог */}
             <li>
-              <a href="#" className="flex items-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors h-full">
-                <Menu className="w-5 h-5" />
-                КАТАЛОГ
-              </a>
+              <DropdownItem
+                label={
+                  <a href="#" className="flex items-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors h-full">
+                    <Menu className="w-5 h-5" />
+                    КАТАЛОГ
+                  </a>
+                }
+              >
+                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
+                  <div className="grid grid-cols-3 gap-5">
+                    {catalogItems.map((section) => (
+                      <div key={section.name}>
+                        <h3 className="font-bold text-sm text-gray-900 mb-2 uppercase">{section.name}</h3>
+                        <ul className="space-y-1">
+                          {section.items.map((item) => (
+                            <li key={item}>
+                              <a href="#" className="block text-xs py-0.5 hover:text-[#ef7d00] transition-colors">{item}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </DropdownItem>
             </li>
+
+            {/* Акции - без выпадающего меню */}
             <li>
               <a href="#" className="flex items-center gap-1.5 py-4 px-6 hover:bg-[#d66f00] transition-colors h-full">
                 <Zap className="w-4 h-4 fill-white" />
                 АКЦИИ
               </a>
             </li>
+
+            {/* Как заказать */}
             <li className="flex-1 flex justify-center">
-              <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КАК ЗАКАЗАТЬ</a>
+              <DropdownItem
+                label={
+                  <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КАК ЗАКАЗАТЬ</a>
+                }
+              >
+                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                  <ul className="space-y-3">
+                    {howToOrderItems.map((item) => (
+                      <li key={item.title}>
+                        <a href="#" className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                          <div className="font-semibold text-sm text-gray-900">{item.title}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </DropdownItem>
             </li>
+
+            {/* Клиентам */}
             <li className="flex-1 flex justify-center">
-              <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КЛИЕНТАМ</a>
+              <DropdownItem
+                label={
+                  <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КЛИЕНТАМ</a>
+                }
+              >
+                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                  <ul className="space-y-3">
+                    {clientsItems.map((item) => (
+                      <li key={item.title}>
+                        <a href="#" className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                          <div className="font-semibold text-sm text-gray-900">{item.title}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </DropdownItem>
             </li>
+
+            {/* О компании */}
             <li className="flex-1 flex justify-center">
-              <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">О КОМПАНИИ</a>
+              <DropdownItem
+                label={
+                  <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">О КОМПАНИИ</a>
+                }
+              >
+                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                  <ul className="space-y-3">
+                    {aboutItems.map((item) => (
+                      <li key={item.title}>
+                        <a href="#" className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                          <div className="font-semibold text-sm text-gray-900">{item.title}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </DropdownItem>
             </li>
+
+            {/* Контакты */}
             <li className="flex-1 flex justify-center">
               <a href="#" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КОНТАКТЫ</a>
             </li>
