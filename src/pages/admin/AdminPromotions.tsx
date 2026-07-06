@@ -45,11 +45,13 @@ export default function AdminPromotions() {
                       {p.is_active ? 'Активна' : 'Неактивна'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
-                    <button className="text-xs text-blue-600 hover:underline">Ред.</button>
-                    <button onClick={() => toggleActive(p.id, p.is_active)} className="text-xs text-gray-500 hover:underline">
-                      {p.is_active ? 'Деактив.' : 'Актив.'}
-                    </button>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-1">
+                      <button className="px-3 py-1.5 text-xs border border-blue-200 text-blue-600 rounded hover:bg-blue-50 transition-colors">Ред.</button>
+                      <button onClick={() => toggleActive(p.id, p.is_active)} className="px-3 py-1.5 text-xs border border-gray-200 text-gray-500 rounded hover:bg-gray-50 transition-colors">
+                        {p.is_active ? 'Деактив.' : 'Актив.'}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

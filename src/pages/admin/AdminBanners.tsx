@@ -110,8 +110,10 @@ export default function AdminBanners() {
                 <span className={`text-xs px-2 py-0.5 rounded ${b.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                   {b.is_active ? 'Активен' : 'Нет'}
                 </span>
-                <button onClick={() => setEdit(b)} className="text-xs text-blue-600 hover:underline">Ред.</button>
-                <button onClick={() => remove(b.id)} className="text-xs text-red-500 hover:underline">Удал.</button>
+                <div className="flex gap-1">
+                  <button onClick={() => setEdit(b)} className="px-3 py-1.5 text-xs border border-blue-200 text-blue-600 rounded hover:bg-blue-50 transition-colors">Ред.</button>
+                  <button onClick={() => remove(b.id)} className="px-3 py-1.5 text-xs border border-red-200 text-red-500 rounded hover:bg-red-50 transition-colors">Удал.</button>
+                </div>
               </div>
             </div>
           ))}

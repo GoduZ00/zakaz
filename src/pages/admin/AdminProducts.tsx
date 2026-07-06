@@ -66,12 +66,14 @@ export default function AdminProducts() {
                       {p.stock_status === 'in_stock' ? 'В наличии' : 'Нет'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
-                    <button className="text-xs text-blue-600 hover:underline">Ред.</button>
-                    <button onClick={() => toggleActive(p.id, p.is_active)} className={`text-xs ${p.is_active ? 'text-gray-500' : 'text-green-600'} hover:underline`}>
-                      {p.is_active ? 'Скрыть' : 'Показать'}
-                    </button>
-                    <button onClick={() => deleteProduct(p.id)} className="text-xs text-red-500 hover:underline">Удал.</button>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-1">
+                      <button className="px-3 py-1.5 text-xs border border-blue-200 text-blue-600 rounded hover:bg-blue-50 transition-colors">Ред.</button>
+                      <button onClick={() => toggleActive(p.id, p.is_active)} className={`px-3 py-1.5 text-xs border rounded transition-colors ${p.is_active ? 'border-gray-200 text-gray-500 hover:bg-gray-50' : 'border-green-200 text-green-600 hover:bg-green-50'}`}>
+                        {p.is_active ? 'Скрыть' : 'Показать'}
+                      </button>
+                      <button onClick={() => deleteProduct(p.id)} className="px-3 py-1.5 text-xs border border-red-200 text-red-500 rounded hover:bg-red-50 transition-colors">Удал.</button>
+                    </div>
                   </td>
                 </tr>
               ))}
