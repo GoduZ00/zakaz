@@ -64,12 +64,12 @@ const sidebarMenu = [
 ];
 
 const subIcons: Record<string, string> = {
-  'torgovye-avtomaty': '/images/categories/cat_1.png',
-  'monetopriemniki': '/images/categories/cat_2.png',
-  'raspredeliteli': '/images/categories/cat_3.png',
-  'detali-i-chasti': '/images/categories/cat_4.png',
-  'stoyki-kronshteyny-shvellery': '/images/categories/cat_5.png',
-  'nakleyki': '/images/categories/cat_6.png',
+  'torgovye-avtomaty': '/images/categories/torgovye-avtomaty.png',
+  'monetopriemniki': '/images/categories/monetopriemniki.png',
+  'raspredeliteli': '/images/categories/raspredeliteli.png',
+  'detali-i-chasti': '/images/categories/detali-i-chasti.png',
+  'stoyki-kronshteyny-shvellery': '/images/categories/stoyki-kronshteyny-shvellery.png',
+  'nakleyki': '/images/categories/nakleyki.png',
 };
 
 const faqItems = [
