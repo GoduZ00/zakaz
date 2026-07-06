@@ -11,26 +11,6 @@ const categories = [
     name: 'Наполнители для торговых автоматов',
     img: 'https://images.unsplash.com/photo-1616406432452-07c0b3c1c4e1?auto=format&fit=crop&q=80&w=250',
   },
-  {
-    id: 'tovary_dlya_detey',
-    name: 'Товары для детей',
-    img: 'https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?auto=format&fit=crop&q=80&w=250',
-  },
-  {
-    id: 'elektromekhanicheskie_avtomaty',
-    name: 'Электромеханические автоматы',
-    img: 'https://images.unsplash.com/photo-1562408590-e32931084e23?auto=format&fit=crop&q=80&w=250',
-  },
-  {
-    id: 'zhetony',
-    name: 'Жетоны',
-    img: 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&q=80&w=250',
-  },
-  {
-    id: 'platezhnye_sistemy',
-    name: 'Платежные системы',
-    img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=250',
-  },
 ];
 
 export default function Catalog() {
