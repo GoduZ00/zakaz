@@ -1,0 +1,114 @@
+import { useEffect, useState } from 'react';
+import { supabase } from '../../lib/supabase';
+
+interface Banner {
+  id: number;
+  title: string;
+  subtitle: string;
+  badge: string;
+  badge_color: string;
+  button_text: string;
+  button_link: string;
+  image_url: string;
+  is_active: boolean;
+  sort_order: number;
+}
+
+const defaultBanner = {
+  title: '', subtitle: '', badge: '', badge_color: 'bg-yellow-300 text-[#ef7d00]',
+  button_text: 'В КАТАЛОГ', button_link: '/catalog', image_url: '', is_active: true, sort_order: 0,
+};
+
+export default function AdminBanners() {
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [edit, setEdit] = useState<Partial<Banner> | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const fetch = () => supabase.from('banners').select('*').order('sort_order').then(({ data }) => {
+    if (data) setBanners(data);
+  });
+
+  useEffect(() => { fetch(); }, []);
+
+  const save = async () => {
+    if (!edit || !edit.title) return;
+    setSaving(true);
+    if (edit.id) {
+      await supabase.from('banners').update(edit).eq('id', edit.id);
+    } else {
+      await supabase.from('banners').insert(edit);
+    }
+    setSaving(false);
+    setEdit(null);
+    fetch();
+  };
+
+  const remove = async (id: number) => {
+    if (!confirm('Удалить баннер?')) return;
+    await supabase.from('banners').delete().eq('id', id);
+    fetch();
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Баннеры</h1>
+        <button onClick={() => setEdit({ ...defaultBanner })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
+      </div>
+
+      {edit && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center" onClick={() => setEdit(null)}>
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg font-bold mb-4">{edit.id ? 'Редактировать' : 'Новый'} баннер</h2>
+            <div className="space-y-3">
+              <input placeholder="Заголовок (СНИЖЕНИЕ)" value={edit.title || ''} onChange={(e) => setEdit({ ...edit, title: e.target.value })}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              <input placeholder="Подзаголовок (ЦЕН НА ИГРУШКИ)" value={edit.subtitle || ''} onChange={(e) => setEdit({ ...edit, subtitle: e.target.value })}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              <input placeholder="Бейдж (ДО 10%)" value={edit.badge || ''} onChange={(e) => setEdit({ ...edit, badge: e.target.value })}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              <input placeholder="Текст кнопки" value={edit.button_text || ''} onChange={(e) => setEdit({ ...edit, button_text: e.target.value })}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              <input placeholder="Ссылка кнопки (/catalog/igrushki)" value={edit.button_link || ''} onChange={(e) => setEdit({ ...edit, button_link: e.target.value })}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              <input placeholder="URL изображения" value={edit.image_url || ''} onChange={(e) => setEdit({ ...edit, image_url: e.target.value })}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={edit.is_active ?? true} onChange={(e) => setEdit({ ...edit, is_active: e.target.checked })} />
+                Активен
+              </label>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <button onClick={save} disabled={saving || !edit.title} className="bg-[#ef7d00] text-white px-5 py-2 text-sm rounded hover:bg-[#d66f00] disabled:opacity-50">
+                {saving ? 'Сохранение...' : 'Сохранить'}
+              </button>
+              <button onClick={() => setEdit(null)} className="px-5 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50">Отмена</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {banners.length === 0 ? (
+        <div className="bg-white rounded shadow p-8 text-center text-gray-400 text-sm">Нет баннеров</div>
+      ) : (
+        <div className="space-y-3">
+          {banners.map((b) => (
+            <div key={b.id} className="bg-white rounded shadow p-4 flex items-center justify-between">
+              <div>
+                <div className="font-medium text-sm">{b.title} {b.subtitle}</div>
+                <div className="text-xs text-gray-400 mt-0.5">Бейдж: {b.badge} | Кнопка: {b.button_text} → {b.button_link}</div>
+              </div>
+              <div className="flex gap-2 shrink-0 ml-4">
+                <span className={`text-xs px-2 py-0.5 rounded ${b.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {b.is_active ? 'Активен' : 'Нет'}
+                </span>
+                <button onClick={() => setEdit(b)} className="text-xs text-blue-600 hover:underline">Ред.</button>
+                <button onClick={() => remove(b.id)} className="text-xs text-red-500 hover:underline">Удал.</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
