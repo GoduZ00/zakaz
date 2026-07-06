@@ -72,9 +72,30 @@ export default function AdminBanners() {
             <div className="space-y-3">
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Фото</label>
-                <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm" />
-                {uploading && <div className="text-xs text-blue-500 mt-1">Загрузка...</div>}
-                {edit.image_url && !uploading && <img src={edit.image_url} className="mt-2 h-20 rounded object-cover" />}
+                <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                {edit.image_url && !uploading ? (
+                  <div className="relative group">
+                    <img src={edit.image_url} className="w-full h-40 rounded-lg object-cover border border-gray-200" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-lg flex items-center justify-center">
+                      <button type="button" onClick={() => fileRef.current?.click()} className="opacity-0 group-hover:opacity-100 bg-white text-gray-700 px-4 py-2 text-sm rounded-lg shadow transition-opacity font-medium">
+                        Заменить фото
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                    className={`w-full border-2 border-dashed rounded-lg p-8 text-center transition-colors ${uploading ? 'border-blue-300 bg-blue-50' : 'border-gray-300 hover:border-[#ef7d00] hover:bg-orange-50'}`}>
+                    {uploading ? (
+                      <div className="text-sm text-blue-500">Загрузка...</div>
+                    ) : (
+                      <div>
+                        <svg className="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        <div className="text-sm text-gray-500">Выберите фото</div>
+                        <div className="text-xs text-gray-400 mt-1">JPEG, PNG, WebP</div>
+                      </div>
+                    )}
+                  </button>
+                )}
               </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Куда направляет</label>
