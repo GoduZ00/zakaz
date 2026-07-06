@@ -143,12 +143,12 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-visible whitespace-nowrap">
             {/* Каталог */}
-            <li>
+            <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <a href="#" className="flex items-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors h-full">
-                    <Menu className="w-5 h-5" />
-                    КАТАЛОГ
+                  <a href="#" className="flex items-center justify-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors w-full">
+                    <Menu className="w-5 h-5 shrink-0" />
+                    <span>КАТАЛОГ</span>
                   </a>
                 }
               >
@@ -171,11 +171,11 @@ export default function Header() {
               </DropdownItem>
             </li>
 
-            {/* Акции - без выпадающего меню */}
-            <li>
-              <a href="#" className="flex items-center gap-1.5 py-4 px-6 hover:bg-[#d66f00] transition-colors h-full">
-                <Zap className="w-4 h-4 fill-white" />
-                АКЦИИ
+            {/* Акции */}
+            <li className="flex-1 flex justify-center">
+              <a href="#" className="flex items-center justify-center gap-1.5 py-4 px-6 hover:bg-[#d66f00] transition-colors w-full">
+                <Zap className="w-4 h-4 fill-white shrink-0" />
+                <span>АКЦИИ</span>
               </a>
             </li>
 
