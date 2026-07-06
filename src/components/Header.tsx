@@ -4,11 +4,13 @@ import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap 
 
 const catalogItems = [
   {
+    id: 'mekhanicheskie_torgovye_avtomaty_catalog',
     name: 'Механические торговые автоматы',
     img: 'https://images.unsplash.com/photo-1625650484478-113df4bfc370?auto=format&fit=crop&q=80&w=250',
     items: ['Торговые автоматы', 'Монетоприемники и пластины к ним', 'Распределители', 'Детали и части', 'Стойки, кронштейны, швеллеры', 'Наклейки'],
   },
   {
+    id: 'napolniteli-dlya-torgovykh-avtomatov',
     name: 'Наполнители для торговых автоматов',
     img: 'https://images.unsplash.com/photo-1616406432452-07c0b3c1c4e1?auto=format&fit=crop&q=80&w=250',
     items: ['Жевательная резинка', 'Конфеты', 'Мячи-прыгуны', 'Игрушки', 'Бахилы в капсулах', 'Капсулы пустые'],
@@ -167,7 +169,7 @@ export default function Header() {
                           src={section.img}
                         />
                         <div>
-                          <Link to={`/catalog/${section.name.replace(/ /g, '_')}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
+                          <Link to={`/catalog/${section.id}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
                           <ul className="space-y-1">
                             {section.items.map((item) => (
                               <li key={item}>

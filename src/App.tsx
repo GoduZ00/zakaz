@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import ViewedItems from './components/ViewedItems';
 import ScrollToTop from './components/ScrollToTop';
 import Catalog from './pages/Catalog';
+import CatalogCategory from './pages/CatalogCategory';
 import Aktsii from './pages/Aktsii';
 import KakZakazat from './pages/KakZakazat';
 import Klientam from './pages/Klientam';
@@ -48,6 +49,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/catalog" element={<Layout><Catalog /></Layout>} />
+      <Route path="/catalog/:categoryId" element={<Layout><CatalogCategory /></Layout>} />
       <Route path="/aktsii" element={<Layout><Aktsii /></Layout>} />
       <Route path="/kak-zakazat" element={<Layout><KakZakazat /></Layout>} />
       <Route path="/klientam" element={<Layout><Klientam /></Layout>} />
