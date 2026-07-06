@@ -139,9 +139,9 @@ export default function Header() {
       </div>
 
       {/* Navigation Bar */}
-      <div className="bg-[#ef7d00] text-white">
+      <div className="bg-[#ef7d00] text-white relative z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-x-auto whitespace-nowrap hide-scrollbar">
+          <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-visible whitespace-nowrap">
             {/* Каталог */}
             <li>
               <DropdownItem
