@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Категории', path: '/admin/categories' },
   { label: 'Акции', path: '/admin/promotions' },
   { label: 'Заказы', path: '/admin/orders' },
+  { label: 'Просмотры', path: '/admin/views' },
 ];
 
 export default function AdminLayout() {

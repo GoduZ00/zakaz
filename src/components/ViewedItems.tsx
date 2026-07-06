@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
-interface ViewedItem {
+export interface ViewedItem {
   id: string;
   name: string;
   price: string;
@@ -9,29 +10,11 @@ interface ViewedItem {
   url: string;
 }
 
-const sampleProducts: Record<string, ViewedItem> = {
-  'beaver-sb-16': {
-    id: 'beaver-sb-16',
-    name: 'Beaver - "SOUTHERN-16" (бесплатная выдача / Капсулы/мячи 25-32 мм)',
-    price: '7 490 руб./шт',
-    img: 'https://images.unsplash.com/photo-1625650484478-113df4bfc370?auto=format&fit=crop&q=80&w=200',
-    url: '/catalog/torgovye-avtomaty/torgovyy-avtomat-beaver-sb-16',
-  },
-};
-
 export default function ViewedItems() {
   const [items, setItems] = useState<ViewedItem[]>([]);
   const location = useLocation();
 
   useEffect(() => {
-    if (!localStorage.getItem('viewedSeeded')) {
-      const stored = localStorage.getItem('viewedItems');
-      let viewed: ViewedItem[] = stored ? JSON.parse(stored) : [];
-      viewed = viewed.filter((v) => v.id !== sampleProducts['beaver-sb-16'].id);
-      viewed.unshift(sampleProducts['beaver-sb-16']);
-      localStorage.setItem('viewedItems', JSON.stringify(viewed));
-      localStorage.setItem('viewedSeeded', '1');
-    }
     const stored = localStorage.getItem('viewedItems');
     if (stored) {
       try {
@@ -73,4 +56,11 @@ export function trackViewed(product: ViewedItem) {
     if (viewed.length > 10) viewed = viewed.slice(0, 10);
     localStorage.setItem('viewedItems', JSON.stringify(viewed));
   } catch {}
+
+  supabase.from('page_views').insert({
+    product_id: product.id,
+    product_name: product.name,
+    url: product.url,
+    viewed_at: new Date().toISOString(),
+  }).then(() => {}, () => {});
 }

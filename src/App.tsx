@@ -26,6 +26,7 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminPromotions from './pages/admin/AdminPromotions';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminViews from './pages/admin/AdminViews';
 
 function Layout({children}: {children: React.ReactNode}) {
   return (
@@ -72,6 +73,7 @@ export default function App() {
         <Route path="categories" element={<AdminCategories />} />
         <Route path="promotions" element={<AdminPromotions />} />
         <Route path="orders" element={<AdminOrders />} />
+        <Route path="views" element={<AdminViews />} />
       </Route>
     </Routes>
   );
