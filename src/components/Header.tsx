@@ -143,7 +143,7 @@ export default function Header() {
       {/* Navigation Bar */}
       <div className="bg-[#ef7d00] text-white relative z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-visible whitespace-nowrap">
+          <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-visible">
             {/* Каталог */}
             <li className="flex-1 flex justify-center">
               <DropdownItem
@@ -154,15 +154,18 @@ export default function Header() {
                   </a>
                 }
               >
-                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[500px] p-5">
-                  <div className="grid grid-cols-2 gap-8">
+                <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
+                  <div className="space-y-6">
                     {catalogItems.map((section) => (
                       <div key={section.name}>
-                        <h3 className="font-bold text-sm text-gray-900 mb-2 uppercase">{section.name}</h3>
-                        <ul className="space-y-1">
+                        <a href="#" className="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2 hover:text-[#ef7d00] transition-colors">
+                          <span className="w-1.5 h-1.5 bg-[#ef7d00] rounded-full shrink-0"></span>
+                          {section.name}
+                        </a>
+                        <ul className="space-y-1 ml-3.5">
                           {section.items.map((item) => (
                             <li key={item}>
-                              <a href="#" className="block text-xs py-0.5 hover:text-[#ef7d00] transition-colors">{item}</a>
+                              <a href="#" className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item}</a>
                             </li>
                           ))}
                         </ul>
