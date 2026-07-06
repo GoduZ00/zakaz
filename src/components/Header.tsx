@@ -159,22 +159,22 @@ export default function Header() {
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
                   <div className="space-y-6">
                     {catalogItems.map((section) => (
-                      <div key={section.name}>
-                        <a href="#" className="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2 hover:text-[#ef7d00] transition-colors">
-                          <img
-                            alt={section.name}
-                            className="w-24 h-24 object-contain mix-blend-multiply shrink-0"
-                            src={section.img}
-                          />
-                          <span className="uppercase">{section.name}</span>
-                        </a>
-                        <ul className="space-y-1 ml-3.5">
-                          {section.items.map((item) => (
-                            <li key={item}>
-                              <a href="#" className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item}</a>
-                            </li>
-                          ))}
-                        </ul>
+                      <div key={section.name} className="flex gap-4">
+                        <img
+                          alt={section.name}
+                          className="w-20 h-20 object-contain mix-blend-multiply shrink-0 rounded-full"
+                          src={section.img}
+                        />
+                        <div>
+                          <a href="#" className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</a>
+                          <ul className="space-y-1">
+                            {section.items.map((item) => (
+                              <li key={item}>
+                                <a href="#" className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     ))}
                   </div>
