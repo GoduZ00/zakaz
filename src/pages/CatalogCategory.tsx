@@ -90,8 +90,8 @@ export default function CatalogCategory() {
   const { categoryId } = useParams();
   const data = categoryData[categoryId || ''];
   const [activeSub, setActiveSub] = useState('');
-  const [sortBy, setSortBy] = useState('popular');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState('price_asc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   if (!data) {
@@ -199,10 +199,8 @@ export default function CatalogCategory() {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="text-sm border border-gray-300 rounded-sm px-3 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]"
                 >
-                  <option value="popular">По популярности</option>
-                  <option value="price_asc">Сначала дешевле</option>
-                  <option value="price_desc">Сначала дороже</option>
-                  <option value="name">По названию</option>
+                  <option value="price_asc">По цене (возрастание)</option>
+                  <option value="price_desc">По цене (убывание)</option>
                 </select>
               </div>
               <div className="flex items-center gap-2">
@@ -221,14 +219,24 @@ export default function CatalogCategory() {
                     </svg>
                   </button>
                   <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-1.5 ${viewMode === 'list' ? 'bg-[#ef7d00] text-white' : 'bg-white text-gray-400 hover:text-gray-600'}`}
-                    title="Список"
+                    onClick={() => setViewMode('list-sm')}
+                    className={`p-1.5 ${viewMode === 'list-sm' ? 'bg-[#ef7d00] text-white' : 'bg-white text-gray-400 hover:text-gray-600'}`}
+                    title="Маленький список"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                       <rect x="1" y="1" width="14" height="3" rx="1" />
                       <rect x="1" y="6.5" width="14" height="3" rx="1" />
                       <rect x="1" y="12" width="14" height="3" rx="1" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list-lg')}
+                    className={`p-1.5 ${viewMode === 'list-lg' ? 'bg-[#ef7d00] text-white' : 'bg-white text-gray-400 hover:text-gray-600'}`}
+                    title="Большой список"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                      <rect x="1" y="1.5" width="14" height="5" rx="1" />
+                      <rect x="1" y="9.5" width="14" height="5" rx="1" />
                     </svg>
                   </button>
                 </div>
