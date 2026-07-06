@@ -64,18 +64,12 @@ const sidebarMenu = [
 ];
 
 const subIcons: Record<string, string> = {
-  'torgovye-avtomaty': 'https://images.unsplash.com/photo-1625650484478-113df4bfc370?auto=format&fit=crop&q=80&w=120&h=120',
-  'monetopriemniki': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=120&h=120',
-  'raspredeliteli': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=120&h=120',
-  'detali-i-chasti': 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&q=80&w=120&h=120',
-  'stoyki-kronshteyny-shvellery': 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&q=80&w=120&h=120',
-  'nakleyki': 'https://images.unsplash.com/photo-1572375992501-4b0892d50c69?auto=format&fit=crop&q=80&w=120&h=120',
-  'zhvachki': 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&q=80&w=120&h=120',
-  'brosaj-shary': 'https://images.unsplash.com/photo-1566577739112-5180d4bf9391?auto=format&fit=crop&q=80&w=120&h=120',
-  'igrushki': 'https://images.unsplash.com/photo-1566577739112-5180d4bf9391?auto=format&fit=crop&q=80&w=120&h=120',
-  'kapsuly': 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&q=80&w=120&h=120',
-  'bakhily-zonty': 'https://images.unsplash.com/photo-1566577739112-5180d4bf9391?auto=format&fit=crop&q=80&w=120&h=120',
-  'suveniry': 'https://images.unsplash.com/photo-1572375992501-4b0892d50c69?auto=format&fit=crop&q=80&w=120&h=120',
+  'torgovye-avtomaty': '/images/categories/cat_1.png',
+  'monetopriemniki': '/images/categories/cat_2.png',
+  'raspredeliteli': '/images/categories/cat_3.png',
+  'detali-i-chasti': '/images/categories/cat_4.png',
+  'stoyki-kronshteyny-shvellery': '/images/categories/cat_5.png',
+  'nakleyki': '/images/categories/cat_6.png',
 };
 
 const faqItems = [
