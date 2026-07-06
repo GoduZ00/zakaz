@@ -7,6 +7,7 @@ import About from './components/About';
 import Features from './components/Features';
 import Reviews from './components/Reviews';
 import Footer from './components/Footer';
+import ViewedItems from './components/ViewedItems';
 import Catalog from './pages/Catalog';
 import Aktsii from './pages/Aktsii';
 import KakZakazat from './pages/KakZakazat';
@@ -21,6 +22,7 @@ function Layout({children}: {children: React.ReactNode}) {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Header />
       <main className="flex-grow">{children}</main>
+      <ViewedItems />
       <Footer />
     </div>
   );
