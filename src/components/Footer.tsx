@@ -43,17 +43,6 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col relative bg-[#3a3a3a] p-5 rounded-sm">
-            <div className="relative mb-6">
-              <input 
-                type="text" 
-                placeholder="ПОДПИСАТЬСЯ НА НАШ ТЕЛЕГРАМ" 
-                className="w-full bg-[#444444] border-none text-white text-[10px] px-4 py-3.5 outline-none focus:ring-1 focus:ring-gray-500 rounded-sm uppercase placeholder-gray-400"
-              />
-              <button className="absolute right-0 top-0 bottom-0 px-4 text-gray-400 hover:text-white transition-colors">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-              </button>
-            </div>
-
             <ul className="space-y-4 text-[13px]">
               <li className="flex items-start gap-3">
                 <svg className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
