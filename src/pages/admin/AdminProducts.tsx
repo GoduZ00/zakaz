@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 
 interface Product {
@@ -13,6 +13,7 @@ interface Product {
   description: string | null;
   is_active: boolean;
   subcategory_id: number | null;
+  images: string[];
 }
 
 export default function AdminProducts() {
@@ -20,6 +21,8 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState<Partial<Product> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const fetchProducts = async () => {
     const { data } = await supabase.from('products').select('*').order('id', { ascending: false });
@@ -40,6 +43,33 @@ export default function AdminProducts() {
     fetchProducts();
   };
 
+  const uploadFile = async (file: File): Promise<string | null> => {
+    setUploading(true);
+    const ext = file.name.split('.').pop();
+    const path = `product_${Date.now()}_${Math.random().toString(36).slice(2, 6)}.${ext}`;
+    const { error } = await supabase.storage.from('products').upload(path, file);
+    if (error) { alert('Ошибка загрузки: ' + error.message); setUploading(false); return null; }
+    const { data: urlData } = supabase.storage.from('products').getPublicUrl(path);
+    setUploading(false);
+    return urlData?.publicUrl || null;
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files?.length) return;
+    const urls: string[] = [];
+    for (const file of Array.from(files) as File[]) {
+      const url = await uploadFile(file);
+      if (url) urls.push(url);
+    }
+    setEdit({ ...edit!, images: [...(edit.images || []), ...urls] });
+    if (fileRef.current) fileRef.current.value = '';
+  };
+
+  const removeImage = (idx: number) => {
+    setEdit({ ...edit!, images: (edit.images || []).filter((_, i) => i !== idx) });
+  };
+
   const save = async () => {
     if (!edit || !edit.name) return;
     setSaving(true);
@@ -54,6 +84,7 @@ export default function AdminProducts() {
       description: edit.description || null,
       is_active: edit.is_active ?? true,
       subcategory_id: edit.subcategory_id || null,
+      images: edit.images || [],
     };
     if (edit.id) {
       await supabase.from('products').update(payload).eq('id', edit.id);
@@ -69,7 +100,7 @@ export default function AdminProducts() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Товары</h1>
-        <button onClick={() => setEdit({ name: '', price: 0, stock_status: 'in_stock', is_active: true })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
+        <button onClick={() => setEdit({ name: '', price: 0, stock_status: 'in_stock', is_active: true, images: [] })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
       </div>
 
       {edit && (
@@ -103,6 +134,23 @@ export default function AdminProducts() {
                 <label className="text-xs text-gray-500 mb-1 block">Артикул</label>
                 <input value={edit.article || ''} onChange={(e) => setEdit({ ...edit, article: e.target.value })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 mb-1 block">Фото</label>
+                <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {(edit.images || []).map((img, i) => (
+                    <div key={i} className="relative group w-16 h-16 border border-gray-200 rounded overflow-hidden">
+                      <img src={img} className="w-full h-full object-cover" />
+                      <button type="button" onClick={() => removeImage(i)}
+                        className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 text-white text-xs rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">×</button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                    className="w-16 h-16 border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-gray-400 hover:border-[#ef7d00] hover:text-[#ef7d00] transition-colors text-lg">
+                    {uploading ? <span className="text-xs text-blue-500">...</span> : '+'}
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Статус</label>
