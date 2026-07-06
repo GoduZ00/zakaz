@@ -1,3 +1,4 @@
+import React from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -18,6 +19,13 @@ import OKompanii from './pages/OKompanii';
 import Kontakty from './pages/Kontakty';
 import Login from './pages/Login';
 import Zvonok from './pages/Zvonok';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminCategories from './pages/admin/AdminCategories';
+import AdminPromotions from './pages/admin/AdminPromotions';
+import AdminOrders from './pages/admin/AdminOrders';
 
 function Layout({children}: {children: React.ReactNode}) {
   return (
@@ -57,6 +65,14 @@ export default function App() {
       <Route path="/kontakty" element={<Layout><Kontakty /></Layout>} />
       <Route path="/login" element={<Layout><Login /></Layout>} />
       <Route path="/zvonok" element={<Layout><Zvonok /></Layout>} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="categories" element={<AdminCategories />} />
+        <Route path="promotions" element={<AdminPromotions />} />
+        <Route path="orders" element={<AdminOrders />} />
+      </Route>
     </Routes>
   );
 }
