@@ -70,12 +70,12 @@ const subIcons: Record<string, string> = {
   'detali-i-chasti': '/images/categories/torgovye-avtomaty.png',
   'stoyki-kronshteyny-shvellery': '/images/categories/stoyki-kronshteyny-shvellery.png',
   'nakleyki': '/images/categories/raspredeliteli.png',
-  'zhevatelnaya-rezinka': '/images/categories/torgovye-avtomaty.png',
-  'konfety': '/images/categories/monetopriemniki.png',
-  'myachi-pryguny': '/images/categories/raspredeliteli.png',
-  'igrushki': '/images/categories/detali-i-chasti.png',
-  'bakhily-v-kapsulakh': '/images/categories/stoyki-kronshteyny-shvellery.png',
-  'kapsuly-pustye': '/images/categories/nakleyki.png',
+  'zhevatelnaya-rezinka': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Жвачка',
+  'konfety': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Конфеты',
+  'myachi-pryguny': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Мячи',
+  'igrushki': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Игрушки',
+  'bakhily-v-kapsulakh': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Бахилы',
+  'kapsuly-pustye': 'https://placehold.co/120x120/e2e8f0/94a3b8?text=Капсулы',
 };
 
 const faqItems = [
