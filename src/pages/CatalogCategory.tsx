@@ -67,6 +67,23 @@ const sidebarMenu = [
   },
 ];
 
+const subIcons: Record<string, string> = {
+  'torgovye-avtomaty': 'https://images.unsplash.com/photo-1625650484478-113df4bfc370?auto=format&fit=crop&q=80&w=120&h=120',
+  'monetopriemniki': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=120&h=120',
+  'dispensers': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=120&h=120',
+  'kupyuropriemniki': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=120&h=120',
+  'zapchasti': 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&q=80&w=120&h=120',
+  'zamki': 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=120&h=120',
+  'stikery': 'https://images.unsplash.com/photo-1572375992501-4b0892d50c69?auto=format&fit=crop&q=80&w=120&h=120',
+  'steny': 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&q=80&w=120&h=120',
+  'zhvachki': 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&q=80&w=120&h=120',
+  'brosaj-shary': 'https://images.unsplash.com/photo-1566577739112-5180d4bf9391?auto=format&fit=crop&q=80&w=120&h=120',
+  'igrushki': 'https://images.unsplash.com/photo-1566577739112-5180d4bf9391?auto=format&fit=crop&q=80&w=120&h=120',
+  'kapsuly': 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&q=80&w=120&h=120',
+  'bakhily-zonty': 'https://images.unsplash.com/photo-1566577739112-5180d4bf9391?auto=format&fit=crop&q=80&w=120&h=120',
+  'suveniry': 'https://images.unsplash.com/photo-1572375992501-4b0892d50c69?auto=format&fit=crop&q=80&w=120&h=120',
+};
+
 const faqItems = [
   {
     q: 'Какие механические торговые автоматы самые надежные?',
@@ -172,20 +189,25 @@ export default function CatalogCategory() {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Compact subcategory list */}
-            <div className="bg-white border border-gray-200 rounded-sm p-4 mb-6">
-              <div className="flex flex-wrap gap-2">
+            <div className="mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {data.subcategories.map((sub) => (
-                  <button
+                  <Link
                     key={sub.slug}
-                    onClick={() => setActiveSub(sub.name === activeSub ? '' : sub.name)}
-                    className={`px-4 py-2 text-sm border rounded-sm transition-colors ${
-                      activeSub === sub.name
-                        ? 'bg-[#ef7d00] text-white border-[#ef7d00]'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#ef7d00] hover:text-[#ef7d00]'
-                    }`}
+                    to={`/catalog/${sub.slug}`}
+                    className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow"
                   >
-                    {sub.name}
-                  </button>
+                    <div className="w-12 h-12 shrink-0 flex items-center justify-center">
+                      <img
+                        src={subIcons[sub.slug] || ''}
+                        alt={sub.name}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <span className="text-xs font-medium text-gray-800 leading-tight">
+                      {sub.name}
+                    </span>
+                  </Link>
                 ))}
               </div>
             </div>
