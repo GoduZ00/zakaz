@@ -33,7 +33,7 @@ export default function AdminLayout() {
     <div className="flex min-h-screen bg-gray-100 font-sans">
       <aside className="w-56 bg-[#1a3673] text-white shrink-0 flex flex-col">
         <div className="p-5 border-b border-white/10">
-          <Link to="/" className="text-lg font-bold">TORGAVTOMAT</Link>
+          <Link to="/" className="text-lg font-bold">ИП БАЙҒОЖИНОВ</Link>
           <div className="text-xs text-white/60 mt-1">Админ-панель</div>
         </div>
         <nav className="flex-1 p-3 space-y-1">
