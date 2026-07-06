@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
 
 const catalogItems = [
@@ -71,7 +72,7 @@ export default function Header() {
                 <Phone className="w-4 h-4 text-gray-400" />
                 <span className="font-semibold text-gray-900">8 (800) 200-31-91</span>
               </div>
-              <a href="/zvonok" className="text-[#ef7d00] border-b border-dashed border-[#ef7d00] hover:border-solid">ЗАКАЗАТЬ ЗВОНОК</a>
+              <Link to="/zvonok" className="text-[#ef7d00] border-b border-dashed border-[#ef7d00] hover:border-solid">ЗАКАЗАТЬ ЗВОНОК</Link>
             </div>
           </div>
           <div className="flex items-center gap-6 hidden sm:flex">
@@ -79,10 +80,10 @@ export default function Header() {
               <MapPin className="w-4 h-4 text-gray-400" />
               <span>г. Москва, ул. Свободы, д. 35, стр. 5</span>
             </div>
-            <a href="/login" className="flex items-center gap-1.5 hover:text-orange-500">
+            <Link to="/login" className="flex items-center gap-1.5 hover:text-orange-500">
               <User className="w-4 h-4 text-gray-400" />
               <span>ВОЙТИ</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -92,9 +93,9 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
           {/* Logo */}
           <div className="flex flex-col items-center md:items-start shrink-0">
-            <div className="text-3xl font-extrabold tracking-tight">
+            <Link to="/" className="text-3xl font-extrabold tracking-tight">
               <span className="text-[#1a3673]">TORGAVTOMAT</span><span className="text-[#ef7d00]">.RU</span>
-            </div>
+            </Link>
             <span className="text-[10px] text-gray-500 tracking-wider mt-0.5">ЛУЧШИЕ РЕШЕНИЯ ДЛЯ ВАШЕГО БИЗНЕСА</span>
           </div>
 
@@ -150,10 +151,10 @@ export default function Header() {
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <a href="/catalog" className="flex items-center justify-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors w-full">
+                  <Link to="/catalog" className="flex items-center justify-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors w-full">
                     <Menu className="w-5 h-5 shrink-0" />
                     <span>КАТАЛОГ</span>
-                  </a>
+                  </Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
@@ -166,11 +167,11 @@ export default function Header() {
                           src={section.img}
                         />
                         <div>
-                          <a href={`/catalog/${section.name.replace(/ /g, '_')}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</a>
+                          <Link to={`/catalog/${section.name.replace(/ /g, '_')}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
                           <ul className="space-y-1">
                             {section.items.map((item) => (
                               <li key={item}>
-                                <a href={`/catalog/${item.replace(/ /g, '_')}`} className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item}</a>
+                                <Link to={`/catalog/${item.replace(/ /g, '_')}`} className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item}</Link>
                               </li>
                             ))}
                           </ul>
@@ -184,27 +185,27 @@ export default function Header() {
 
             {/* Акции */}
             <li className="flex-1 flex justify-center">
-              <a href="/aktsii" className="flex items-center justify-center gap-1.5 py-4 px-6 hover:bg-[#d66f00] transition-colors w-full">
+              <Link to="/aktsii" className="flex items-center justify-center gap-1.5 py-4 px-6 hover:bg-[#d66f00] transition-colors w-full">
                 <Zap className="w-4 h-4 fill-white shrink-0" />
                 <span>АКЦИИ</span>
-              </a>
+              </Link>
             </li>
 
             {/* Как заказать */}
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <a href="/kak-zakazat" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КАК ЗАКАЗАТЬ</a>
+                  <Link to="/kak-zakazat" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КАК ЗАКАЗАТЬ</Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
                   <ul className="space-y-3">
                     {howToOrderItems.map((item) => (
                       <li key={item.title}>
-                        <a href={`/kak-zakazat/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        <Link to={`/kak-zakazat/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
                           <div className="font-semibold text-sm text-gray-900">{item.title}</div>
                           <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -216,17 +217,17 @@ export default function Header() {
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <a href="/klientam" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КЛИЕНТАМ</a>
+                  <Link to="/klientam" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КЛИЕНТАМ</Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
                   <ul className="space-y-3">
                     {clientsItems.map((item) => (
                       <li key={item.title}>
-                        <a href={`/klientam/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        <Link to={`/klientam/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
                           <div className="font-semibold text-sm text-gray-900">{item.title}</div>
                           <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -238,17 +239,17 @@ export default function Header() {
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <a href="/o-kompanii" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">О КОМПАНИИ</a>
+                  <Link to="/o-kompanii" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">О КОМПАНИИ</Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
                   <ul className="space-y-3">
                     {aboutItems.map((item) => (
                       <li key={item.title}>
-                        <a href={`/o-kompanii/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        <Link to={`/o-kompanii/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
                           <div className="font-semibold text-sm text-gray-900">{item.title}</div>
                           <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -258,7 +259,7 @@ export default function Header() {
 
             {/* Контакты */}
             <li className="flex-1 flex justify-center">
-              <a href="/kontakty" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КОНТАКТЫ</a>
+              <Link to="/kontakty" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КОНТАКТЫ</Link>
             </li>
           </ul>
         </div>
