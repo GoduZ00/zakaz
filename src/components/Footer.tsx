@@ -86,25 +86,6 @@ export default function Footer() {
 
         </div>
 
-        <div className="flex justify-center gap-4 py-8 border-t border-[#404040]">
-          <a href="#" className="w-10 h-10 border border-[#555] rounded-sm flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#444] transition-colors">
-            <span className="font-bold text-[11px]">VK</span>
-          </a>
-          <a href="#" className="w-10 h-10 border border-[#555] rounded-sm flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#444] transition-colors">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-          </a>
-        </div>
-      </div>
-      
-      <div className="bg-[#2a2a2a] py-5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          <p className="text-[11px] text-gray-400 max-w-4xl">
-            На этом сайте используются файлы cookie. Продолжая просмотр сайта, вы соглашаетесь с использованием файлов cookie и обработкой персональных данных в соответствии с <a href="#" className="text-blue-400 hover:underline">Политикой конфиденциальности</a>.
-          </p>
-          <button className="bg-white text-gray-900 text-[11px] font-bold uppercase px-8 py-2.5 rounded-sm hover:bg-gray-100 transition-colors shrink-0 whitespace-nowrap">
-            Я согласен
-          </button>
-        </div>
       </div>
     </footer>
   );
