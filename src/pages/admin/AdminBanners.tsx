@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 
 interface Banner {
@@ -12,12 +12,32 @@ export default function AdminBanners() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [edit, setEdit] = useState<Partial<Banner> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const fetch = () => supabase.from('banners').select('*').order('id').then(({ data }) => {
     if (data) setBanners(data);
   });
 
   useEffect(() => { fetch(); }, []);
+
+  const uploadFile = async (file: File) => {
+    setUploading(true);
+    const ext = file.name.split('.').pop();
+    const path = `banner_${Date.now()}.${ext}`;
+    const { data, error } = await supabase.storage.from('banners').upload(path, file);
+    if (error) { alert('Ошибка загрузки: ' + error.message); setUploading(false); return; }
+    const { data: urlData } = supabase.storage.from('banners').getPublicUrl(path);
+    setUploading(false);
+    return urlData?.publicUrl || '';
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = await uploadFile(file);
+    if (url) setEdit({ ...edit!, image_url: url });
+  };
 
   const save = async () => {
     if (!edit || !edit.image_url) return;
@@ -52,9 +72,9 @@ export default function AdminBanners() {
             <div className="space-y-3">
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Фото</label>
-                <input placeholder="URL изображения" value={edit.image_url || ''} onChange={(e) => setEdit({ ...edit, image_url: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
-                {edit.image_url && <img src={edit.image_url} className="mt-2 h-20 rounded object-cover" />}
+                <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm" />
+                {uploading && <div className="text-xs text-blue-500 mt-1">Загрузка...</div>}
+                {edit.image_url && !uploading && <img src={edit.image_url} className="mt-2 h-20 rounded object-cover" />}
               </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Куда направляет</label>
