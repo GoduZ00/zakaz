@@ -1,67 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import { useCart } from '../context/CartContext';
+import type { Product } from '../types';
 
 interface SubCategory {
+  id: number;
   name: string;
   slug: string;
 }
 
-interface CategoryData {
+interface CategoryInfo {
+  id: number;
   name: string;
-  subcategories: SubCategory[];
+  slug: string;
 }
-
-const categoryData: Record<string, CategoryData> = {
-  'mekhanicheskie_torgovye_avtomaty_catalog': {
-    name: 'Механические торговые автоматы',
-    subcategories: [
-      { name: 'Торговые автоматы', slug: 'torgovye-avtomaty' },
-      { name: 'Монетоприемники и пластины к ним', slug: 'monetopriemniki' },
-      { name: 'Распределители', slug: 'raspredeliteli' },
-      { name: 'Детали и части', slug: 'detali-i-chasti' },
-      { name: 'Стойки, кронштейны, швеллеры', slug: 'stoyki-kronshteyny-shvellery' },
-      { name: 'Наклейки', slug: 'nakleyki' },
-    ],
-  },
-  'napolniteli-dlya-torgovykh-avtomatov': {
-    name: 'Наполнители для торговых автоматов',
-    subcategories: [
-      { name: 'Жевательная резинка', slug: 'zhevatelnaya-rezinka' },
-      { name: 'Конфеты', slug: 'konfety' },
-      { name: 'Мячи-прыгуны', slug: 'myachi-pryguny' },
-      { name: 'Игрушки', slug: 'igrushki' },
-      { name: 'Бахилы в капсулах', slug: 'bakhily-v-kapsulakh' },
-      { name: 'Капсулы пустые', slug: 'kapsuly-pustye' },
-    ],
-  },
-};
-
-const sidebarMenu = [
-  {
-    name: 'Механические торговые автоматы',
-    slug: 'mekhanicheskie_torgovye_avtomaty_catalog',
-    children: [
-      'Торговые автоматы',
-      'Монетоприемники и пластины к ним',
-      'Распределители',
-      'Детали и части',
-      'Стойки, кронштейны, швеллеры',
-      'Наклейки',
-    ],
-  },
-  {
-    name: 'Наполнители для торговых автоматов',
-    slug: 'napolniteli-dlya-torgovykh-avtomatov',
-    children: [
-      'Жевательная резинка',
-      'Конфеты',
-      'Мячи-прыгуны',
-      'Игрушки',
-      'Бахилы в капсулах',
-      'Капсулы пустые',
-    ],
-  },
-];
 
 const subIcons: Record<string, string> = {
   'torgovye-avtomaty': '/images/categories/nakleyki.png',
@@ -99,13 +52,82 @@ const faqItems = [
 
 export default function CatalogCategory() {
   const { categoryId } = useParams();
-  const data = categoryData[categoryId || ''];
-  const [activeSub, setActiveSub] = useState('');
+  const { addItem } = useCart();
+
+  const [category, setCategory] = useState<CategoryInfo | null>(null);
+  const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [activeSub, setActiveSub] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState('price_asc');
   const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!data) {
+  useEffect(() => {
+    if (!categoryId) return;
+    setLoading(true);
+
+    (async () => {
+      let cat: CategoryInfo | null = null;
+      let subs: SubCategory[] = [];
+      let activeSubId: number | null = null;
+
+      const { data: catData } = await supabase.from('categories').select('id, name, slug').eq('slug', categoryId).single();
+      if (catData) {
+        cat = catData;
+        const { data: subData } = await supabase.from('subcategories').select('id, name, slug').eq('category_id', cat.id).order('sort_order');
+        subs = subData || [];
+      } else {
+        const { data: subData } = await supabase.from('subcategories').select('id, name, slug, category_id').eq('slug', categoryId).single();
+        if (subData) {
+          const { data: catData2 } = await supabase.from('categories').select('id, name, slug').eq('id', subData.category_id).single();
+          cat = catData2 || null;
+          const { data: allSubs } = await supabase.from('subcategories').select('id, name, slug').eq('category_id', subData.category_id).order('sort_order');
+          subs = allSubs || [];
+          activeSubId = subData.id;
+        }
+      }
+
+      setCategory(cat);
+      setSubcategories(subs);
+      setActiveSub(activeSubId);
+
+      if (cat) {
+        const subIds = subs.map((s) => s.id);
+        let query = supabase.from('products').select('*').in('subcategory_id', subIds).eq('is_active', true);
+        if (activeSubId) {
+          query = supabase.from('products').select('*').eq('subcategory_id', activeSubId).eq('is_active', true);
+        }
+        const { data: prodData } = await query.order('id', { ascending: false });
+        setProducts(prodData || []);
+      }
+
+      setLoading(false);
+    })();
+  }, [categoryId]);
+
+  const filteredProducts = activeSub
+    ? products.filter((p) => p.subcategory_id === activeSub)
+    : products;
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === 'price_asc') return a.price - b.price;
+    return b.price - a.price;
+  });
+
+  const handleSubClick = (subId: number) => {
+    setActiveSub((prev) => (prev === subId ? null : subId));
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-[#f8f8f8] min-h-screen font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center text-gray-400 text-sm">Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (!category) {
     return (
       <div className="bg-[#f8f8f8] min-h-screen font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -128,68 +150,56 @@ export default function CatalogCategory() {
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Breadcrumbs */}
         <nav className="text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
           <span className="mx-2">—</span>
           <Link to="/catalog" className="hover:text-[#ef7d00] transition-colors">Каталог</Link>
           <span className="mx-2">—</span>
-          <span className="text-gray-900">{data.name}</span>
+          <span className="text-gray-900">{category.name}</span>
         </nav>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-7">
-          {data.name}
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-7">{category.name}</h1>
 
         <div className="flex gap-8">
           {/* Sidebar */}
           <aside className="w-64 shrink-0 hidden lg:block">
             <div className="bg-white border border-gray-200 rounded-sm">
-              {sidebarMenu.map((section) => (
-                <div key={section.slug} className="border-b border-gray-200 last:border-b-0">
-                  <Link
-                    to={`/catalog/${section.slug}`}
-                    className={`block px-4 py-3 text-sm font-medium transition-colors ${
-                      section.slug === categoryId
-                        ? 'bg-[#ef7d00] text-white'
-                        : 'text-gray-800 hover:text-[#ef7d00]'
-                    }`}
-                  >
-                    {section.name}
-                  </Link>
-                  {section.slug === categoryId && (
-                    <ul className="py-1">
-                      {section.children.map((child) => (
-                        <li key={child}>
-                          <button
-                            onClick={() => setActiveSub(child === activeSub ? '' : child)}
-                            className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                              activeSub === child
-                                ? 'text-[#ef7d00] font-medium'
-                                : 'text-gray-600 hover:text-[#ef7d00]'
-                            }`}
-                          >
-                            {child}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+              {subcategories.length > 0 && (
+                <div className="border-b border-gray-200 last:border-b-0">
+                  <div className="block px-4 py-3 text-sm font-medium bg-[#ef7d00] text-white">{category.name}</div>
+                  <ul className="py-1">
+                    {subcategories.map((sub) => (
+                      <li key={sub.id}>
+                        <button
+                          onClick={() => handleSubClick(sub.id)}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                            activeSub === sub.id
+                              ? 'text-[#ef7d00] font-medium'
+                              : 'text-gray-600 hover:text-[#ef7d00]'
+                          }`}
+                        >
+                          {sub.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
+              )}
             </div>
           </aside>
 
           {/* Main content */}
           <div className="flex-1 min-w-0">
-            {/* Compact subcategory list */}
+            {/* Compact subcategory grid */}
             <div className="mb-6">
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {data.subcategories.map((sub) => (
+                {subcategories.map((sub) => (
                   <Link
-                    key={sub.slug}
+                    key={sub.id}
                     to={`/catalog/${sub.slug}`}
-                    className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow"
+                    className={`flex items-center gap-3 p-3 bg-white border rounded-sm shadow-sm hover:shadow-md transition-shadow ${
+                      activeSub === sub.id ? 'border-[#ef7d00]' : 'border-gray-200'
+                    }`}
                   >
                     <div className="w-12 h-12 shrink-0 flex items-center justify-center">
                       <img
@@ -198,9 +208,7 @@ export default function CatalogCategory() {
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <span className="text-xs font-medium text-gray-800 leading-tight">
-                      {sub.name}
-                    </span>
+                    <span className="text-xs font-medium text-gray-800 leading-tight">{sub.name}</span>
                   </Link>
                 ))}
               </div>
@@ -220,7 +228,7 @@ export default function CatalogCategory() {
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Товаров: 0</span>
+                <span className="text-sm text-gray-500">Товаров: {sortedProducts.length}</span>
                 <div className="flex border border-gray-300 rounded-sm overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
@@ -259,32 +267,78 @@ export default function CatalogCategory() {
               </div>
             </div>
 
-            {/* Products area */}
-            <div className="bg-white border border-gray-200 rounded-sm p-12 text-center mb-6">
-              <div className="max-w-sm mx-auto">
-                <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-                <p className="text-gray-400 text-sm">
-                  В этой категории пока нет товаров.
-                </p>
-                <p className="text-gray-400 text-xs mt-1">
-                  Товары будут добавлены после настройки админ-панели.
-                </p>
+            {/* Products */}
+            {sortedProducts.length === 0 ? (
+              <div className="bg-white border border-gray-200 rounded-sm p-12 text-center mb-6">
+                <div className="max-w-sm mx-auto">
+                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <p className="text-gray-400 text-sm">В этой категории пока нет товаров.</p>
+                </div>
               </div>
-            </div>
+            ) : viewMode === 'grid' ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                {sortedProducts.map((p) => (
+                  <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+                    <Link to={`/product/${p.slug}`} className="p-4 flex items-center justify-center h-44">
+                      <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
+                    </Link>
+                    <div className="px-4 pb-4 flex flex-col flex-1">
+                      <Link to={`/product/${p.slug}`} className="text-sm text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
+                      <div className="mt-auto">
+                        <div className="text-lg font-bold text-[#ef7d00]">{p.price} ₽</div>
+                        <button onClick={() => addItem(p)} className="mt-2 w-full text-sm bg-[#ef7d00] text-white py-2 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : viewMode === 'list-sm' ? (
+              <div className="space-y-2 mb-6">
+                {sortedProducts.map((p) => (
+                  <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow flex items-center gap-4 p-3">
+                    <Link to={`/product/${p.slug}`} className="w-16 h-16 shrink-0 flex items-center justify-center">
+                      <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
+                    </Link>
+                    <div className="flex-1 min-w-0">
+                      <Link to={`/product/${p.slug}`} className="text-sm text-gray-800 leading-tight line-clamp-1 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
+                      {p.article && <div className="text-xs text-gray-400 mt-0.5">Арт. {p.article}</div>}
+                    </div>
+                    <div className="text-base font-bold text-[#ef7d00] shrink-0">{p.price} ₽</div>
+                    <button onClick={() => addItem(p)} className="shrink-0 text-sm bg-[#ef7d00] text-white px-4 py-1.5 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4 mb-6">
+                {sortedProducts.map((p) => (
+                  <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow flex gap-5 p-5">
+                    <Link to={`/product/${p.slug}`} className="w-48 h-48 shrink-0 flex items-center justify-center bg-gray-50 rounded">
+                      <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
+                    </Link>
+                    <div className="flex flex-col flex-1 py-1">
+                      <Link to={`/product/${p.slug}`} className="text-base font-medium text-gray-900 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
+                      {p.article && <div className="text-sm text-gray-400 mt-1">Артикул: {p.article}</div>}
+                      <div className="text-sm text-gray-500 mt-2 line-clamp-3">{p.description}</div>
+                      <div className="mt-auto flex items-center justify-between">
+                        <div>
+                          <div className="text-xl font-bold text-[#ef7d00]">{p.price} ₽</div>
+                          {p.price_wholesale && <div className="text-xs text-gray-400">Опт: {p.price_wholesale} ₽</div>}
+                        </div>
+                        <button onClick={() => addItem(p)} className="text-sm bg-[#ef7d00] text-white px-6 py-2.5 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Pagination placeholder */}
             <div className="flex items-center justify-center gap-2 mb-8">
-              <button className="w-9 h-9 flex items-center justify-center text-sm border border-gray-300 rounded-sm text-gray-400 cursor-not-allowed" disabled>
-                ‹
-              </button>
-              <button className="w-9 h-9 flex items-center justify-center text-sm border border-[#ef7d00] rounded-sm bg-[#ef7d00] text-white">
-                1
-              </button>
-              <button className="w-9 h-9 flex items-center justify-center text-sm border border-gray-300 rounded-sm text-gray-400 cursor-not-allowed" disabled>
-                ›
-              </button>
+              <button className="w-9 h-9 flex items-center justify-center text-sm border border-gray-300 rounded-sm text-gray-400 cursor-not-allowed" disabled>‹</button>
+              <button className="w-9 h-9 flex items-center justify-center text-sm border border-[#ef7d00] rounded-sm bg-[#ef7d00] text-white">1</button>
+              <button className="w-9 h-9 flex items-center justify-center text-sm border border-gray-300 rounded-sm text-gray-400 cursor-not-allowed" disabled>›</button>
             </div>
 
             {/* FAQ */}
@@ -298,18 +352,11 @@ export default function CatalogCategory() {
                       className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50 transition-colors text-left"
                     >
                       <span>{item.q}</span>
-                      <svg
-                        className={`w-4 h-4 shrink-0 ml-2 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      >
+                      <svg className={`w-4 h-4 shrink-0 ml-2 transition-transform ${openFaq === i ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-                    {openFaq === i && (
-                      <div className="px-4 pb-3 text-sm text-gray-600 leading-relaxed">
-                        {item.a}
-                      </div>
-                    )}
+                    {openFaq === i && <div className="px-4 pb-3 text-sm text-gray-600 leading-relaxed">{item.a}</div>}
                   </div>
                 ))}
               </div>
@@ -319,16 +366,8 @@ export default function CatalogCategory() {
             <div className="bg-white border border-gray-200 rounded-sm p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">Описание категории</h2>
               <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>
-                  {data.name} — это надежное оборудование для вендингового бизнеса. В нашем каталоге представлены
-                  механические торговые автоматы, монетоприемники, диспенсеры, купюроприемники, а также
-                  запасные части, замки, стикеры и стенды для напольных автоматов.
-                </p>
-                <p>
-                  Механические торговые автоматы не требуют подключения к электросети, что позволяет
-                  устанавливать их в любых местах с высокой проходимостью. Простая конструкция обеспечивает
-                  надежность и долгий срок службы.
-                </p>
+                <p>{category.name} — это надежное оборудование для вендингового бизнеса. В нашем каталоге представлены механические торговые автоматы, монетоприемники, диспенсеры, купюроприемники, а также запасные части, замки, стикеры и стенды для напольных автоматов.</p>
+                <p>Механические торговые автоматы не требуют подключения к электросети, что позволяет устанавливать их в любых местах с высокой проходимостью. Простая конструкция обеспечивает надежность и долгий срок службы.</p>
               </div>
             </div>
           </div>

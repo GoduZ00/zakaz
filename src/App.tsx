@@ -1,5 +1,6 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
+import {CartProvider} from './context/CartContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Categories from './components/Categories';
@@ -12,6 +13,7 @@ import ViewedItems from './components/ViewedItems';
 import ScrollToTop from './components/ScrollToTop';
 import Catalog from './pages/Catalog';
 import CatalogCategory from './pages/CatalogCategory';
+import ProductPage from './pages/ProductPage';
 import Aktsii from './pages/Aktsii';
 import KakZakazat from './pages/KakZakazat';
 import Klientam from './pages/Klientam';
@@ -55,26 +57,29 @@ function Home() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout><Home /></Layout>} />
-      <Route path="/catalog" element={<Layout><Catalog /></Layout>} />
-      <Route path="/catalog/:categoryId" element={<Layout><CatalogCategory /></Layout>} />
-      <Route path="/aktsii" element={<Layout><Aktsii /></Layout>} />
-      <Route path="/kak-zakazat" element={<Layout><KakZakazat /></Layout>} />
-      <Route path="/klientam" element={<Layout><Klientam /></Layout>} />
-      <Route path="/o-kompanii" element={<Layout><OKompanii /></Layout>} />
-      <Route path="/kontakty" element={<Layout><Kontakty /></Layout>} />
-      <Route path="/login" element={<Layout><Login /></Layout>} />
-      <Route path="/zvonok" element={<Layout><Zvonok /></Layout>} />
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="banners" element={<AdminBanners />} />
-        <Route path="products" element={<AdminProducts />} />
-        <Route path="categories" element={<AdminCategories />} />
-        <Route path="promotions" element={<AdminPromotions />} />
-        <Route path="orders" element={<AdminOrders />} />
-      </Route>
-    </Routes>
+    <CartProvider>
+      <Routes>
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/catalog" element={<Layout><Catalog /></Layout>} />
+        <Route path="/catalog/:categoryId" element={<Layout><CatalogCategory /></Layout>} />
+        <Route path="/product/:slug" element={<Layout><ProductPage /></Layout>} />
+        <Route path="/aktsii" element={<Layout><Aktsii /></Layout>} />
+        <Route path="/kak-zakazat" element={<Layout><KakZakazat /></Layout>} />
+        <Route path="/klientam" element={<Layout><Klientam /></Layout>} />
+        <Route path="/o-kompanii" element={<Layout><OKompanii /></Layout>} />
+        <Route path="/kontakty" element={<Layout><Kontakty /></Layout>} />
+        <Route path="/login" element={<Layout><Login /></Layout>} />
+        <Route path="/zvonok" element={<Layout><Zvonok /></Layout>} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="banners" element={<AdminBanners />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="promotions" element={<AdminPromotions />} />
+          <Route path="orders" element={<AdminOrders />} />
+        </Route>
+      </Routes>
+    </CartProvider>
   );
 }
