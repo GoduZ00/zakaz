@@ -103,7 +103,11 @@ export default function AdminNews() {
               </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Изображение</label>
-                <input ref={fileRef} type="file" accept="image/*" className="w-full text-sm" />
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" />
+                <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                  className="border border-dashed border-gray-300 rounded px-4 py-2 text-sm text-gray-500 hover:border-[#ef7d00] hover:text-[#ef7d00] transition-colors">
+                  {uploading ? 'Загрузка...' : 'Выберите файл'}
+                </button>
                 {edit.image_url && (
                   <div className="mt-2 flex gap-2 items-center">
                     <img src={edit.image_url} className="w-16 h-16 object-cover rounded border" />
