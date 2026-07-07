@@ -75,47 +75,45 @@ export default function Header() {
   return (
     <header className="w-full font-sans">
       {/* Top Bar */}
-      <div className="bg-[#f8f8f8] border-b border-gray-200 py-1.5 text-[13px] text-gray-600">
+      <div className="bg-[#f8f8f8] border-b border-gray-200 py-1.5 text-[11px] sm:text-[13px] text-gray-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <a href="https://go.2gis.com/O6tAe" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-orange-500">
-              <MapPin className="w-4 h-4 text-gray-400" />
-              <span>Алматы</span>
+          <div className="flex items-center gap-3 sm:gap-6">
+            <a href="https://go.2gis.com/O6tAe" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-orange-500">
+              <MapPin className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-gray-400" />
+              <span className="hidden xs:inline">Алматы</span>
             </a>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-gray-400" />
-                <span className="font-semibold text-gray-900">8-701-309-9969</span>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-1">
+                <Phone className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-gray-400" />
+                <span className="font-semibold text-gray-900 text-[11px] sm:text-[13px]">8-701-309-9969</span>
               </div>
-              <Link to="/zvonok" className="text-[#ef7d00] border-b border-dashed border-[#ef7d00] hover:border-solid">ЗАКАЗАТЬ ЗВОНОК</Link>
+              <Link to="/zvonok" className="text-[#ef7d00] border-b border-dashed border-[#ef7d00] hover:border-solid text-[11px] sm:text-[13px]">ЗАКАЗАТЬ ЗВОНОК</Link>
             </div>
           </div>
-          <div className="flex items-center gap-6 hidden sm:flex">
-            <div className="flex items-center gap-1.5">
-              <a href="https://go.2gis.com/O6tAe" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-orange-500">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span>Алматы қ. Асыл-Арман 20</span>
-              </a>
-            </div>
-            <UserLink />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <a href="https://go.2gis.com/O6tAe" target="_blank" rel="noopener noreferrer" className="items-center gap-1 hover:text-orange-500 hidden sm:flex">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <span>Алматы қ. Асыл-Арман 20</span>
+            </a>
+            <div className="hidden sm:block"><UserLink /></div>
           </div>
         </div>
       </div>
 
       {/* Middle Bar */}
-      <div className="bg-white py-5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
+      <div className="bg-white py-3 sm:py-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-row justify-between items-center gap-3 sm:gap-8">
           {/* Logo */}
-          <div className="flex flex-col items-center md:items-start shrink-0">
-            <Link to="/" className="text-3xl font-extrabold tracking-tight">
+          <div className="flex flex-col items-start shrink-0">
+            <Link to="/" className="text-xl sm:text-3xl font-extrabold tracking-tight whitespace-nowrap">
               <span className="text-[#1a3673]">ИП Байғожинов</span><span className="text-[#ef7d00]">.KZ</span>
             </Link>
             <span className="text-[10px] text-gray-500 tracking-wider mt-0.5">ЛУЧШИЕ РЕШЕНИЯ ДЛЯ ВАШЕГО БИЗНЕСА</span>
           </div>
 
           {/* Search */}
-          <div className="w-full md:flex-1 max-w-2xl">
-            <div className="flex border-2 border-gray-100 rounded-sm overflow-hidden bg-white focus-within:border-gray-300 transition-colors h-11 shadow-sm">
+          <div className="flex-1 min-w-0 max-w-2xl">
+            <div className="flex border border-gray-100 sm:border-2 rounded-sm overflow-hidden bg-white focus-within:border-gray-300 transition-colors h-9 sm:h-11 shadow-sm">
               <input 
                 type="text" 
                 placeholder="Поиск" 
@@ -137,20 +135,19 @@ export default function Header() {
           </div>
 
           {/* Icons */}
-          <div className="flex items-center gap-6 shrink-0">
-            <div className="flex items-center gap-5">
-              <button className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
-                <BarChart2 className="w-6 h-6" />
+          <div className="flex items-center gap-2 sm:gap-6 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-5">
+              <button className="relative text-gray-400 hover:text-[#ef7d00] transition-colors hidden sm:block">
+                <BarChart2 className="w-5 sm:w-6 h-5 sm:h-6" />
                 <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
               </button>
               <Link to="/profile" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
-                <Heart className="w-6 h-6" />
-                <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
+                <Heart className="w-5 sm:w-6 h-5 sm:h-6" />
               </Link>
             </div>
-            <div className="h-8 w-px bg-gray-200"></div>
+            <div className="h-6 sm:h-8 w-px bg-gray-200"></div>
             <Link to="/cart" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
-              <ShoppingCart className="w-7 h-7" />
+              <ShoppingCart className="w-6 sm:w-7 h-6 sm:h-7" />
               {count > 0 && <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold min-w-[1rem] h-4 flex items-center justify-center rounded-full px-1">{count}</span>}
             </Link>
           </div>
@@ -160,12 +157,12 @@ export default function Header() {
       {/* Navigation Bar */}
       <div className="bg-[#ef7d00] text-white relative z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ul className="flex items-center text-[13px] font-bold uppercase tracking-wider overflow-visible">
+          <ul className="flex items-center text-[13px] sm:text-[13px] text-[11px] font-bold uppercase tracking-wider overflow-x-auto overflow-visible whitespace-nowrap scrollbar-none">
             {/* Каталог */}
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <Link to="/catalog" className="flex items-center justify-center gap-2 py-4 px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors w-full">
+                  <Link to="/catalog" className="flex items-center justify-center gap-2 py-4 px-3 sm:px-6 bg-[#d66f00] hover:bg-[#c26400] transition-colors w-full">
                     <Menu className="w-5 h-5 shrink-0" />
                     <span>КАТАЛОГ</span>
                   </Link>
@@ -199,7 +196,7 @@ export default function Header() {
 
             {/* Акции */}
             <li className="flex-1 flex justify-center">
-              <Link to="/aktsii" className="flex items-center justify-center gap-1.5 py-4 px-6 hover:bg-[#d66f00] transition-colors w-full">
+              <Link to="/aktsii" className="flex items-center justify-center gap-1.5 py-4 px-3 sm:px-6 hover:bg-[#d66f00] transition-colors w-full">
                 <Zap className="w-4 h-4 fill-white shrink-0" />
                 <span>АКЦИИ</span>
               </Link>
@@ -209,7 +206,7 @@ export default function Header() {
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <Link to="/kak-zakazat" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КАК ЗАКАЗАТЬ</Link>
+                  <Link to="/kak-zakazat" className="py-4 px-3 sm:px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КАК ЗАКАЗАТЬ</Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -231,7 +228,7 @@ export default function Header() {
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <Link to="/klientam" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КЛИЕНТАМ</Link>
+                  <Link to="/klientam" className="py-4 px-3 sm:px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">КЛИЕНТАМ</Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -253,7 +250,7 @@ export default function Header() {
             <li className="flex-1 flex justify-center">
               <DropdownItem
                 label={
-                  <Link to="/o-kompanii" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">О КОМПАНИИ</Link>
+                  <Link to="/o-kompanii" className="py-4 px-3 sm:px-6 hover:bg-[#d66f00] transition-colors w-full text-center block">О КОМПАНИИ</Link>
                 }
               >
                 <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -273,7 +270,7 @@ export default function Header() {
 
             {/* Контакты */}
             <li className="flex-1 flex justify-center">
-              <Link to="/kontakty" className="py-4 px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КОНТАКТЫ</Link>
+              <Link to="/kontakty" className="py-4 px-3 sm:px-6 hover:bg-[#d66f00] transition-colors w-full text-center">КОНТАКТЫ</Link>
             </li>
           </ul>
         </div>
