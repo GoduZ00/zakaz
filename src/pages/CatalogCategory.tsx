@@ -288,9 +288,8 @@ export default function CatalogCategory() {
               <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-6">
                 <div className="flex items-center gap-4">
                   {/* Price filter group */}
-                  <div className="relative">
-                    <button onClick={() => setOpenFilter(openFilter === 'price' ? null : 'price')}
-                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                  <div className="relative" onMouseEnter={() => setOpenFilter('price')} onMouseLeave={() => setOpenFilter(null)}>
+                    <button className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Цена
                     </button>
                     {openFilter === 'price' && (
@@ -323,9 +322,8 @@ export default function CatalogCategory() {
                   </div>
 
                   {/* Sticker types filter group */}
-                  <div className="relative">
-                    <button onClick={() => setOpenFilter(openFilter === 'stickers' ? null : 'stickers')}
-                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                  <div className="relative" onMouseEnter={() => setOpenFilter('stickers')} onMouseLeave={() => setOpenFilter(null)}>
+                    <button className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Виды наклеек
                     </button>
                     {openFilter === 'stickers' && (
@@ -341,9 +339,8 @@ export default function CatalogCategory() {
                   </div>
 
                   {/* Coating filter group */}
-                  <div className="relative">
-                    <button onClick={() => setOpenFilter(openFilter === 'coating' ? null : 'coating')}
-                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                  <div className="relative" onMouseEnter={() => setOpenFilter('coating')} onMouseLeave={() => setOpenFilter(null)}>
+                    <button className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Покрытие
                     </button>
                     {openFilter === 'coating' && (
