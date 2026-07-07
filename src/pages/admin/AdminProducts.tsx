@@ -16,8 +16,17 @@ interface Product {
   images: string[];
 }
 
+interface SubCat {
+  id: number;
+  name: string;
+  slug: string;
+  category_name?: string;
+  category_id: number;
+}
+
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [subcategories, setSubcategories] = useState<SubCat[]>([]);
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState<Partial<Product> | null>(null);
   const [saving, setSaving] = useState(false);
@@ -30,7 +39,19 @@ export default function AdminProducts() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchProducts(); }, []);
+  useEffect(() => {
+    fetchProducts();
+    supabase.from('subcategories').select('id, name, slug, category_id').order('sort_order').then(({ data }) => {
+      if (data) {
+        supabase.from('categories').select('id, name').then(({ data: cats }) => {
+          if (cats && data) {
+            const map = Object.fromEntries(cats.map((c) => [c.id, c.name]));
+            setSubcategories(data.map((s) => ({ ...s, category_name: map[s.category_id] || '' })));
+          }
+        });
+      }
+    });
+  }, []);
 
   const toggleActive = async (id: number, current: boolean) => {
     await supabase.from('products').update({ is_active: !current }).eq('id', id);
@@ -165,6 +186,16 @@ export default function AdminProducts() {
                 <label className="text-xs text-gray-500 mb-1 block">Описание</label>
                 <textarea rows={4} value={edit.description || ''} onChange={(e) => setEdit({ ...edit, description: e.target.value })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 mb-1 block">Подкатегория</label>
+                <select value={edit.subcategory_id ?? ''} onChange={(e) => setEdit({ ...edit, subcategory_id: e.target.value ? Number(e.target.value) : null })}
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]">
+                  <option value="">— без подкатегории —</option>
+                  {subcategories.map((s) => (
+                    <option key={s.id} value={s.id}>{s.name}{s.category_name ? ` (${s.category_name})` : ''}</option>
+                  ))}
+                </select>
               </div>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={edit.is_active ?? true} onChange={(e) => setEdit({ ...edit, is_active: e.target.checked })} />
