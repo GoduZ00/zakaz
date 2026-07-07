@@ -84,6 +84,7 @@ export default function CatalogCategory() {
   const [charFilters, setCharFilters] = useState<Record<string, string[]>>({});
   const [filterGroups, setFilterGroups] = useState<FilterGroupConfig[] | null>(null);
   const [openFilter, setOpenFilter] = useState<string | null>(null);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const charOptions = useMemo(() => {
@@ -348,7 +349,7 @@ export default function CatalogCategory() {
               </div>
             </div>
 
-              <div className="bg-white border border-gray-200 rounded-sm px-3 py-2 mb-6">
+              <div className="bg-white border border-gray-200 rounded-sm px-3 py-2 mb-6 hidden lg:block">
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* Price filter group */}
                   <div className="relative">
@@ -467,6 +468,182 @@ export default function CatalogCategory() {
                   </button>
                 </div>
               </div>
+
+              {/* Mobile filter toggle */}
+              <div className="lg:hidden mb-3 flex items-center gap-2">
+                <button onClick={() => setShowMobileFilters(true)}
+                  className="flex items-center gap-2 text-xs font-medium px-3 py-2 border border-gray-300 rounded-sm text-gray-700 hover:border-gray-400 transition-colors">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  Фильтры
+                  {(filterStickers.length > 0 || filterCoating.length > 0 || (Object.values(charFilters) as string[][]).some((v) => v.length > 0) || filterInStock) && (
+                    <span className="w-2 h-2 rounded-full bg-[#ef7d00]" />
+                  )}
+                </button>
+                {(filterStickers.length > 0 || filterCoating.length > 0 || (Object.values(charFilters) as string[][]).some((v) => v.length > 0) || filterInStock) && (
+                  <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setFilterStickers([]); setFilterCoating([]); setCharFilters({}); setOpenFilter(null); }}
+                    className="text-[11px] text-gray-400 hover:text-[#ef7d00] transition-colors shrink-0 flex items-center gap-1">
+                    <svg className="w-3 h-3" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
+                    Очистить
+                  </button>
+                )}
+              </div>
+
+              {/* Mobile filter drawer */}
+              {showMobileFilters && (
+                <div className="fixed inset-0 z-50 lg:hidden">
+                  <div className="absolute inset-0 bg-black/40" onClick={() => setShowMobileFilters(false)} />
+                  <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-xl overflow-y-auto">
+                    <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                      <h2 className="text-sm font-bold text-gray-900">Фильтры</h2>
+                      <button onClick={() => setShowMobileFilters(false)} className="text-gray-400 hover:text-gray-600">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div className="p-4 space-y-4">
+                      {/* Price */}
+                      <div>
+                        <button onClick={() => setOpenFilter(openFilter === 'm-price' ? null : 'm-price')}
+                          className={`w-full flex items-center justify-between text-sm font-medium py-2 ${openFilter === 'm-price' ? 'text-[#ef7d00]' : 'text-gray-700'}`}>
+                          Цена
+                          <svg className={`w-4 h-4 transition-transform ${openFilter === 'm-price' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        {openFilter === 'm-price' && (
+                          <div className="pt-2 pb-3 space-y-3">
+                            <div className="flex items-center justify-between text-xs text-gray-700">
+                              <span>{priceMin} ₸</span>
+                              <span>{priceMax} ₸</span>
+                            </div>
+                            <div className="relative h-6">
+                              <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
+                              <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none"
+                                style={{ left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`, right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%` }} />
+                              <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
+                                value={priceMin} onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax - 1))}
+                                className="price-range price-range-min absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer z-10" />
+                              <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
+                                value={priceMax} onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin + 1))}
+                                className="price-range price-range-max absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer z-10" />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <input type="number" value={priceMin} onChange={(e) => setPriceMin(Math.min(Number(e.target.value) || globalMin, priceMax - 1))}
+                                className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:border-[#ef7d00]" />
+                              <span className="text-gray-400 text-xs">—</span>
+                              <input type="number" value={priceMax} onChange={(e) => setPriceMax(Math.max(Number(e.target.value) || globalMax, priceMin + 1))}
+                                className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:border-[#ef7d00]" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Category-specific filter groups */}
+                      {filterGroups ? filterGroups.map((fg) => (
+                        <div key={fg.characteristicLabel}>
+                          <button onClick={() => setOpenFilter(openFilter === `m-${fg.characteristicLabel}` ? null : `m-${fg.characteristicLabel}`)}
+                            className={`w-full flex items-center justify-between text-sm font-medium py-2 ${openFilter === `m-${fg.characteristicLabel}` ? 'text-[#ef7d00]' : 'text-gray-700'}`}>
+                            {fg.name}
+                            <svg className={`w-4 h-4 transition-transform ${openFilter === `m-${fg.characteristicLabel}` ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                          {openFilter === `m-${fg.characteristicLabel}` && (
+                            <div className="pt-1 pb-2 space-y-1.5">
+                              {(charOptions[fg.characteristicLabel] || []).map((opt) => (
+                                <label key={opt} className="flex items-center gap-2 cursor-pointer group py-1">
+                                  <input type="checkbox" checked={(charFilters[fg.characteristicLabel] || []).includes(opt)}
+                                    onChange={(e) => setCharFilters((prev) => {
+                                      const current = prev[fg.characteristicLabel] || [];
+                                      const next = e.target.checked ? [...current, opt] : current.filter((x) => x !== opt);
+                                      return { ...prev, [fg.characteristicLabel]: next };
+                                    })}
+                                    className="w-3.5 h-3.5 accent-[#ef7d00]" />
+                                  <span className="text-sm text-gray-600">{opt}</span>
+                                </label>
+                              ))}
+                              {(!charOptions[fg.characteristicLabel] || charOptions[fg.characteristicLabel].length === 0) && (
+                                <span className="text-xs text-gray-400">Нет вариантов</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )) : (
+                        <>
+                          {/* Legacy sticker filter */}
+                          <div>
+                            <button onClick={() => setOpenFilter(openFilter === 'm-stickers' ? null : 'm-stickers')}
+                              className={`w-full flex items-center justify-between text-sm font-medium py-2 ${openFilter === 'm-stickers' ? 'text-[#ef7d00]' : 'text-gray-700'}`}>
+                              Виды наклеек
+                              <svg className={`w-4 h-4 transition-transform ${openFilter === 'm-stickers' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                            {openFilter === 'm-stickers' && (
+                              <div className="pt-1 pb-2 space-y-1.5">
+                                {['Универсальная', 'Индивидуальная', 'Инструкция'].map((s) => (
+                                  <label key={s} className="flex items-center gap-2 cursor-pointer group py-1">
+                                    <input type="checkbox" checked={filterStickers.includes(s)}
+                                      onChange={(e) => setFilterStickers(e.target.checked ? [...filterStickers, s] : filterStickers.filter((x) => x !== s))}
+                                      className="w-3.5 h-3.5 accent-[#ef7d00]" />
+                                    <span className="text-sm text-gray-600">{s}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          {/* Legacy coating filter */}
+                          <div>
+                            <button onClick={() => setOpenFilter(openFilter === 'm-coating' ? null : 'm-coating')}
+                              className={`w-full flex items-center justify-between text-sm font-medium py-2 ${openFilter === 'm-coating' ? 'text-[#ef7d00]' : 'text-gray-700'}`}>
+                              Покрытие
+                              <svg className={`w-4 h-4 transition-transform ${openFilter === 'm-coating' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                            {openFilter === 'm-coating' && (
+                              <div className="pt-1 pb-2 space-y-1.5">
+                                {['Хромированные', 'Окрашенные'].map((c) => (
+                                  <label key={c} className="flex items-center gap-2 cursor-pointer group py-1">
+                                    <input type="checkbox" checked={filterCoating.includes(c)}
+                                      onChange={(e) => setFilterCoating(e.target.checked ? [...filterCoating, c] : filterCoating.filter((x) => x !== c))}
+                                      className="w-3.5 h-3.5 accent-[#ef7d00]" />
+                                    <span className="text-sm text-gray-600">{c}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+
+                      {/* In stock */}
+                      <div className="pt-2 border-t border-gray-100">
+                        <label className="flex items-center gap-2 cursor-pointer py-1">
+                          <input type="checkbox" checked={filterInStock} onChange={(e) => setFilterInStock(e.target.checked)}
+                            className="w-3.5 h-3.5 accent-[#ef7d00]" />
+                          <span className="text-sm text-gray-700">В наличии</span>
+                        </label>
+                      </div>
+
+                      {/* Reset */}
+                      <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setFilterStickers([]); setFilterCoating([]); setCharFilters({}); setOpenFilter(null); }}
+                        className="w-full text-sm text-gray-500 border border-gray-300 rounded-sm px-3 py-2 hover:bg-gray-50 transition-colors">
+                        Сбросить фильтры
+                      </button>
+
+                      <button onClick={() => setShowMobileFilters(false)}
+                        className="w-full text-sm bg-[#ef7d00] text-white rounded-sm px-3 py-2 hover:bg-[#d66f00] transition-colors">
+                        Применить
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             {/* Products */}
             {sortedProducts.length === 0 ? (
