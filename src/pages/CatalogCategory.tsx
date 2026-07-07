@@ -63,8 +63,7 @@ export default function CatalogCategory() {
   const [priceMax, setPriceMax] = useState<number>(Infinity);
   const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showFilter, setShowFilter] = useState(true);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ sort: true, price: true });
+  const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -242,6 +241,36 @@ export default function CatalogCategory() {
                   <option value="price_asc">По цене (возрастание)</option>
                   <option value="price_desc">По цене (убывание)</option>
                 </select>
+                {(
+                  <div className="relative">
+                    <button onClick={() => setShowFilter(!showFilter)}
+                      className={`p-1.5 border rounded-sm transition-colors ${showFilter ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'bg-white text-gray-400 hover:text-gray-600 border-gray-300'}`}
+                      title="Фильтр">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                      </svg>
+                    </button>
+                    {showFilter && (
+                      <div className="absolute left-0 top-full mt-1 z-20 w-56 bg-white border border-gray-200 rounded-sm shadow-lg p-4 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
+                            onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
+                            className="w-full text-[11px] border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                          <span className="text-gray-400 text-[11px]">—</span>
+                          <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
+                            onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
+                            className="w-full text-[11px] border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                        </div>
+                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
+                          <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); }}
+                            className="text-[11px] text-gray-500 hover:text-[#ef7d00] transition-colors">Очистить</button>
+                          <button onClick={() => setShowFilter(false)}
+                            className="text-[11px] bg-[#ef7d00] text-white px-3 py-1 rounded hover:bg-[#d66f00] transition-colors">Показать</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Товаров: {sortedProducts.length}</span>
@@ -281,57 +310,6 @@ export default function CatalogCategory() {
                   </button>
                 </div>
               </div>
-            </div>
-
-            {/* Compact filter panel under sort bar */}
-            <div className="bg-white border border-gray-200 rounded-sm mb-6 overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 cursor-pointer select-none border-b border-gray-200" onClick={() => setShowFilter(!showFilter)}>
-                <div className="flex items-center gap-2 text-sm font-bold uppercase text-gray-800">
-                  <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                    <path d="M10.6 0H1.4C0.7 0 0.2 0.7 0.5 1.3L4 5.4V8.5C4 8.8 4.2 9 4.5 9.2L6.5 10C7 10.2 7.5 9.8 7.5 9.3V5.4L11.5 1.3C11.8 0.7 11.3 0 10.6 0Z" fill="currentColor"/>
-                  </svg>
-                  <span>Фильтр</span>
-                </div>
-                <svg className={`w-3 h-3 text-gray-400 transition-transform ${showFilter ? 'rotate-0' : '-rotate-90'}`} viewBox="0 0 5 3" fill="currentColor">
-                  <path d="M0 0h5L2.5 3Z"/>
-                </svg>
-              </div>
-              {showFilter && (
-                <div className="px-4 py-3 space-y-4">
-                  {/* Price range */}
-                  <div>
-                    <div className="flex items-center justify-between cursor-pointer mb-2" onClick={() => setOpenSections({ ...openSections, price: !openSections.price })}>
-                      <span className="text-sm font-medium text-gray-800">Цена</span>
-                      <svg className={`w-3 h-3 text-gray-400 transition-transform ${openSections.price ? 'rotate-0' : '-rotate-90'}`} viewBox="0 0 5 3" fill="currentColor">
-                        <path d="M0 0h5L2.5 3Z"/>
-                      </svg>
-                    </div>
-                    {openSections.price && (
-                      <div className="flex items-center gap-2">
-                        <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
-                          onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
-                          className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
-                        <span className="text-gray-400 text-xs">—</span>
-                        <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
-                          onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
-                          className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
-                      </div>
-                    )}
-                  </div>
-                  {/* Reset */}
-                  <div className="flex items-center justify-between gap-2">
-                    <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); }}
-                      className="text-xs text-gray-500 hover:text-[#ef7d00] transition-colors flex items-center gap-1">
-                      <svg className="w-3 h-3" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
-                      Очистить фильтр
-                    </button>
-                    <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setSortBy('price_asc'); setActiveSub(null); }}
-                      className="text-xs bg-[#ef7d00] text-white px-4 py-1.5 rounded hover:bg-[#d66f00] transition-colors">
-                      Показать
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Products */}
