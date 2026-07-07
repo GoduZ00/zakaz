@@ -176,7 +176,7 @@ export default function Header() {
         {/* Navigation Bar */}
         <div className="bg-[#ef7d00] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ul className={`flex flex-nowrap items-center font-bold uppercase tracking-wider overflow-x-visible whitespace-nowrap scrollbar-none gap-0.5 ${sticky ? 'text-[10px]' : 'text-[10px] sm:text-[13px]'}`}>
+            <ul className={`flex flex-nowrap items-center font-bold uppercase tracking-wider overflow-visible whitespace-nowrap scrollbar-none gap-0.5 ${sticky ? 'text-[10px]' : 'text-[10px] sm:text-[13px]'}`}>
               {/* –ö–∞—Ç–∞–ª–æ–≥ */}
               <li className="flex-none">
                 <DropdownItem
@@ -187,7 +187,7 @@ export default function Header() {
                     </Link>
                   }
                 >
-                  <div className="hidden sm:block bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
+                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
                     <div className="space-y-6">
                       {catalogItems.map((section) => (
                         <div key={section.name} className="flex gap-4">
@@ -225,10 +225,10 @@ export default function Header() {
               <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/kak-zakazat" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}> ¿  «¿ ¿«¿“‹</Link>
+                    <Link to="/kak-zakazat" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}>–ö–ê–ö –ó–ê–ö–ê–ó–ê–¢–¨</Link>
                   }
                 >
-                  <div className="hidden sm:block bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
                     <ul className="space-y-3">
                       {howToOrderItems.map((item) => (
                         <li key={item.title}>
@@ -247,10 +247,10 @@ export default function Header() {
               <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/klientam" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}> À»≈Õ“¿Ã</Link>
+                    <Link to="/klientam" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}>–ö–õ–ò–ï–ù–¢–ê–ú</Link>
                   }
                 >
-                  <div className="hidden sm:block bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
                     <ul className="space-y-3">
                       {clientsItems.map((item) => (
                         <li key={item.title}>
@@ -269,10 +269,10 @@ export default function Header() {
               <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/o-kompanii" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}>Œ  ŒÃœ¿Õ»»</Link>
+                    <Link to="/o-kompanii" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}>–û –ö–û–ú–ü–ê–ù–ò–ò</Link>
                   }
                 >
-                  <div className="hidden sm:block bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
                     <ul className="space-y-3">
                       {aboutItems.map((item) => (
                         <li key={item.title}>
@@ -289,7 +289,7 @@ export default function Header() {
 
               {/* –ö–æ–Ω—Ç–∞–∫—Ç—ã */}
               <li className="flex-none">
-                <Link to="/kontakty" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}> ŒÕ“¿ “€</Link>
+                <Link to="/kontakty" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-1.5 sm:px-3' : 'py-2 px-1.5 sm:py-4 sm:px-6'}`}>–ö–û–ù–¢–ê–ö–¢–´</Link>
               </li>
             </ul>
 
