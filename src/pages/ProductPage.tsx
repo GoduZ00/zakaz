@@ -289,13 +289,24 @@ export default function ProductPage() {
                     <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{product.description}</div>
                   )}
                   {tab === 'chars' && product.characteristics?.length > 0 && (
-                    <div className="divide-y divide-gray-100 border border-gray-200 rounded-sm">
-                      {product.characteristics.map((c, i) => (
-                        <div key={i} className="flex px-4 py-2.5 text-sm even:bg-gray-50">
-                          <span className="w-1/2 text-gray-500">{c.label}</span>
-                          <span className="w-1/2 text-gray-800">{c.value}</span>
-                        </div>
-                      ))}
+                    <div className="char_block bordered rounded3 js-scrolled border border-gray-200 rounded-sm overflow-hidden">
+                      <table className="props_list nbg w-full text-sm">
+                        <tbody className="js-offers-prop">
+                          {product.characteristics.map((c, i) => (
+                            <tr key={i} className={`js-prop-replace ${i % 2 === 0 ? '' : 'bg-gray-50'}`} itemScope itemType="http://schema.org/PropertyValue">
+                              <td className="char_name px-4 py-2.5 w-1/2 text-gray-500 align-top">
+                                <div className="props_item">
+                                  <span itemProp="name" className="js-prop-title">{c.label}</span>
+                                </div>
+                              </td>
+                              <td className="char_value px-4 py-2.5 w-1/2 text-gray-800 align-top">
+                                <span className="js-prop-value" itemProp="value" dangerouslySetInnerHTML={{ __html: c.value }} />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <table className="props_list nbg w-full text-sm" id="bx_117848907_5977_sku_prop"></table>
                     </div>
                   )}
                 </div>
