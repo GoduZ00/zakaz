@@ -351,12 +351,12 @@ export default function CatalogCategory() {
               </div>
             </div>
 
-              <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-6">
-                <div className="flex items-center gap-4">
+              <div className="bg-white border border-gray-200 rounded-sm px-3 py-2 mb-6">
+                <div className="flex items-center gap-2 flex-wrap">
                   {/* Price filter group */}
                   <div className="relative">
                     <button onClick={() => setOpenFilter(openFilter === 'price' ? null : 'price')}
-                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                      className={`text-[11px] font-medium px-2 py-1.5 border rounded-sm transition-all duration-200 whitespace-nowrap ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Цена
                     </button>
                     <div className={`absolute left-0 top-full mt-1 z-20 w-64 bg-white border border-gray-200 rounded-sm shadow-lg p-4 space-y-3 transition-all duration-200 ease-out ${openFilter === 'price' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
@@ -394,7 +394,7 @@ export default function CatalogCategory() {
                   {filterGroups ? filterGroups.map((fg) => (
                     <div key={fg.characteristicLabel} className="relative">
                       <button onClick={() => setOpenFilter(openFilter === fg.characteristicLabel ? null : fg.characteristicLabel)}
-                        className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === fg.characteristicLabel ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                        className={`text-[11px] font-medium px-2 py-1.5 border rounded-sm transition-all duration-200 whitespace-nowrap ${openFilter === fg.characteristicLabel ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                         {fg.name}
                       </button>
                       <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === fg.characteristicLabel ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
@@ -420,7 +420,7 @@ export default function CatalogCategory() {
                       {/* Sticker types filter group (legacy) */}
                       <div className="relative">
                         <button onClick={() => setOpenFilter(openFilter === 'stickers' ? null : 'stickers')}
-                          className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                          className={`text-[11px] font-medium px-2 py-1.5 border rounded-sm transition-all duration-200 whitespace-nowrap ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                           Виды наклеек
                         </button>
                         <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'stickers' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
@@ -438,7 +438,7 @@ export default function CatalogCategory() {
                       {/* Coating filter group (legacy) */}
                       <div className="relative">
                         <button onClick={() => setOpenFilter(openFilter === 'coating' ? null : 'coating')}
-                          className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                          className={`text-[11px] font-medium px-2 py-1.5 border rounded-sm transition-all duration-200 whitespace-nowrap ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                           Покрытие
                         </button>
                         <div className={`absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'coating' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
@@ -455,8 +455,8 @@ export default function CatalogCategory() {
                     </>
                   )}
 
-                  {/* In stock checkbox inline */}
-                  <label className="flex items-center gap-1.5 cursor-pointer group ml-auto">
+                  {/* In stock checkbox */}
+                  <label className="flex items-center gap-1.5 cursor-pointer group">
                     <input type="checkbox" checked={filterInStock} onChange={(e) => setFilterInStock(e.target.checked)}
                       className="w-3 h-3 accent-[#ef7d00]" />
                     <span className="text-[11px] text-gray-500 group-hover:text-gray-700 whitespace-nowrap">В наличии</span>
