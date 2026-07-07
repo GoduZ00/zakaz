@@ -172,12 +172,12 @@ export default function Header() {
         {/* Navigation Bar */}
         <div className="bg-[#ef7d00] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ul className={`flex items-center font-bold uppercase tracking-wider overflow-x-auto overflow-visible whitespace-nowrap scrollbar-none transition-all duration-300 ${sticky ? 'text-[11px] sm:text-[11px]' : 'text-[13px] sm:text-[13px] text-[11px]'}`}>
+            <ul className={`flex items-center font-bold uppercase tracking-wider overflow-x-auto overflow-visible whitespace-nowrap scrollbar-none ${sticky ? 'text-[11px] sm:text-[11px]' : 'text-[13px] sm:text-[13px] text-[11px]'}`}>
               {/* Каталог */}
               <li className="flex-1 flex justify-center">
                 <DropdownItem
                   label={
-                    <Link to="/catalog" className={`flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-all duration-300 w-full ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-2 py-4 px-3 sm:px-6'}`}>
+                    <Link to="/catalog" className={`flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 w-full ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-2 py-4 px-3 sm:px-6'}`}>
                       <Menu className={`shrink-0 transition-all duration-300 ${sticky ? 'w-4 h-4' : 'w-5 h-5'}`} />
                       <span>КАТАЛОГ</span>
                     </Link>
@@ -211,7 +211,7 @@ export default function Header() {
 
               {/* Акции */}
               <li className="flex-1 flex justify-center">
-                <Link to="/aktsii" className={`flex items-center justify-center hover:bg-[#d66f00] transition-all duration-300 w-full ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-1.5 py-4 px-3 sm:px-6'}`}>
+                <Link to="/aktsii" className={`flex items-center justify-center hover:bg-[#d66f00] transition-colors duration-300 w-full ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-1.5 py-4 px-3 sm:px-6'}`}>
                   <Zap className={`fill-white shrink-0 transition-all duration-300 ${sticky ? 'w-3 h-3' : 'w-4 h-4'}`} />
                   <span>АКЦИИ</span>
                 </Link>
@@ -221,7 +221,7 @@ export default function Header() {
               <li className="flex-1 flex justify-center">
                 <DropdownItem
                   label={
-                    <Link to="/kak-zakazat" className={`hover:bg-[#d66f00] transition-all duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КАК ЗАКАЗАТЬ</Link>
+                    <Link to="/kak-zakazat" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КАК ЗАКАЗАТЬ</Link>
                   }
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -243,7 +243,7 @@ export default function Header() {
               <li className="flex-1 flex justify-center">
                 <DropdownItem
                   label={
-                    <Link to="/klientam" className={`hover:bg-[#d66f00] transition-all duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КЛИЕНТАМ</Link>
+                    <Link to="/klientam" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КЛИЕНТАМ</Link>
                   }
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -265,7 +265,7 @@ export default function Header() {
               <li className="flex-1 flex justify-center">
                 <DropdownItem
                   label={
-                    <Link to="/o-kompanii" className={`hover:bg-[#d66f00] transition-all duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>О КОМПАНИИ</Link>
+                    <Link to="/o-kompanii" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>О КОМПАНИИ</Link>
                   }
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -285,7 +285,7 @@ export default function Header() {
 
               {/* Контакты */}
               <li className="flex-1 flex justify-center">
-                <Link to="/kontakty" className={`hover:bg-[#d66f00] transition-all duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КОНТАКТЫ</Link>
+                <Link to="/kontakty" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КОНТАКТЫ</Link>
               </li>
             </ul>
           </div>
