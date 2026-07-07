@@ -4,7 +4,7 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 const contacts = [
   { icon: <Phone className="w-5 h-5" />, title: 'Телефон', value: '+7 (701) 309-9969', href: 'tel:+77013099969' },
   { icon: <Mail className="w-5 h-5" />, title: 'E-mail', value: 'b23almas@gmail.com', href: 'mailto:b23almas@gmail.com' },
-  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Республика Казахстан' },
+  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Алматы қ., Асыл-Арман 20' },
   { icon: <Clock className="w-5 h-5" />, title: 'Режим работы', value: 'Пн–Пт: 9:00 – 18:00' },
 ];
 
@@ -47,13 +47,7 @@ export default function Kontakty() {
         </div>
       </div>
 
-      <div className="bg-[#f9f9f9] rounded-lg p-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Реквизиты</h2>
-        <div className="text-sm text-gray-600 space-y-1.5">
-          <p><span className="text-gray-400">ИП:</span> БАЙҒОЖИНОВ</p>
-          <p className="text-gray-400 mt-3 text-xs">Для уточнения полных реквизитов и выставления счёта свяжитесь с нами по телефону.</p>
-        </div>
-      </div>
+
     </div>
   );
 }
