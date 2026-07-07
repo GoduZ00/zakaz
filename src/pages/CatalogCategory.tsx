@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
@@ -59,8 +59,12 @@ export default function CatalogCategory() {
   const [products, setProducts] = useState<Product[]>([]);
   const [activeSub, setActiveSub] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState('price_asc');
+  const [priceMin, setPriceMin] = useState<number>(0);
+  const [priceMax, setPriceMax] = useState<number>(Infinity);
   const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showFilter, setShowFilter] = useState(true);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ sort: true, price: true });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -106,9 +110,21 @@ export default function CatalogCategory() {
     })();
   }, [categoryId]);
 
-  const filteredProducts = activeSub
+  const allPrices = useMemo(() => products.map((p) => p.price), [products]);
+  const globalMin = useMemo(() => (allPrices.length ? Math.min(...allPrices) : 0), [allPrices]);
+  const globalMax = useMemo(() => (allPrices.length ? Math.max(...allPrices) : 0), [allPrices]);
+
+  useEffect(() => {
+    if (products.length) {
+      setPriceMin(globalMin);
+      setPriceMax(globalMax);
+    }
+  }, [globalMin, globalMax, products.length]);
+
+  const filteredProducts = (activeSub
     ? products.filter((p) => p.subcategory_id === activeSub)
-    : products;
+    : products
+  ).filter((p) => p.price >= priceMin && p.price <= priceMax);
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy === 'price_asc') return a.price - b.price;
@@ -161,30 +177,114 @@ export default function CatalogCategory() {
         <h1 className="text-2xl font-bold text-gray-900 mb-7">{category.name}</h1>
 
         <div className="flex gap-8">
-          {/* Sidebar */}
+          {/* Sidebar — Filter */}
           <aside className="w-64 shrink-0 hidden lg:block">
-            <div className="bg-white border border-gray-200 rounded-sm">
-              {subcategories.length > 0 && (
-                <div className="border-b border-gray-200 last:border-b-0">
-                  <div className="block px-4 py-3 text-sm font-medium bg-[#ef7d00] text-white">{category.name}</div>
-                  <ul className="py-1">
-                    {subcategories.map((sub) => (
-                      <li key={sub.id}>
-                        <button
-                          onClick={() => handleSubClick(sub.id)}
-                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                            activeSub === sub.id
-                              ? 'text-[#ef7d00] font-medium'
-                              : 'text-gray-600 hover:text-[#ef7d00]'
-                          }`}
-                        >
-                          {sub.name}
+            <div className="filter-compact-block swipeignore">
+              <div className="bx_filter bx_filter_vertical compact swipeignore">
+                <div className="bx_filter_section bg-white border border-gray-200 rounded-sm">
+                  {/* Title */}
+                  <div className="bx_filter_parameters_box title px-4 py-3 border-b border-gray-200">
+                    <div className="flex items-center justify-between" onClick={() => setShowFilter(!showFilter)}>
+                      <div className="flex items-center gap-2 text-sm font-bold uppercase text-gray-800 cursor-pointer">
+                        <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                          <path d="M10.6 0H1.4C0.7 0 0.2 0.7 0.5 1.3L4 5.4V8.5C4 8.8 4.2 9 4.5 9.2L6.5 10C7 10.2 7.5 9.8 7.5 9.3V5.4L11.5 1.3C11.8 0.7 11.3 0 10.6 0Z" fill="currentColor"/>
+                        </svg>
+                        <span>Фильтр</span>
+                      </div>
+                      <button onClick={() => setShowFilter(!showFilter)} className="text-gray-400 hover:text-gray-600">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                          <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  {showFilter && (
+                    <>
+                      {/* Subcategories */}
+                      {subcategories.length > 0 && (
+                        <div className="bx_filter_parameters_box px-4 py-3 border-b border-gray-200">
+                          <div className="text-sm font-medium text-gray-800 mb-2">{category.name}</div>
+                          <ul className="space-y-0.5">
+                            <li>
+                              <button onClick={() => setActiveSub(null)}
+                                className={`w-full text-left px-2 py-1.5 text-xs transition-colors rounded ${!activeSub ? 'text-[#ef7d00] font-medium bg-orange-50' : 'text-gray-600 hover:text-[#ef7d00]'}`}>
+                                Все товары
+                              </button>
+                            </li>
+                            {subcategories.map((sub) => (
+                              <li key={sub.id}>
+                                <button onClick={() => handleSubClick(sub.id)}
+                                  className={`w-full text-left px-2 py-1.5 text-xs transition-colors rounded ${activeSub === sub.id ? 'text-[#ef7d00] font-medium bg-orange-50' : 'text-gray-600 hover:text-[#ef7d00]'}`}>
+                                  {sub.name}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Sort */}
+                      <div className="bx_filter_parameters_box px-4 py-3 border-b border-gray-200">
+                        <div className="flex items-center justify-between cursor-pointer" onClick={() => setOpenSections({ ...openSections, sort: !openSections.sort })}>
+                          <div className="text-sm font-medium text-gray-800">Сортировка</div>
+                          <svg className={`w-3 h-3 text-gray-400 transition-transform ${openSections.sort ? 'rotate-0' : '-rotate-90'}`} viewBox="0 0 5 3" fill="currentColor">
+                            <path d="M0 0h5L2.5 3Z"/>
+                          </svg>
+                        </div>
+                        {openSections.sort && (
+                          <div className="mt-2">
+                            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+                              className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]">
+                              <option value="price_asc">По цене (возрастание)</option>
+                              <option value="price_desc">По цене (убывание)</option>
+                            </select>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Price */}
+                      <div className="bx_filter_parameters_box px-4 py-3 border-b border-gray-200">
+                        <div className="flex items-center justify-between cursor-pointer" onClick={() => setOpenSections({ ...openSections, price: !openSections.price })}>
+                          <div className="text-sm font-medium text-gray-800">Цена</div>
+                          <svg className={`w-3 h-3 text-gray-400 transition-transform ${openSections.price ? 'rotate-0' : '-rotate-90'}`} viewBox="0 0 5 3" fill="currentColor">
+                            <path d="M0 0h5L2.5 3Z"/>
+                          </svg>
+                        </div>
+                        {openSections.price && (
+                          <div className="mt-3">
+                            <div className="flex items-center gap-2">
+                              <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
+                                onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
+                                className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                              <span className="text-gray-400 text-xs">—</span>
+                              <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
+                                onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
+                                className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                            </div>
+                            <div className="relative mt-3 h-6">
+                              <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded"></div>
+                            </div>
+                            <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); }}
+                              className="mt-2 text-xs text-gray-500 hover:text-[#ef7d00] transition-colors">
+                              <svg className="inline w-3 h-3 mr-1" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
+                              Очистить фильтр
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Apply / Reset button */}
+                      <div className="px-4 py-3">
+                        <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setSortBy('price_asc'); setActiveSub(null); }}
+                          className="w-full text-xs bg-[#ef7d00] text-white py-2 rounded hover:bg-[#d66f00] transition-colors">
+                          Показать
                         </button>
-                      </li>
-                    ))}
-                  </ul>
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </aside>
 
