@@ -64,6 +64,7 @@ export default function CatalogCategory() {
   const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [filterInStock, setFilterInStock] = useState(false);
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -284,49 +285,92 @@ export default function CatalogCategory() {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-sm px-4 py-4 mb-6">
-                <div className="flex flex-wrap items-start gap-6">
-                  <div className="min-w-[180px]">
-                    <div className="text-xs font-medium text-gray-700 mb-2">Цена</div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
-                        onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
-                        className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
-                      <span className="text-gray-400 text-xs">—</span>
-                      <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
-                        onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
-                        className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
-                    </div>
-                    {globalMax > globalMin && (
-                      <div className="relative h-6">
-                        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
-                        <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full"
-                          style={{
-                            left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`,
-                            right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%`,
-                          }}></div>
-                        <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
-                          style={{ left: `calc(${((priceMin - globalMin) / (globalMax - globalMin)) * 100}% - 6px)` }}></div>
-                        <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
-                          style={{ left: `calc(${((priceMax - globalMin) / (globalMax - globalMin)) * 100}% - 6px)` }}></div>
+              <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-6">
+                <div className="flex items-center gap-4">
+                  {/* Price filter group */}
+                  <div className="relative">
+                    <button onClick={() => setOpenFilter(openFilter === 'price' ? null : 'price')}
+                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                      Цена
+                    </button>
+                    {openFilter === 'price' && (
+                      <div className="absolute left-0 top-full mt-1 z-20 w-60 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
+                            onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
+                            className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                          <span className="text-gray-400 text-[11px]">—</span>
+                          <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
+                            onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
+                            className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                        </div>
+                        {globalMax > globalMin && (
+                          <div className="relative h-4">
+                            <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
+                            <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full"
+                              style={{
+                                left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`,
+                                right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%`,
+                              }}></div>
+                            <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
+                              style={{ left: `calc(${((priceMin - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
+                            <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
+                              style={{ left: `calc(${((priceMax - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                  <div>
-                    <div className="text-xs font-medium text-gray-700 mb-2">Наличие</div>
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                      <input type="checkbox" checked={filterInStock} onChange={(e) => setFilterInStock(e.target.checked)}
-                        className="w-3.5 h-3.5 accent-[#ef7d00]" />
-                      <span className="text-xs text-gray-600 group-hover:text-gray-800">В наличии</span>
-                    </label>
-                  </div>
-                  <div className="self-end pb-0.5">
-                    <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); }}
-                      className="text-xs text-gray-500 hover:text-[#ef7d00] transition-colors flex items-center gap-1">
-                      <svg className="w-3 h-3" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
-                      Очистить
+
+                  {/* Sticker types filter group */}
+                  <div className="relative">
+                    <button onClick={() => setOpenFilter(openFilter === 'stickers' ? null : 'stickers')}
+                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                      Виды наклеек
                     </button>
+                    {openFilter === 'stickers' && (
+                      <div className="absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5">
+                        {['Стандартные', 'Светоотражающие', 'С люминофором', 'Тематические'].map((s) => (
+                          <label key={s} className="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
+                            <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{s}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Coating filter group */}
+                  <div className="relative">
+                    <button onClick={() => setOpenFilter(openFilter === 'coating' ? null : 'coating')}
+                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                      Покрытие
+                    </button>
+                    {openFilter === 'coating' && (
+                      <div className="absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5">
+                        {['Окрашенные', 'Оцинкованные', 'Нержавеющая сталь', 'Порошковое'].map((c) => (
+                          <label key={c} className="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
+                            <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{c}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* In stock checkbox inline */}
+                  <label className="flex items-center gap-1.5 cursor-pointer group ml-auto">
+                    <input type="checkbox" checked={filterInStock} onChange={(e) => setFilterInStock(e.target.checked)}
+                      className="w-3 h-3 accent-[#ef7d00]" />
+                    <span className="text-[11px] text-gray-500 group-hover:text-gray-700 whitespace-nowrap">В наличии</span>
+                  </label>
+
+                  {/* Reset */}
+                  <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setOpenFilter(null); }}
+                    className="text-[11px] text-gray-400 hover:text-[#ef7d00] transition-colors shrink-0 flex items-center gap-1">
+                    <svg className="w-3 h-3" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
+                    Очистить
+                  </button>
                 </div>
               </div>
 
