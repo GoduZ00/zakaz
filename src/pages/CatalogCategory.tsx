@@ -63,7 +63,6 @@ export default function CatalogCategory() {
   const [priceMax, setPriceMax] = useState<number>(Infinity);
   const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showFilter, setShowFilter] = useState(false);
   const [filterInStock, setFilterInStock] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -243,13 +242,7 @@ export default function CatalogCategory() {
                   <option value="price_asc">По цене (возрастание)</option>
                   <option value="price_desc">По цене (убывание)</option>
                 </select>
-                <button onClick={() => setShowFilter(!showFilter)}
-                  className={`p-1.5 border rounded-sm transition-colors ${showFilter ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'bg-white text-gray-400 hover:text-gray-600 border-gray-300'}`}
-                  title="Фильтр">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-                  </svg>
-                </button>
+
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Товаров: {sortedProducts.length}</span>
@@ -291,8 +284,7 @@ export default function CatalogCategory() {
               </div>
             </div>
 
-            {showFilter && (
-              <div className="bg-white border border-gray-200 rounded-sm px-4 py-4 mb-6">
+            <div className="bg-white border border-gray-200 rounded-sm px-4 py-4 mb-6">
                 <div className="flex flex-wrap items-start gap-6">
                   <div className="min-w-[180px]">
                     <div className="text-xs font-medium text-gray-700 mb-2">Цена</div>
@@ -337,7 +329,6 @@ export default function CatalogCategory() {
                   </div>
                 </div>
               </div>
-            )}
 
             {/* Products */}
             {sortedProducts.length === 0 ? (
