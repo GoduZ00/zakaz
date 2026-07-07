@@ -128,6 +128,7 @@ export default function AdminProducts() {
       stock_status: edit.stock_status || 'in_stock',
       quantity: edit.quantity ?? 0,
       description: edit.description || null,
+      characteristics: edit.characteristics || [],
       is_active: edit.is_active ?? true,
       subcategory_id: edit.subcategory_id || null,
       images: edit.images || [],
@@ -147,7 +148,7 @@ export default function AdminProducts() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Товары</h1>
-        <button onClick={() => setEdit({ name: '', price: 0, stock_status: 'in_stock', quantity: 0, is_active: true, images: [], sku_variants: [] })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
+        <button onClick={() => setEdit({ name: '', price: 0, stock_status: 'in_stock', quantity: 0, is_active: true, images: [], sku_variants: [], characteristics: [] })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
       </div>
 
       {edit && (
@@ -292,6 +293,30 @@ export default function AdminProducts() {
                 <label className="text-xs text-gray-500 mb-1 block">Описание</label>
                 <textarea rows={4} value={edit.description || ''} onChange={(e) => setEdit({ ...edit, description: e.target.value })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              </div>
+
+              <div>
+                <label className="text-xs text-gray-500 mb-1 block">Характеристики</label>
+                {(edit.characteristics || []).map((c, i) => (
+                  <div key={i} className="flex items-center gap-2 mb-1.5">
+                    <input placeholder="Название" value={c.label} onChange={(e) => {
+                      const chars = [...(edit.characteristics || [])];
+                      chars[i] = { ...chars[i], label: e.target.value };
+                      setEdit({ ...edit!, characteristics: chars });
+                    }} className="w-2/5 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
+                    <input placeholder="Значение" value={c.value} onChange={(e) => {
+                      const chars = [...(edit.characteristics || [])];
+                      chars[i] = { ...chars[i], value: e.target.value };
+                      setEdit({ ...edit!, characteristics: chars });
+                    }} className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
+                    <button type="button" onClick={() => {
+                      setEdit({ ...edit!, characteristics: (edit.characteristics || []).filter((_, j) => j !== i) });
+                    }} className="shrink-0 text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => {
+                  setEdit({ ...edit!, characteristics: [...(edit.characteristics || []), { label: '', value: '' }] });
+                }} className="text-xs text-[#ef7d00] hover:underline">+ Добавить характеристику</button>
               </div>
 
               <label className="flex items-center gap-2 text-sm">

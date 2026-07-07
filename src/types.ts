@@ -1,3 +1,8 @@
+export interface Characteristic {
+  label: string;
+  value: string;
+}
+
 export interface Product {
   id: number;
   subcategory_id: number | null;
@@ -5,6 +10,7 @@ export interface Product {
   slug: string;
   article: string | null;
   description: string | null;
+  characteristics: Characteristic[];
   price: number;
   price_wholesale: number | null;
   price_opt: number | null;

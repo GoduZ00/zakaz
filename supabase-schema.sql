@@ -27,6 +27,7 @@ CREATE TABLE products (
   slug TEXT NOT NULL UNIQUE,
   article TEXT,
   description TEXT,
+  characteristics JSONB DEFAULT '[]',
   price NUMERIC(10,2) NOT NULL DEFAULT 0,
   price_wholesale NUMERIC(10,2),
   price_opt NUMERIC(10,2),

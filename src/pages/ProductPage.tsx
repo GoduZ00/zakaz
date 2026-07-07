@@ -48,6 +48,7 @@ export default function ProductPage() {
   const [selectedSku, setSelectedSku] = useState<string>('');
   const [qty, setQty] = useState(1);
   const [showOneClick, setShowOneClick] = useState(false);
+  const [tab, setTab] = useState<'desc' | 'chars'>('desc');
 
   useEffect(() => {
     if (!slug) return;
@@ -56,6 +57,7 @@ export default function ProductPage() {
       setProduct(data);
       if (data) {
         setSelectedSku(data.sku_variants?.[0]?.article || '');
+        setTab(data.description ? 'desc' : data.characteristics?.length ? 'chars' : 'desc');
         trackViewed({
           id: String(data.id),
           name: data.name,
@@ -266,11 +268,36 @@ export default function ProductPage() {
                 Купить в 1 клик
               </button>
 
-              {/* Description */}
-              {product.description && (
+              {/* Tabs: Description / Characteristics */}
+              {(product.description || product.characteristics?.length) && (
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Описание</h3>
-                  <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{product.description}</div>
+                  <div className="flex gap-1 mb-4 border-b border-gray-200">
+                    {product.description && (
+                      <button onClick={() => setTab('desc')}
+                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${tab === 'desc' ? 'border-[#ef7d00] text-[#ef7d00]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                        Описание
+                      </button>
+                    )}
+                    {product.characteristics?.length > 0 && (
+                      <button onClick={() => setTab('chars')}
+                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${tab === 'chars' ? 'border-[#ef7d00] text-[#ef7d00]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                        Характеристики
+                      </button>
+                    )}
+                  </div>
+                  {tab === 'desc' && product.description && (
+                    <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{product.description}</div>
+                  )}
+                  {tab === 'chars' && product.characteristics?.length > 0 && (
+                    <div className="divide-y divide-gray-100 border border-gray-200 rounded-sm">
+                      {product.characteristics.map((c, i) => (
+                        <div key={i} className="flex px-4 py-2.5 text-sm even:bg-gray-50">
+                          <span className="w-1/2 text-gray-500">{c.label}</span>
+                          <span className="w-1/2 text-gray-800">{c.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
