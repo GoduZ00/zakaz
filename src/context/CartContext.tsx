@@ -9,6 +9,8 @@ interface CartContextValue {
   updateQuantity: (productId: number, qty: number, article?: string) => void;
   clearCart: () => void;
   total: number;
+  toastMessage: string | null;
+  clearToast: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -24,8 +26,18 @@ function loadCart(): CartItem[] {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(loadCart);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }, [items]);
+
+  useEffect(() => {
+    if (toastMessage) {
+      const t = setTimeout(() => setToastMessage(null), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [toastMessage]);
+
+  const clearToast = useCallback(() => setToastMessage(null), []);
 
   const addItem = useCallback((product: Product, qty = 1, sku?: SkuVariant) => {
     setItems((prev) => {
@@ -41,6 +53,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { product, quantity: qty, sku }];
     });
+    setToastMessage(`«${product.name}» добавлен в корзину`);
   }, []);
 
   const removeItem = useCallback((productId: number, article?: string) => {
@@ -66,7 +79,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const total = items.reduce((s, i) => s + (i.sku?.price ?? i.product.price) * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, count, addItem, removeItem, updateQuantity, clearCart, total }}>
+    <CartContext.Provider value={{ items, count, addItem, removeItem, updateQuantity, clearCart, total, toastMessage, clearToast }}>
       {children}
     </CartContext.Provider>
   );

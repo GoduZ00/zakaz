@@ -11,6 +11,7 @@ import Features from './components/Features';
 import Reviews from './components/Reviews';
 import Footer from './components/Footer';
 import ViewedItems from './components/ViewedItems';
+import CartToast from './components/CartToast';
 import ScrollToTop from './components/ScrollToTop';
 import Catalog from './pages/Catalog';
 import CatalogCategory from './pages/CatalogCategory';
@@ -39,6 +40,7 @@ function Layout({children}: {children: React.ReactNode}) {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Header />
       <main className="flex-grow">{children}</main>
+      <CartToast />
       <ViewedItems />
       <ScrollToTop />
       <Footer />
