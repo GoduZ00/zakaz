@@ -1,6 +1,26 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
-import type { SkuVariant } from '../../types';
+import type { SkuVariant, Characteristic } from '../../types';
+
+interface FilterGroupConfig {
+  name: string;
+  characteristicLabel: string;
+  options?: string[];
+}
+
+const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
+  'napolniteli-dlya-torgovykh-avtomatov': [
+    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы', options: ['28 мм', '32 мм', '34 мм', '45 мм', '53 мм', '58 мм', '100 мм', '48 мм', '65 мм', '75 мм'] },
+    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат', options: ['Игрушка в капсуле', 'Требуется упаковка в капсулу', 'Не требуется упаковка в капсулу'] },
+    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек', options: ['Значки', 'Животные', 'Ластики', 'Лизуны/ Слаймы / Тянучки', 'Украшения', 'Страшилки', 'Техника', 'Прочие', 'Антистресс', 'Наклейки', 'Сквиши', 'Фигурки', 'Фигурки людей'] },
+    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)', options: ['22 мм', '23 мм', '24 мм', '25 мм', '27 мм', '14 мм', 'Порционные'] },
+    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)', options: ['Круглые', 'Фигурные', 'Овальные'] },
+    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)', options: ['Разноцветные', 'Разноцветные с рисунком', 'Одноцветные', 'Одноцветные с рисунком'] },
+    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)', options: ['Без начинки', 'С начинкой', 'Желейные', 'С жевательным центром'] },
+    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)', options: ['25 мм', '27 мм', '32 мм', '45 мм'] },
+    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)', options: ['Круглые', 'Фигурные'] },
+  ],
+};
 
 interface Product {
   id: number;
@@ -17,6 +37,7 @@ interface Product {
   subcategory_id: number | null;
   images: string[];
   sku_variants: SkuVariant[];
+  characteristics: Characteristic[];
 }
 
 interface SubCat {
@@ -27,11 +48,27 @@ interface SubCat {
   category_id: number;
 }
 
+interface CatInfo {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CatInfo[]>([]);
   const [subcategories, setSubcategories] = useState<SubCat[]>([]);
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState<Partial<Product> | null>(null);
+
+  const availableFilterGroups = useMemo((): FilterGroupConfig[] => {
+    if (!edit?.subcategory_id) return [];
+    const subcat = subcategories.find((s) => s.id === edit.subcategory_id);
+    if (!subcat) return [];
+    const cat = categories.find((c) => c.id === subcat.category_id);
+    if (!cat) return [];
+    return filterConfigByCategory[cat.slug] || [];
+  }, [edit?.subcategory_id, subcategories, categories]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -46,6 +83,9 @@ export default function AdminProducts() {
 
   useEffect(() => {
     fetchProducts();
+    supabase.from('categories').select('id, name, slug').then(({ data: cats }) => {
+      if (cats) setCategories(cats);
+    });
     supabase.from('subcategories').select('id, name, slug, category_id').order('sort_order').then(({ data }) => {
       if (data) {
         supabase.from('categories').select('id, name').then(({ data: cats }) => {
@@ -297,6 +337,23 @@ export default function AdminProducts() {
 
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Характеристики</label>
+                {availableFilterGroups.length > 0 && (
+                  <div className="mb-2 flex flex-wrap gap-1">
+                    {availableFilterGroups.map((fg) => {
+                      const exists = (edit.characteristics || []).some((c) => c.label === fg.characteristicLabel);
+                      return (
+                        <button key={fg.characteristicLabel} type="button" onClick={() => {
+                          if (!exists) {
+                            setEdit({ ...edit!, characteristics: [...(edit.characteristics || []), { label: fg.characteristicLabel, value: '' }] });
+                          }
+                        }}
+                          className={`text-xs px-2 py-1 rounded border transition-colors ${exists ? 'border-green-300 bg-green-50 text-green-700' : 'border-gray-200 text-gray-500 hover:border-[#ef7d00] hover:text-[#ef7d00]'}`}>
+                          + {fg.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
                 {(edit.characteristics || []).map((c, i) => (
                   <div key={i} className="flex items-center gap-2 mb-1.5">
                     <input placeholder="Название" value={c.label} onChange={(e) => {
