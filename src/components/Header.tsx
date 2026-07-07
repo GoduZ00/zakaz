@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -71,7 +71,16 @@ function DropdownItem({ label, children }: { label: React.ReactNode; children: R
 }
 
 export default function Header() {
+  const navigate = useNavigate();
   const { count } = useCart();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) navigate(`/search?q=${encodeURIComponent(q)}`);
+  };
+
   return (
     <header className="w-full font-sans">
       {/* Top Bar */}
@@ -112,11 +121,13 @@ export default function Header() {
           </div>
 
           {/* Search */}
-          <div className="flex-1 min-w-0 max-w-2xl">
+          <form onSubmit={handleSearch} className="flex-1 min-w-0 max-w-2xl">
             <div className="flex border border-gray-100 sm:border-2 rounded-sm overflow-hidden bg-white focus-within:border-gray-300 transition-colors h-9 sm:h-11 shadow-sm">
               <input 
                 type="text" 
-                placeholder="Поиск" 
+                placeholder="Поиск"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-4 py-2 bg-transparent outline-none text-sm placeholder-gray-400"
               />
               <div className="flex items-center bg-white">
@@ -127,12 +138,12 @@ export default function Header() {
                 <div className="px-1 text-gray-400 pointer-events-none">
                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 </div>
-                <button className="px-4 h-full flex items-center text-gray-400 hover:text-orange-500 transition-colors ml-2">
+                <button type="submit" className="px-4 h-full flex items-center text-gray-400 hover:text-orange-500 transition-colors ml-2">
                   <Search className="w-5 h-5" />
                 </button>
               </div>
             </div>
-          </div>
+          </form>
 
           {/* Icons */}
           <div className="flex items-center gap-2 sm:gap-6 shrink-0">

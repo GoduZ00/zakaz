@@ -21,6 +21,7 @@ import CartPage from './pages/CartPage';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import KakZakazat from './pages/KakZakazat';
+import SearchPage from './pages/SearchPage';
 import Klientam from './pages/Klientam';
 import OKompanii from './pages/OKompanii';
 import Kontakty from './pages/Kontakty';
@@ -72,6 +73,7 @@ export default function App() {
         <Route path="/catalog/:categoryId" element={<Layout><CatalogCategory /></Layout>} />
         <Route path="/product/:slug" element={<Layout><ProductPage /></Layout>} />
         <Route path="/aktsii" element={<Layout><Aktsii /></Layout>} />
+        <Route path="/search" element={<Layout><SearchPage /></Layout>} />
         <Route path="/kak-zakazat" element={<Layout><KakZakazat /></Layout>} />
         <Route path="/klientam" element={<Layout><Klientam /></Layout>} />
         <Route path="/o-kompanii" element={<Layout><OKompanii /></Layout>} />
