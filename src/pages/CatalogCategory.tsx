@@ -9,20 +9,6 @@ interface FilterGroupConfig {
   characteristicLabel: string;
 }
 
-const filterConfigByCategory: Record<string, FilterGroupConfig[] | null> = {
-  'napolniteli-dlya-torgovykh-avtomatov': [
-    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы' },
-    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат' },
-    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек' },
-    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)' },
-    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)' },
-    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)' },
-    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)' },
-    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)' },
-    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)' },
-  ],
-};
-
 function getCharOptions(products: Product[], label: string): string[] {
   const values = new Set<string>();
   for (const p of products) {
@@ -96,11 +82,9 @@ export default function CatalogCategory() {
   const [filterStickers, setFilterStickers] = useState<string[]>([]);
   const [filterCoating, setFilterCoating] = useState<string[]>([]);
   const [charFilters, setCharFilters] = useState<Record<string, string[]>>({});
+  const [filterGroups, setFilterGroups] = useState<FilterGroupConfig[] | null>(null);
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const categorySlug = category?.slug || '';
-  const filterGroups = filterConfigByCategory[categorySlug];
 
   const charOptions = useMemo(() => {
     if (!filterGroups) return {} as Record<string, string[]>;
@@ -141,6 +125,9 @@ export default function CatalogCategory() {
       setActiveSub(activeSubId);
 
       if (cat) {
+        const { data: filterData } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('category_id', cat.id).order('sort_order');
+        setFilterGroups(filterData?.length ? filterData : null);
+
         const subIds = subs.map((s) => s.id);
         let query = supabase.from('products').select('*').in('subcategory_id', subIds).eq('is_active', true);
         if (activeSubId) {
@@ -148,6 +135,8 @@ export default function CatalogCategory() {
         }
         const { data: prodData } = await query.order('id', { ascending: false });
         setProducts(prodData || []);
+      } else {
+        setFilterGroups(null);
       }
 
       setLoading(false);
