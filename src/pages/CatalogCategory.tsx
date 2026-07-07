@@ -293,30 +293,34 @@ export default function CatalogCategory() {
                       className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Цена
                     </button>
-                    <div className={`absolute left-0 top-full mt-1 z-20 w-60 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-2 transition-all duration-200 ease-out ${openFilter === 'price' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                    <div className={`absolute left-0 top-full mt-1 z-20 w-64 bg-white border border-gray-200 rounded-sm shadow-lg p-4 space-y-3 transition-all duration-200 ease-out ${openFilter === 'price' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                      <div className="flex items-center justify-between text-xs text-gray-700">
+                        <span>{priceMin} ₸</span>
+                        <span>{priceMax} ₸</span>
+                      </div>
+                      <div className="relative h-6">
+                        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
+                        <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none"
+                          style={{
+                            left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`,
+                            right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%`,
+                          }}></div>
+                        <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
+                          value={priceMin}
+                          onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax - 1))}
+                          className="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-auto cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:bg-[#ef7d00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:bg-[#ef7d00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow [&::-moz-range-thumb]:cursor-pointer" />
+                        <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
+                          value={priceMax}
+                          onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin + 1))}
+                          className="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-auto cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:bg-[#ef7d00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:bg-[#ef7d00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow [&::-moz-range-thumb]:cursor-pointer" />
+                      </div>
                       <div className="flex items-center gap-2">
-                        <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
-                          onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
+                        <input type="number" value={priceMin} onChange={(e) => setPriceMin(Math.min(Number(e.target.value) || globalMin, priceMax - 1))}
                           className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
                         <span className="text-gray-400 text-[11px]">—</span>
-                        <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
-                          onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
+                        <input type="number" value={priceMax} onChange={(e) => setPriceMax(Math.max(Number(e.target.value) || globalMax, priceMin + 1))}
                           className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
                       </div>
-                      {globalMax > globalMin && (
-                        <div className="relative h-4">
-                          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
-                          <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full"
-                            style={{
-                              left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`,
-                              right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%`,
-                            }}></div>
-                          <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
-                            style={{ left: `calc(${((priceMin - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
-                          <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
-                            style={{ left: `calc(${((priceMax - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
-                        </div>
-                      )}
                     </div>
                   </div>
 
