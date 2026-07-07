@@ -33,7 +33,7 @@ export default function OKompanii() {
           </p>
         </div>
         <div className="bg-[#f9f9f9] rounded-lg p-8 flex items-center justify-center">
-          <img src="/images/categories/Gemini_Generated_Image_tozt84tozt84tozt.png" alt="О компании" className="rounded-lg max-w-full h-auto" />
+          <img src="/images/categories/10.png" alt="О компании" className="rounded-lg max-w-full h-auto" />
         </div>
       </div>
 
