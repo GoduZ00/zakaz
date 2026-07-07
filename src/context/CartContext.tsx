@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { Product, CartItem, SkuVariant } from '../types';
 
+interface ToastInfo {
+  text: string;
+  image?: string;
+}
+
 interface CartContextValue {
   items: CartItem[];
   count: number;
@@ -9,8 +14,9 @@ interface CartContextValue {
   updateQuantity: (productId: number, qty: number, article?: string) => void;
   clearCart: () => void;
   total: number;
-  toastMessage: string | null;
+  toast: ToastInfo | null;
   clearToast: () => void;
+  showToast: (text: string, image?: string) => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -26,18 +32,19 @@ function loadCart(): CartItem[] {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(loadCart);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toast, setToast] = useState<ToastInfo | null>(null);
 
   useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }, [items]);
 
   useEffect(() => {
-    if (toastMessage) {
-      const t = setTimeout(() => setToastMessage(null), 3000);
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 3000);
       return () => clearTimeout(t);
     }
-  }, [toastMessage]);
+  }, [toast]);
 
-  const clearToast = useCallback(() => setToastMessage(null), []);
+  const clearToast = useCallback(() => setToast(null), []);
+  const showToast = useCallback((text: string, image?: string) => setToast({ text, image }), []);
 
   const addItem = useCallback((product: Product, qty = 1, sku?: SkuVariant) => {
     setItems((prev) => {
@@ -53,7 +60,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { product, quantity: qty, sku }];
     });
-    setToastMessage(`«${product.name}» добавлен в корзину`);
+    setToast({ text: `«${product.name}» добавлен в корзину`, image: product.images?.[0] });
   }, []);
 
   const removeItem = useCallback((productId: number, article?: string) => {
@@ -79,7 +86,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const total = items.reduce((s, i) => s + (i.sku?.price ?? i.product.price) * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, count, addItem, removeItem, updateQuantity, clearCart, total, toastMessage, clearToast }}>
+    <CartContext.Provider value={{ items, count, addItem, removeItem, updateQuantity, clearCart, total, toast, clearToast, showToast }}>
       {children}
     </CartContext.Provider>
   );

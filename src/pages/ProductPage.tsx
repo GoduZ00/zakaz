@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { trackViewed } from '../components/ViewedItems';
 import type { Product, SkuVariant } from '../types';
 
@@ -41,7 +42,9 @@ function OneClickModal({ price, onClose }: { price: number; onClose: () => void 
 
 export default function ProductPage() {
   const { slug } = useParams();
-  const { addItem } = useCart();
+  const { addItem, showToast } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
@@ -49,6 +52,9 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1);
   const [showOneClick, setShowOneClick] = useState(false);
   const [tab, setTab] = useState<'desc' | 'chars'>('desc');
+  const [inWish, setInWish] = useState(false);
+  const [inCompare, setInCompare] = useState(false);
+  const [wishLoading, setWishLoading] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -69,6 +75,53 @@ export default function ProductPage() {
       setLoading(false);
     });
   }, [slug]);
+
+  useEffect(() => {
+    if (!user || !product) { setInWish(false); return; }
+    supabase.from('wishlists').select('id').eq('user_id', user.id).eq('product_id', product.id).maybeSingle().then(({ data }) => {
+      setInWish(!!data);
+    });
+  }, [user, product]);
+
+  useEffect(() => {
+    if (!product) { setInCompare(false); return; }
+    const stored = localStorage.getItem('zakaz_compare');
+    if (stored) {
+      const ids: number[] = JSON.parse(stored);
+      setInCompare(ids.includes(product.id));
+    }
+  }, [product]);
+
+  const toggleWish = async () => {
+    if (!user) { navigate('/login'); return; }
+    if (!product) return;
+    setWishLoading(true);
+    if (inWish) {
+      await supabase.from('wishlists').delete().eq('user_id', user.id).eq('product_id', product.id);
+      setInWish(false);
+      showToast('«' + product.name + '» удалён из избранного');
+    } else {
+      await supabase.from('wishlists').insert({ user_id: user.id, product_id: product.id });
+      setInWish(true);
+      showToast('«' + product.name + '» добавлен в избранное', product.images?.[0]);
+    }
+    setWishLoading(false);
+  };
+
+  const toggleCompare = () => {
+    if (!product) return;
+    const stored = localStorage.getItem('zakaz_compare');
+    let ids: number[] = stored ? JSON.parse(stored) : [];
+    if (inCompare) {
+      ids = ids.filter((id) => id !== product.id);
+      showToast('«' + product.name + '» удалён из сравнения');
+    } else {
+      ids.push(product.id);
+      showToast('«' + product.name + '» добавлен к сравнению');
+    }
+    localStorage.setItem('zakaz_compare', JSON.stringify(ids));
+    setInCompare(!inCompare);
+  };
 
   const prevImg = () => setActiveImg((p) => (p > 0 ? p - 1 : (images?.length || 1) - 1));
   const nextImg = () => setActiveImg((p) => (p < (images?.length || 1) - 1 ? p + 1 : 0));
@@ -161,12 +214,22 @@ export default function ProductPage() {
               {/* Toolbar */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-200 rounded-sm hover:border-gray-300 transition-colors">
-                    <svg width="16" height="13" viewBox="0 0 16 13" fill="none"><path d="M8 12.4L2.1 6.5C0.6 5 0.5 2.8 2 1.3C3.5 -0.2 5.7 -0.1 7.2 1.3L8 2.1L8.8 1.3C10.3 -0.2 12.5 -0.3 14 1.2C15.5 2.7 15.4 4.9 13.9 6.4L8 12.4Z" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>
+                  <button onClick={toggleWish} disabled={wishLoading}
+                    className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded-sm transition-colors ${
+                      inWish
+                        ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-100'
+                        : 'border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}>
+                    <svg width="16" height="13" viewBox="0 0 16 13" fill={inWish ? 'currentColor' : 'none'}><path d="M8 12.4L2.1 6.5C0.6 5 0.5 2.8 2 1.3C3.5 -0.2 5.7 -0.1 7.2 1.3L8 2.1L8.8 1.3C10.3 -0.2 12.5 -0.3 14 1.2C15.5 2.7 15.4 4.9 13.9 6.4L8 12.4Z" stroke={inWish ? 'none' : 'currentColor'} strokeWidth="1.5" fill={inWish ? 'currentColor' : 'none'}/></svg>
                     Отложить
                   </button>
-                  <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-200 rounded-sm hover:border-gray-300 transition-colors">
-                    <svg width="14" height="13" viewBox="0 0 14 13" fill="none"><rect x="1" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5"/><rect x="5.5" y="4" width="3" height="8" rx="1" stroke="currentColor" strokeWidth="1.5"/><rect x="10" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5"/></svg>
+                  <button onClick={toggleCompare}
+                    className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded-sm transition-colors ${
+                      inCompare
+                        ? 'border-[#ef7d00] text-[#ef7d00] bg-orange-50'
+                        : 'border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}>
+                    <svg width="14" height="13" viewBox="0 0 14 13" fill="none"><rect x="1" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill={inCompare ? 'currentColor' : 'none'}/><rect x="5.5" y="4" width="3" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" fill={inCompare ? 'currentColor' : 'none'}/><rect x="10" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill={inCompare ? 'currentColor' : 'none'}/></svg>
                     Сравнить
                   </button>
                 </div>
