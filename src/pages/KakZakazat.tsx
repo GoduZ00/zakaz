@@ -8,7 +8,23 @@ export default function KakZakazat() {
         <span className="mx-2">—</span>
         <span className="text-gray-900">Как заказать</span>
       </nav>
-      <h1 className="text-3xl font-bold text-gray-900">КАК ЗАКАЗАТЬ</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">КАК ЗАКАЗАТЬ</h1>
+
+      <div className="prose prose-gray max-w-3xl text-gray-700 space-y-6">
+        <p className="text-base leading-relaxed">
+          У нас могут приобрести товар как юридические, так и физические лица.
+        </p>
+
+        <p className="text-base leading-relaxed">
+          На сайте доступен заказ, а также справочная информация о стоимости доставки по регионам Казахстана с возможностью выбора удобного для вас способа оплаты: выставлением счета, кредитной картой, наличными. Заказ через корзину доступен как зарегистрированным, так и незарегистрированным пользователям.
+        </p>
+
+        <p className="text-base leading-relaxed">
+          Также вы можете заказать продукцию по телефону{' '}
+          <a href="tel:+77013099969" className="text-[#ef7d00] hover:underline font-medium">+7 (701) 309-9969</a>
+          , или посредством отправки на наш e-mail письма в произвольной форме.
+        </p>
+      </div>
     </div>
   );
 }
