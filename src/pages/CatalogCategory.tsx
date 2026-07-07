@@ -19,6 +19,20 @@ function getCharOptions(products: Product[], label: string): string[] {
   return Array.from(values).sort();
 }
 
+const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
+  'napolniteli-dlya-torgovykh-avtomatov': [
+    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы' },
+    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат' },
+    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек' },
+    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)' },
+    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)' },
+    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)' },
+    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)' },
+    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)' },
+    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)' },
+  ],
+};
+
 interface SubCategory {
   id: number;
   name: string;
@@ -134,6 +148,11 @@ export default function CatalogCategory() {
         if (!filterData || !filterData.length) {
           const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('category_id', cat.id).order('sort_order');
           filterData = data;
+        }
+        // Fall back to hardcoded config if DB has no entries for this category
+        if (!filterData || !filterData.length) {
+          const hardcoded = filterConfigByCategory[cat.slug];
+          if (hardcoded) filterData = hardcoded;
         }
         setFilterGroups(filterData?.length ? filterData : null);
 
