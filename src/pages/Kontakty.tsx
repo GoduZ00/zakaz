@@ -4,7 +4,7 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 const contacts = [
   { icon: <Phone className="w-5 h-5" />, title: 'Телефон', value: '+7 (701) 309-9969', href: 'tel:+77013099969' },
   { icon: <Mail className="w-5 h-5" />, title: 'E-mail', value: 'b23almas@gmail.com', href: 'mailto:b23almas@gmail.com' },
-  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Алматы қ., Асыл-Арман 20' },
+  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Алматы қ., Асыл-Арман 20', href: 'https://go.2gis.com/DjDsW' },
   { icon: <Clock className="w-5 h-5" />, title: 'Режим работы', value: 'Пн–Пт: 9:00 – 18:00' },
 ];
 
@@ -27,7 +27,7 @@ export default function Kontakty() {
               <div>
                 <div className="text-xs text-gray-400 mb-0.5">{c.title}</div>
                 {c.href ? (
-                  <a href={c.href} className="text-sm font-medium text-gray-900 hover:text-[#ef7d00] transition-colors">{c.value}</a>
+                  <a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-sm font-medium text-gray-900 hover:text-[#ef7d00] transition-colors">{c.value}</a>
                 ) : (
                   <div className="text-sm font-medium text-gray-900">{c.value}</div>
                 )}
