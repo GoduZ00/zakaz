@@ -274,7 +274,7 @@ export default function CatalogCategory() {
                       <li key={sub.id}>
                         <button
                           onClick={() => handleSubClick(sub.id)}
-                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors break-words ${
                             activeSub === sub.id
                               ? 'text-[#ef7d00] font-medium'
                               : 'text-gray-600 hover:text-[#ef7d00]'
@@ -310,7 +310,7 @@ export default function CatalogCategory() {
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <span className="text-xs font-medium text-gray-800 leading-tight">{sub.name}</span>
+                    <span className="text-xs font-medium text-gray-800 leading-tight break-words hyphens-auto">{sub.name}</span>
                   </Link>
                 ))}
               </div>
@@ -513,9 +513,9 @@ export default function CatalogCategory() {
 
               {/* Mobile filter drawer */}
               {showMobileFilters && (
-                <div className="fixed inset-0 z-50 lg:hidden">
+                <div className="fixed inset-0 z-50 lg:hidden flex items-center justify-center">
                   <div className="absolute inset-0 bg-black/40" onClick={() => setShowMobileFilters(false)} />
-                  <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-xl overflow-y-auto">
+                  <div className="relative w-[90vw] max-w-md max-h-[90vh] bg-white shadow-xl rounded-lg overflow-y-auto">
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
                       <h2 className="text-sm font-bold text-gray-900">Фильтры</h2>
                       <button onClick={() => setShowMobileFilters(false)} className="text-gray-400 hover:text-gray-600">
