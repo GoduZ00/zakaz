@@ -288,71 +288,68 @@ export default function CatalogCategory() {
               <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-6">
                 <div className="flex items-center gap-4">
                   {/* Price filter group */}
-                  <div className="relative" onMouseEnter={() => setOpenFilter('price')} onMouseLeave={() => setOpenFilter(null)}>
-                    <button className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                  <div className="relative">
+                    <button onClick={() => setOpenFilter(openFilter === 'price' ? null : 'price')}
+                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'price' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Цена
                     </button>
-                    {openFilter === 'price' && (
-                      <div className="absolute left-0 top-full mt-1 z-20 w-60 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
-                            onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
-                            className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
-                          <span className="text-gray-400 text-[11px]">—</span>
-                          <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
-                            onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
-                            className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
-                        </div>
-                        {globalMax > globalMin && (
-                          <div className="relative h-4">
-                            <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
-                            <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full"
-                              style={{
-                                left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`,
-                                right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%`,
-                              }}></div>
-                            <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
-                              style={{ left: `calc(${((priceMin - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
-                            <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
-                              style={{ left: `calc(${((priceMax - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
-                          </div>
-                        )}
+                    <div className={`absolute left-0 top-full mt-1 z-20 w-60 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-2 transition-all duration-200 ease-out ${openFilter === 'price' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                      <div className="flex items-center gap-2">
+                        <input type="number" placeholder={String(globalMin)} value={priceMin === globalMin ? '' : priceMin}
+                          onChange={(e) => setPriceMin(e.target.value ? Number(e.target.value) : globalMin)}
+                          className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                        <span className="text-gray-400 text-[11px]">—</span>
+                        <input type="number" placeholder={String(globalMax)} value={priceMax === globalMax ? '' : priceMax}
+                          onChange={(e) => setPriceMax(e.target.value ? Number(e.target.value) : globalMax)}
+                          className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
                       </div>
-                    )}
+                      {globalMax > globalMin && (
+                        <div className="relative h-4">
+                          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
+                          <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full"
+                            style={{
+                              left: `${((priceMin - globalMin) / (globalMax - globalMin)) * 100}%`,
+                              right: `${((globalMax - priceMax) / (globalMax - globalMin)) * 100}%`,
+                            }}></div>
+                          <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
+                            style={{ left: `calc(${((priceMin - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
+                          <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#ef7d00] rounded-full border-2 border-white shadow cursor-pointer"
+                            style={{ left: `calc(${((priceMax - globalMin) / (globalMax - globalMin)) * 100}% - 5px)` }}></div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Sticker types filter group */}
-                  <div className="relative" onMouseEnter={() => setOpenFilter('stickers')} onMouseLeave={() => setOpenFilter(null)}>
-                    <button className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                  <div className="relative">
+                    <button onClick={() => setOpenFilter(openFilter === 'stickers' ? null : 'stickers')}
+                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Виды наклеек
                     </button>
-                    {openFilter === 'stickers' && (
-                      <div className="absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5">
-                        {['Стандартные', 'Светоотражающие', 'С люминофором', 'Тематические'].map((s) => (
-                          <label key={s} className="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
-                            <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{s}</span>
-                          </label>
-                        ))}
-                      </div>
-                    )}
+                    <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'stickers' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                      {['Стандартные', 'Светоотражающие', 'С люминофором', 'Тематические'].map((s) => (
+                        <label key={s} className="flex items-center gap-2 cursor-pointer group">
+                          <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
+                          <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{s}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Coating filter group */}
-                  <div className="relative" onMouseEnter={() => setOpenFilter('coating')} onMouseLeave={() => setOpenFilter(null)}>
-                    <button className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                  <div className="relative">
+                    <button onClick={() => setOpenFilter(openFilter === 'coating' ? null : 'coating')}
+                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
                       Покрытие
                     </button>
-                    {openFilter === 'coating' && (
-                      <div className="absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5">
-                        {['Окрашенные', 'Оцинкованные', 'Нержавеющая сталь', 'Порошковое'].map((c) => (
-                          <label key={c} className="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
-                            <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{c}</span>
-                          </label>
-                        ))}
-                      </div>
-                    )}
+                    <div className={`absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'coating' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                      {['Окрашенные', 'Оцинкованные', 'Нержавеющая сталь', 'Порошковое'].map((c) => (
+                        <label key={c} className="flex items-center gap-2 cursor-pointer group">
+                          <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
+                          <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{c}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
 
                   {/* In stock checkbox inline */}
