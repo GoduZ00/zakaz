@@ -74,10 +74,10 @@ export default function Header() {
   const navigate = useNavigate();
   const { count } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
-  const [sticky, setSticky] = useState(true);
+  const [sticky, setSticky] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setSticky(window.scrollY > 0);
+    const onScroll = () => setSticky(window.scrollY > 36);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -118,51 +118,51 @@ export default function Header() {
 
       <div className={`${sticky ? 'fixed top-0 left-0 right-0 z-50 shadow-md' : ''} bg-white transition-all duration-300`}>
         {/* Middle Bar */}
-        <div className={`bg-white transition-all duration-300 ${sticky ? 'py-1 sm:py-2' : 'py-3 sm:py-5'}`}>
-          <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-row justify-between items-center transition-all duration-300 ${sticky ? 'gap-2 sm:gap-4' : 'gap-3 sm:gap-8'}`}>
+        <div className="bg-white py-3 sm:py-5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-row justify-between items-center gap-3 sm:gap-8">
             {/* Logo */}
             <div className="flex flex-col items-start shrink-0">
-              <Link to="/" className={`font-extrabold tracking-tight whitespace-nowrap transition-all duration-300 ${sticky ? 'text-base sm:text-xl' : 'text-xl sm:text-3xl'}`}>
+              <Link to="/" className="font-extrabold tracking-tight whitespace-nowrap text-xl sm:text-3xl">
                 <span className="text-[#1a3673]">ИП Байғожинов</span><span className="text-[#ef7d00]">.KZ</span>
               </Link>
-              <span className={`text-gray-500 tracking-wider transition-all duration-300 ${sticky ? 'text-[0px] opacity-0 h-0 overflow-hidden' : 'text-[10px] mt-0.5'}`}>ЛУЧШИЕ РЕШЕНИЯ ДЛЯ ВАШЕГО БИЗНЕСА</span>
+              <span className="text-gray-500 tracking-wider text-[10px] mt-0.5">ЛУЧШИЕ РЕШЕНИЯ ДЛЯ ВАШЕГО БИЗНЕСА</span>
             </div>
 
             {/* Search */}
             <form onSubmit={handleSearch} className="flex-1 min-w-0 max-w-2xl">
-              <div className={`flex border border-gray-100 sm:border-2 rounded-sm overflow-hidden bg-white focus-within:border-gray-300 transition-all duration-300 shadow-sm ${sticky ? 'h-7 sm:h-8' : 'h-9 sm:h-11'}`}>
+              <div className="flex border border-gray-100 sm:border-2 rounded-sm overflow-hidden bg-white focus-within:border-gray-300 shadow-sm h-9 sm:h-11">
                 <input 
                   type="text" 
                   placeholder="Поиск"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`flex-1 px-3 py-1 bg-transparent outline-none placeholder-gray-400 transition-all duration-300 ${sticky ? 'text-xs' : 'text-sm'}`}
+                  className="flex-1 px-3 py-1 bg-transparent outline-none placeholder-gray-400 text-sm"
                 />
                 <div className="flex items-center bg-white">
                   <div className="h-4 w-px bg-gray-200 mx-1"></div>
-                  <select className={`bg-transparent border-none outline-none cursor-pointer appearance-none transition-all duration-300 ${sticky ? 'text-xs pl-1 pr-0' : 'text-sm pl-3 pr-1'}`}>
+                  <select className="bg-transparent border-none outline-none cursor-pointer appearance-none text-sm pl-3 pr-1">
                     <option>Каталог</option>
                   </select>
                   <div className="px-1 text-gray-400 pointer-events-none">
                      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                   </div>
-                  <button type="submit" className={`h-full flex items-center text-gray-400 hover:text-orange-500 transition-colors ml-1 ${sticky ? 'px-2' : 'px-4'}`}>
-                    <Search className={`transition-all duration-300 ${sticky ? 'w-3.5 h-3.5' : 'w-5 h-5'}`} />
+                  <button type="submit" className="h-full flex items-center text-gray-400 hover:text-orange-500 transition-colors ml-1 px-4">
+                    <Search className="w-5 h-5" />
                   </button>
                 </div>
               </div>
             </form>
 
             {/* Icons */}
-            <div className={`flex items-center shrink-0 transition-all duration-300 ${sticky ? 'gap-2 sm:gap-3' : 'gap-2 sm:gap-6'}`}>
-              <div className={`flex items-center transition-all duration-300 ${sticky ? 'gap-1 sm:gap-2' : 'gap-2 sm:gap-5'}`}>
+            <div className="flex items-center shrink-0 gap-2 sm:gap-6">
+              <div className="flex items-center gap-2 sm:gap-5">
                 <Link to="/profile" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
-                  <Heart className={`transition-all duration-300 ${sticky ? 'w-4 sm:w-5 h-4 sm:h-5' : 'w-5 sm:w-6 h-5 sm:h-6'}`} />
+                  <Heart className="w-5 sm:w-6 h-5 sm:h-6" />
                 </Link>
               </div>
-              <div className={`bg-gray-200 transition-all duration-300 ${sticky ? 'h-5 sm:h-6 w-px' : 'h-6 sm:h-8 w-px'}`}></div>
+              <div className="bg-gray-200 h-6 sm:h-8 w-px"></div>
               <Link to="/cart" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
-                <ShoppingCart className={`transition-all duration-300 ${sticky ? 'w-5 sm:w-6 h-5 sm:h-6' : 'w-6 sm:w-7 h-6 sm:h-7'}`} />
+                <ShoppingCart className="w-6 sm:w-7 h-6 sm:h-7" />
                 {count > 0 && <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold min-w-[1rem] h-4 flex items-center justify-center rounded-full px-1">{count}</span>}
               </Link>
             </div>
@@ -292,7 +292,7 @@ export default function Header() {
           </div>
         </div>
     </div>
-    {sticky && <div className="h-[88px] sm:h-[100px]" />}
+    {sticky && <div className="h-[92px] sm:h-[120px]" />}
     </header>
   );
 }
