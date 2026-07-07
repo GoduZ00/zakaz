@@ -3,7 +3,7 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
 const contacts = [
   { icon: <Phone className="w-5 h-5" />, title: 'Телефон', value: '+7 (701) 309-9969', href: 'tel:+77013099969' },
-  { icon: <Mail className="w-5 h-5" />, title: 'E-mail', value: 'info@', href: 'mailto:info@' },
+  { icon: <Mail className="w-5 h-5" />, title: 'E-mail', value: 'b23almas@gmail.com', href: 'mailto:b23almas@gmail.com' },
   { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Республика Казахстан' },
   { icon: <Clock className="w-5 h-5" />, title: 'Режим работы', value: 'Пн–Пт: 9:00 – 18:00' },
 ];
@@ -41,8 +41,8 @@ export default function Kontakty() {
           <p className="text-sm text-gray-500 leading-relaxed mb-4">
             Вы можете отправить нам письмо в произвольной форме на e-mail, и мы обязательно ответим в рабочее время.
           </p>
-          <a href="mailto:info@" className="inline-flex items-center gap-2 text-sm font-medium text-[#ef7d00] hover:underline">
-            <Mail className="w-4 h-4" /> info@
+          <a href="mailto:b23almas@gmail.com" className="inline-flex items-center gap-2 text-sm font-medium text-[#ef7d00] hover:underline">
+            <Mail className="w-4 h-4" /> b23almas@gmail.com
           </a>
         </div>
       </div>

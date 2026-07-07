@@ -22,7 +22,7 @@ export default function KakZakazat() {
         <p className="text-base leading-relaxed">
           Также вы можете заказать продукцию по телефону{' '}
           <a href="tel:+77013099969" className="text-[#ef7d00] hover:underline font-medium">+7 (701) 309-9969</a>
-          , или посредством отправки на наш e-mail письма в произвольной форме.
+          , или посредством отправки на наш e-mail <a href="mailto:b23almas@gmail.com" className="text-[#ef7d00] hover:underline font-medium">b23almas@gmail.com</a> письма в произвольной форме.
         </p>
       </div>
     </div>
