@@ -7,7 +7,6 @@ const navItems = [
   { label: 'Баннеры', path: '/admin/banners' },
   { label: 'Товары', path: '/admin/products' },
   { label: 'Категории', path: '/admin/categories' },
-  { label: 'Фильтры', path: '/admin/filters' },
   { label: 'Акции', path: '/admin/promotions' },
   { label: 'Заказы', path: '/admin/orders' },
 ];
