@@ -32,8 +32,9 @@ export default function Klientam() {
 
       {/* Payment */}
       <section className="mb-16">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Способы оплаты</h2>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">Как оплатить?</h2>
+        <p className="text-gray-600 mb-4">Вы можете оплатить ваш заказ следующими способами:</p>
+        <div className="grid sm:grid-cols-3 gap-4 mb-4">
           {paymentMethods.map((pm) => (
             <div key={pm.title} className="flex items-center gap-4 bg-[#f9f9f9] rounded-lg p-5">
               <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-[#ef7d00] shrink-0">{pm.icon}</div>
@@ -44,6 +45,7 @@ export default function Klientam() {
             </div>
           ))}
         </div>
+        <p className="text-sm text-gray-500">Цена товара не зависит от способа оплаты.</p>
       </section>
 
       {/* Delivery + Warranty */}
