@@ -37,3 +37,9 @@ CREATE POLICY "Admin delete" ON orders FOR DELETE USING (auth.role() = 'authenti
 CREATE POLICY "Read own profile" ON profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admin insert" ON profiles FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin update" ON profiles FOR UPDATE USING (auth.role() = 'authenticated');
+
+-- Wishlists
+ALTER TABLE wishlists ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users read own wishlist" ON wishlists FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users insert own wishlist" ON wishlists FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users delete own wishlist" ON wishlists FOR DELETE USING (auth.uid() = user_id);

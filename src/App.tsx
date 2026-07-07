@@ -1,6 +1,7 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-import {CartProvider} from './context/CartContext';
+import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Categories from './components/Categories';
@@ -16,6 +17,8 @@ import CatalogCategory from './pages/CatalogCategory';
 import ProductPage from './pages/ProductPage';
 import Aktsii from './pages/Aktsii';
 import CartPage from './pages/CartPage';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
 import KakZakazat from './pages/KakZakazat';
 import Klientam from './pages/Klientam';
 import OKompanii from './pages/OKompanii';
@@ -58,6 +61,7 @@ function Home() {
 
 export default function App() {
   return (
+    <AuthProvider>
     <CartProvider>
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
@@ -70,6 +74,8 @@ export default function App() {
         <Route path="/o-kompanii" element={<Layout><OKompanii /></Layout>} />
         <Route path="/kontakty" element={<Layout><Kontakty /></Layout>} />
         <Route path="/login" element={<Layout><Login /></Layout>} />
+        <Route path="/register" element={<Layout><Register /></Layout>} />
+        <Route path="/profile" element={<Layout><Profile /></Layout>} />
         <Route path="/zvonok" element={<Layout><Zvonok /></Layout>} />
         <Route path="/cart" element={<Layout><CartPage /></Layout>} />
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -83,5 +89,6 @@ export default function App() {
         </Route>
       </Routes>
     </CartProvider>
+    </AuthProvider>
   );
 }

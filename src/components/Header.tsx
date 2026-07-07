@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const catalogItems = [
   {
@@ -40,6 +41,16 @@ const aboutItems = [
   { title: 'Реквизиты', desc: 'Юридическая информация и документы' },
   { title: 'Отзывы', desc: 'Что говорят о нас клиенты' },
 ];
+
+function UserLink() {
+  const { user } = useAuth();
+  return (
+    <Link to={user ? '/profile' : '/login'} className="flex items-center gap-1.5 hover:text-orange-500">
+      <User className="w-4 h-4 text-gray-400" />
+      <span>{user ? user.email?.split('@')[0] : 'ВОЙТИ'}</span>
+    </Link>
+  );
+}
 
 function DropdownItem({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -86,10 +97,7 @@ export default function Header() {
                 <span>Алматы қ. Асыл-Арман 20</span>
               </a>
             </div>
-            <Link to="/login" className="flex items-center gap-1.5 hover:text-orange-500">
-              <User className="w-4 h-4 text-gray-400" />
-              <span>ВОЙТИ</span>
-            </Link>
+            <UserLink />
           </div>
         </div>
       </div>
@@ -135,10 +143,10 @@ export default function Header() {
                 <BarChart2 className="w-6 h-6" />
                 <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
               </button>
-              <button className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
+              <Link to="/profile" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
                 <Heart className="w-6 h-6" />
                 <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
-              </button>
+              </Link>
             </div>
             <div className="h-8 w-px bg-gray-200"></div>
             <Link to="/cart" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">

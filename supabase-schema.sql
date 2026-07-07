@@ -76,6 +76,15 @@ CREATE TABLE profiles (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Wishlists (for client users)
+CREATE TABLE wishlists (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, product_id)
+);
+
 -- Seed categories
 INSERT INTO categories (name, slug, sort_order) VALUES
   ('Механические торговые автоматы', 'mekhanicheskie_torgovye_avtomaty_catalog', 1),

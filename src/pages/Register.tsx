@@ -2,22 +2,32 @@ import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
+    if (password !== confirm) { setError('Пароли не совпадают'); return; }
+    if (password.length < 6) { setError('Пароль должен быть минимум 6 символов'); return; }
     setSubmitting(true);
-    const { error: err } = await signIn(email, password);
+    const { error: err } = await signUp(email, password);
     setSubmitting(false);
-    if (err) setError(err.message === 'Invalid login credentials' ? 'Неверный email или пароль' : err.message);
-    else navigate('/profile');
+    if (err) setError(err.message);
+    else {
+      setSuccess('Регистрация прошла успешно! Проверьте вашу почту для подтверждения.');
+      setEmail('');
+      setPassword('');
+      setConfirm('');
+    }
   };
 
   return (
@@ -25,23 +35,26 @@ export default function Login() {
       <nav className="text-sm text-gray-500 mb-8">
         <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
         <span className="mx-2">—</span>
-        <span className="text-gray-900">Вход</span>
+        <span className="text-gray-900">Регистрация</span>
       </nav>
       <div className="max-w-sm mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Вход</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Регистрация</h1>
         {error && <div className="bg-red-50 text-red-600 text-sm p-3 rounded mb-4 border border-red-200">{error}</div>}
+        {success && <div className="bg-green-50 text-green-700 text-sm p-3 rounded mb-4 border border-green-200">{success}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}
             className="w-full border border-gray-300 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:border-[#ef7d00]" required />
           <input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-gray-300 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:border-[#ef7d00]" required />
+          <input type="password" placeholder="Подтвердите пароль" value={confirm} onChange={(e) => setConfirm(e.target.value)}
+            className="w-full border border-gray-300 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:border-[#ef7d00]" required />
           <button type="submit" disabled={submitting}
             className="w-full bg-[#ef7d00] text-white py-2.5 text-sm rounded-sm hover:bg-[#d66f00] transition-colors font-medium disabled:opacity-50">
-            {submitting ? 'Вход...' : 'Войти'}
+            {submitting ? 'Регистрация...' : 'Зарегистрироваться'}
           </button>
         </form>
         <p className="text-sm text-gray-500 text-center mt-5">
-          Нет аккаунта? <Link to="/register" className="text-[#ef7d00] hover:underline">Зарегистрироваться</Link>
+          Уже есть аккаунт? <Link to="/login" className="text-[#ef7d00] hover:underline">Войти</Link>
         </p>
       </div>
     </div>
