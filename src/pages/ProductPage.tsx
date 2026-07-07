@@ -3,7 +3,41 @@ import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { trackViewed } from '../components/ViewedItems';
-import type { Product } from '../types';
+import type { Product, SkuVariant } from '../types';
+
+function OneClickModal({ price, onClose }: { price: number; onClose: () => void }) {
+  const [phone, setPhone] = useState('');
+  const [sent, setSent] = useState(false);
+  const handleSubmit = async () => {
+    if (phone.length < 10) return;
+    await supabase.from('orders').insert({ customer_name: '', customer_phone: phone, total: price, items: [{ one_click: true }] });
+    setSent(true);
+  };
+  return (
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center" onClick={onClose}>
+      <div className="bg-white rounded-lg p-6 w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
+        {sent ? (
+          <div className="text-center py-4">
+            <div className="text-lg font-bold text-green-600 mb-2">Заявка отправлена</div>
+            <p className="text-sm text-gray-500">Мы перезвоним вам в ближайшее время</p>
+            <button onClick={onClose} className="mt-4 bg-gray-100 px-5 py-2 text-sm rounded hover:bg-gray-200">Закрыть</button>
+          </div>
+        ) : (
+          <>
+            <h3 className="text-lg font-bold mb-2">Купить в 1 клик</h3>
+            <p className="text-sm text-gray-500 mb-4">На сумму {price} ₽</p>
+            <input type="tel" placeholder="+7 (___) ___ __-__" value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ''))}
+              className="w-full border border-gray-300 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-[#ef7d00] mb-3" />
+            <button onClick={handleSubmit} disabled={phone.length < 10}
+              className="w-full bg-[#ef7d00] text-white py-2.5 text-sm rounded hover:bg-[#d66f00] disabled:opacity-50 transition-colors">Отправить</button>
+            <button onClick={onClose} className="w-full text-center text-xs text-gray-400 mt-2 hover:underline">Отмена</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function ProductPage() {
   const { slug } = useParams();
@@ -13,6 +47,7 @@ export default function ProductPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [selectedSku, setSelectedSku] = useState<string>('');
   const [qty, setQty] = useState(1);
+  const [showOneClick, setShowOneClick] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -20,6 +55,7 @@ export default function ProductPage() {
     supabase.from('products').select('*').eq('slug', slug).eq('is_active', true).single().then(({ data }) => {
       setProduct(data);
       if (data) {
+        setSelectedSku(data.sku_variants?.[0]?.article || '');
         trackViewed({
           id: String(data.id),
           name: data.name,
@@ -32,8 +68,8 @@ export default function ProductPage() {
     });
   }, [slug]);
 
-  const prevImg = () => setActiveImg((p) => (p > 0 ? p - 1 : images.length - 1));
-  const nextImg = () => setActiveImg((p) => (p < images.length - 1 ? p + 1 : 0));
+  const prevImg = () => setActiveImg((p) => (p > 0 ? p - 1 : (images?.length || 1) - 1));
+  const nextImg = () => setActiveImg((p) => (p < (images?.length || 1) - 1 ? p + 1 : 0));
 
   if (loading) {
     return (
@@ -67,12 +103,14 @@ export default function ProductPage() {
   const imagesLen = images.length;
   const sku = product.sku_variants?.length ? product.sku_variants : null;
   const currentSku = sku ? sku.find((s) => s.article === selectedSku) || sku[0] : undefined;
+  const isActiveByArticle = (article: string) => (selectedSku || sku?.[0]?.article || '') === article;
   const displayPrice = currentSku?.price ?? product.price;
 
   const handleAdd = () => addItem(product, qty, currentSku);
 
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
+      {showOneClick && <OneClickModal price={displayPrice * qty} onClose={() => setShowOneClick(false)} />}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
@@ -84,7 +122,7 @@ export default function ProductPage() {
 
         <div className="bg-white border border-gray-200 rounded-sm">
           <div className="flex flex-col lg:flex-row">
-            {/* Left: Gallery */}
+            {/* Gallery */}
             <div className="w-full lg:w-1/2 p-6 pb-0 lg:pb-6">
               <div className="relative bg-gray-50 rounded-lg flex items-center justify-center h-80 mb-3 group">
                 <img src={images[activeImg]} alt={product.name} className="max-w-full max-h-full object-contain p-4" />
@@ -116,7 +154,7 @@ export default function ProductPage() {
               )}
             </div>
 
-            {/* Right: Info */}
+            {/* Info */}
             <div className="flex-1 p-6 border-t lg:border-t-0 lg:border-l border-gray-200">
               {/* Toolbar */}
               <div className="flex items-center justify-between mb-4">
@@ -137,28 +175,41 @@ export default function ProductPage() {
 
               <h1 className="text-xl font-bold text-gray-900 mb-5">{product.name}</h1>
 
-              {/* SKU */}
+              {/* SKU with images */}
               {sku && (
-                <div className="mb-5 space-y-4">
-                  <div>
-                    <div className="text-sm text-gray-500 mb-2">Выберите вариант:</div>
-                    <div className="flex flex-wrap gap-2">
-                      {sku.map((v) => {
-                        const active = (selectedSku || sku[0].article) === v.article;
-                        return (
-                          <button key={v.article} onClick={() => { setSelectedSku(v.article); setQty(1); }}
-                            className={`px-4 py-2.5 text-sm border rounded-sm transition-all ${
-                              active
-                                ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium shadow-sm'
-                                : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                            }`}>
-                            {v.label}
-                            {v.price != null && <span className="ml-1.5 text-xs opacity-70">({v.price} ₽)</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+                <div className="mb-5 space-y-3">
+                  {(() => {
+                    const groups = groupSkuByLabel(sku);
+                    return groups.map((group, gi) => (
+                      <div key={gi}>
+                        <div className="text-sm text-gray-500 mb-2">
+                          {group.label}
+                          <span className="text-gray-400 mx-1">—</span>
+                          <span className="text-gray-700 font-medium">{group.activeLabel}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {group.items.map((v) => {
+                            const active = isActiveByArticle(v.article);
+                            return (
+                              <button key={v.article} onClick={() => setSelectedSku(v.article)}
+                                className={`flex items-center gap-2 px-3 py-2 text-xs border rounded-sm transition-all ${
+                                  active
+                                    ? 'border-[#ef7d00] bg-orange-50 shadow-sm'
+                                    : 'border-gray-200 hover:border-gray-400'
+                                }`}>
+                                {v.image ? (
+                                  <img src={v.image} className="w-8 h-8 object-contain rounded" />
+                                ) : (
+                                  <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-sm">{v.label[0]}</div>
+                                )}
+                                <span className={active ? 'text-[#ef7d00] font-medium' : 'text-gray-600'}>{v.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ));
+                  })()}
                 </div>
               )}
 
@@ -168,6 +219,9 @@ export default function ProductPage() {
                 <span className={`text-sm font-medium ${product.stock_status === 'in_stock' ? 'text-green-700' : 'text-red-500'}`}>
                   {product.stock_status === 'in_stock' ? 'Есть в наличии' : product.stock_status === 'out_of_stock' ? 'Нет в наличии' : 'Под заказ'}
                 </span>
+                {product.stock_status === 'in_stock' && product.quantity > 0 && (
+                  <span className="text-xs text-gray-400">: {product.quantity} шт</span>
+                )}
               </div>
 
               {/* Price */}
@@ -199,7 +253,7 @@ export default function ProductPage() {
                     <svg width="11" height="1" viewBox="0 0 11 1" fill="currentColor"><rect width="11" height="1" rx="0.5"/></svg>
                   </button>
                   <span className="w-14 h-10 flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">{qty}</span>
-                  <button onClick={() => setQty(qty + 1)} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
+                  <button onClick={() => setQty(Math.min(qty + 1, product.quantity || 999))} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
                     <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor"><path d="M11 5H6V0H5v5H0v1h5v5h1V6h5z"/></svg>
                   </button>
                 </div>
@@ -208,7 +262,7 @@ export default function ProductPage() {
                   В корзину
                 </button>
               </div>
-              <button className="w-full h-10 border border-[#ef7d00] text-[#ef7d00] text-sm rounded-sm hover:bg-orange-50 transition-colors font-medium">
+              <button onClick={() => setShowOneClick(true)} className="w-full h-10 border border-[#ef7d00] text-[#ef7d00] text-sm rounded-sm hover:bg-orange-50 transition-colors font-medium">
                 Купить в 1 клик
               </button>
 
@@ -225,4 +279,19 @@ export default function ProductPage() {
       </div>
     </div>
   );
+}
+
+function groupSkuByLabel(sku: SkuVariant[]): { label: string; activeLabel: string; items: SkuVariant[] }[] {
+  const groups = new Map<string, typeof sku>();
+  for (const v of sku) {
+    const parts = v.label.split(',');
+    const key = parts.length > 1 ? parts[0].trim() : 'Вариант';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(v);
+  }
+  return Array.from(groups.entries()).map(([label, items]) => ({
+    label,
+    activeLabel: items[0]?.label.replace(/^[^,]+,\s*/, '') || items[0]?.label || '',
+    items,
+  }));
 }

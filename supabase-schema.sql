@@ -31,6 +31,7 @@ CREATE TABLE products (
   price_wholesale NUMERIC(10,2),
   price_opt NUMERIC(10,2),
   stock_status TEXT DEFAULT 'in_stock',
+  quantity INTEGER DEFAULT 0,
   images TEXT[] DEFAULT '{}',
   sku_variants JSONB DEFAULT '[]',
   is_active BOOLEAN DEFAULT true,

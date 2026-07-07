@@ -9,6 +9,7 @@ export interface Product {
   price_wholesale: number | null;
   price_opt: number | null;
   stock_status: string;
+  quantity: number;
   images: string[];
   sku_variants: SkuVariant[];
   is_active: boolean;
@@ -20,6 +21,7 @@ export interface SkuVariant {
   article: string;
   label: string;
   price?: number;
+  image?: string;
 }
 
 export interface CartItem {
