@@ -64,6 +64,8 @@ export default function CatalogCategory() {
   const [viewMode, setViewMode] = useState<'grid' | 'list-sm' | 'list-lg'>('grid');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [filterInStock, setFilterInStock] = useState(false);
+  const [filterStickers, setFilterStickers] = useState<string[]>([]);
+  const [filterCoating, setFilterCoating] = useState<string[]>([]);
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -341,7 +343,9 @@ export default function CatalogCategory() {
                     <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'stickers' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
                       {['Стандартные', 'Светоотражающие', 'С люминофором', 'Тематические'].map((s) => (
                         <label key={s} className="flex items-center gap-2 cursor-pointer group">
-                          <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
+                          <input type="checkbox" checked={filterStickers.includes(s)}
+                            onChange={(e) => setFilterStickers(e.target.checked ? [...filterStickers, s] : filterStickers.filter((x) => x !== s))}
+                            className="w-3 h-3 accent-[#ef7d00]" />
                           <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{s}</span>
                         </label>
                       ))}
@@ -357,7 +361,9 @@ export default function CatalogCategory() {
                     <div className={`absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'coating' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
                       {['Окрашенные', 'Оцинкованные', 'Нержавеющая сталь', 'Порошковое'].map((c) => (
                         <label key={c} className="flex items-center gap-2 cursor-pointer group">
-                          <input type="checkbox" className="w-3 h-3 accent-[#ef7d00]" />
+                          <input type="checkbox" checked={filterCoating.includes(c)}
+                            onChange={(e) => setFilterCoating(e.target.checked ? [...filterCoating, c] : filterCoating.filter((x) => x !== c))}
+                            className="w-3 h-3 accent-[#ef7d00]" />
                           <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{c}</span>
                         </label>
                       ))}
@@ -372,7 +378,7 @@ export default function CatalogCategory() {
                   </label>
 
                   {/* Reset */}
-                  <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setOpenFilter(null); }}
+                  <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setFilterStickers([]); setFilterCoating([]); setOpenFilter(null); }}
                     className="text-[11px] text-gray-400 hover:text-[#ef7d00] transition-colors shrink-0 flex items-center gap-1">
                     <svg className="w-3 h-3" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
                     Очистить
