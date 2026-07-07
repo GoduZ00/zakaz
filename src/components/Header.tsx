@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu, Zap, X } from 'lucide-react';
+import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -75,7 +75,7 @@ export default function Header() {
   const { count } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [sticky, setSticky] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
 
   useEffect(() => {
     const onScroll = () => setSticky(window.scrollY > 36);
@@ -166,9 +166,6 @@ export default function Header() {
                 <ShoppingCart className={`transition-all duration-300 ${sticky ? 'w-5 sm:w-6 h-5 sm:h-6' : 'w-6 sm:w-7 h-6 sm:h-7'}`} />
                 {count > 0 && <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold min-w-[1rem] h-4 flex items-center justify-center rounded-full px-1">{count}</span>}
               </Link>
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-gray-400 hover:text-[#ef7d00] transition-colors">
-                {mobileMenuOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7" /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7" />}
-              </button>
             </div>
           </div>
         </div>
@@ -176,12 +173,12 @@ export default function Header() {
         {/* Navigation Bar */}
         <div className="bg-[#ef7d00] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ul className={`hidden lg:flex items-center font-bold uppercase tracking-wider ${sticky ? 'text-[11px]' : 'text-[13px]'}`}>
+            <ul className={`flex items-center font-bold uppercase tracking-wider overflow-x-auto whitespace-nowrap scrollbar-none gap-0 ${sticky ? 'text-[11px]' : 'text-[13px]'}`}>
               {/* Каталог */}
-              <li className="flex-1 flex justify-center">
+              <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/catalog" className={`flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 w-full ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-2 py-4 px-3 sm:px-6'}`}>
+                    <Link to="/catalog" className={`flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-2 py-4 px-3 sm:px-6'}`}>
                       <Menu className={`shrink-0 transition-all duration-300 ${sticky ? 'w-4 h-4' : 'w-5 h-5'}`} />
                       <span>КАТАЛОГ</span>
                     </Link>
@@ -214,18 +211,18 @@ export default function Header() {
               </li>
 
               {/* Акции */}
-              <li className="flex-1 flex justify-center">
-                <Link to="/aktsii" className={`flex items-center justify-center hover:bg-[#d66f00] transition-colors duration-300 w-full ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-1.5 py-4 px-3 sm:px-6'}`}>
+              <li className="flex-none">
+                <Link to="/aktsii" className={`flex items-center justify-center hover:bg-[#d66f00] transition-colors duration-300 ${sticky ? 'gap-1 py-2 px-2 sm:px-3' : 'gap-1.5 py-4 px-3 sm:px-6'}`}>
                   <Zap className={`fill-white shrink-0 transition-all duration-300 ${sticky ? 'w-3 h-3' : 'w-4 h-4'}`} />
                   <span>АКЦИИ</span>
                 </Link>
               </li>
 
               {/* Как заказать */}
-              <li className="flex-1 flex justify-center">
+              <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/kak-zakazat" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КАК ЗАКАЗАТЬ</Link>
+                    <Link to="/kak-zakazat" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КАК ЗАКАЗАТЬ</Link>
                   }
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -244,10 +241,10 @@ export default function Header() {
               </li>
 
               {/* Клиентам */}
-              <li className="flex-1 flex justify-center">
+              <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/klientam" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КЛИЕНТАМ</Link>
+                    <Link to="/klientam" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КЛИЕНТАМ</Link>
                   }
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -266,10 +263,10 @@ export default function Header() {
               </li>
 
               {/* О компании */}
-              <li className="flex-1 flex justify-center">
+              <li className="flex-none">
                 <DropdownItem
                   label={
-                    <Link to="/o-kompanii" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>О КОМПАНИИ</Link>
+                    <Link to="/o-kompanii" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>О КОМПАНИИ</Link>
                   }
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
@@ -288,30 +285,11 @@ export default function Header() {
               </li>
 
               {/* Контакты */}
-              <li className="flex-1 flex justify-center">
-                <Link to="/kontakty" className={`hover:bg-[#d66f00] transition-colors duration-300 w-full text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КОНТАКТЫ</Link>
+              <li className="flex-none">
+                <Link to="/kontakty" className={`hover:bg-[#d66f00] transition-colors duration-300 text-center block ${sticky ? 'py-2 px-2 sm:px-3' : 'py-4 px-3 sm:px-6'}`}>КОНТАКТЫ</Link>
               </li>
             </ul>
 
-            {/* Mobile menu */}
-            {mobileMenuOpen && (
-              <div className="lg:hidden bg-[#d66f00] border-t border-[#c26400] animate-slide-down">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-                  <div className="flex flex-col">
-                    <Link to="/catalog" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 py-3 px-2 text-sm font-bold uppercase tracking-wider hover:bg-[#c26400] rounded-sm">
-                      <Menu className="w-4 h-4" /> КАТАЛОГ
-                    </Link>
-                    <Link to="/aktsii" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 py-3 px-2 text-sm font-bold uppercase tracking-wider hover:bg-[#c26400] rounded-sm">
-                      <Zap className="w-4 h-4 fill-white" /> АКЦИИ
-                    </Link>
-                    <Link to="/kak-zakazat" onClick={() => setMobileMenuOpen(false)} className="py-3 px-2 text-sm font-bold uppercase tracking-wider hover:bg-[#c26400] rounded-sm">КАК ЗАКАЗАТЬ</Link>
-                    <Link to="/klientam" onClick={() => setMobileMenuOpen(false)} className="py-3 px-2 text-sm font-bold uppercase tracking-wider hover:bg-[#c26400] rounded-sm">КЛИЕНТАМ</Link>
-                    <Link to="/o-kompanii" onClick={() => setMobileMenuOpen(false)} className="py-3 px-2 text-sm font-bold uppercase tracking-wider hover:bg-[#c26400] rounded-sm">О КОМПАНИИ</Link>
-                    <Link to="/kontakty" onClick={() => setMobileMenuOpen(false)} className="py-3 px-2 text-sm font-bold uppercase tracking-wider hover:bg-[#c26400] rounded-sm">КОНТАКТЫ</Link>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
     </div>
