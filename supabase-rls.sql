@@ -45,6 +45,13 @@ CREATE POLICY "Users insert own wishlist" ON wishlists FOR INSERT WITH CHECK (au
 CREATE POLICY "Users delete own wishlist" ON wishlists FOR DELETE USING (auth.uid() = user_id);
 
 -- category_filter_groups
+ALTER TABLE news ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read" ON news FOR SELECT USING (true);
+CREATE POLICY "Admin insert" ON news FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Admin update" ON news FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin delete" ON news FOR DELETE USING (auth.role() = 'authenticated');
+
 ALTER TABLE category_filter_groups ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public read" ON category_filter_groups FOR SELECT USING (true);
 CREATE POLICY "Admin insert" ON category_filter_groups FOR INSERT WITH CHECK (auth.role() = 'authenticated');

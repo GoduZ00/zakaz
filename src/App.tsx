@@ -35,6 +35,7 @@ import AdminCategories from './pages/admin/AdminCategories';
 import AdminPromotions from './pages/admin/AdminPromotions';
 import AdminBanners from './pages/admin/AdminBanners';
 import AdminFilterGroups from './pages/admin/AdminFilterGroups';
+import AdminNews from './pages/admin/AdminNews';
 import AdminOrders from './pages/admin/AdminOrders';
 
 function Layout({children}: {children: React.ReactNode}) {
@@ -88,6 +89,7 @@ export default function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="banners" element={<AdminBanners />} />
           <Route path="filters" element={<AdminFilterGroups />} />
+          <Route path="news" element={<AdminNews />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="categories" element={<AdminCategories />} />
           <Route path="promotions" element={<AdminPromotions />} />

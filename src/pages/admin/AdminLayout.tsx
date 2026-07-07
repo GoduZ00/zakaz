@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 const navItems = [
   { label: 'Дашборд', path: '/admin' },
   { label: 'Баннеры', path: '/admin/banners' },
+  { label: 'Новости', path: '/admin/news' },
   { label: 'Товары', path: '/admin/products' },
   { label: 'Категории', path: '/admin/categories' },
   { label: 'Акции', path: '/admin/promotions' },

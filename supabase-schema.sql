@@ -108,6 +108,17 @@ INSERT INTO subcategories (category_id, name, slug, sort_order) VALUES
   (2, 'Бахилы в капсулах', 'bakhily-v-kapsulakh', 5),
   (2, 'Капсулы пустые', 'kapsuly-pustye', 6);
 
+-- News
+CREATE TABLE news (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  date TEXT NOT NULL,
+  image_url TEXT,
+  badge TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Category filter groups (admin-configurable characteristic-based filters)
 -- subcategory_id = specific subcategory, category_id = "Все товары категории"
 CREATE TABLE category_filter_groups (
