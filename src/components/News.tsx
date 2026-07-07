@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 interface NewsItem {
@@ -37,15 +37,21 @@ export default function News() {
               <div key={item.id} className="bg-white rounded overflow-hidden border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer flex flex-col">
                 <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 flex items-center justify-center p-4">
                   {item.image_url ? (
-                    <img src={item.image_url} alt={item.title} className="w-full h-full object-cover rounded mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover rounded mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                    />
                   ) : (
                     <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300 text-4xl font-bold">?</div>
                   )}
                   {item.badge && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                       <span className="bg-white/95 text-gray-900 font-bold px-4 py-2 rounded shadow-sm text-sm text-center transform -rotate-2 border border-gray-100">
-                         {item.badge}
-                       </span>
+                      <span className="bg-white/95 text-gray-900 font-bold px-4 py-2 rounded shadow-sm text-sm text-center transform -rotate-2 border border-gray-100">
+                        {item.badge}
+                      </span>
                     </div>
                   )}
                 </div>

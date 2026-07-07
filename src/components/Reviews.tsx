@@ -19,13 +19,15 @@ export default function Reviews() {
         <button className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-800 transition-colors hidden sm:block">
           <ChevronLeft className="w-8 h-8" />
         </button>
-        
+
         <div className="bg-white">
           <div className="flex flex-col md:flex-row gap-8 lg:gap-16 items-start max-w-4xl mx-auto">
             <div className="flex flex-col items-center md:items-start gap-4 shrink-0 min-w-[200px]">
-              <img 
-                src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=150" 
-                alt="Борис" 
+              <img
+                src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=150"
+                alt="Борис"
+                loading="lazy"
+                decoding="async"
                 className="w-20 h-20 rounded-full object-cover border border-gray-100"
               />
               <div className="text-center md:text-left">
@@ -33,7 +35,7 @@ export default function Reviews() {
                 <div className="text-lg font-medium text-gray-900">Борис</div>
               </div>
             </div>
-            
+
             <div className="flex-1 pt-2">
               <div className="flex mb-6 gap-1">
                 {[1, 2, 3, 4, 5].map(i => (
