@@ -341,7 +341,7 @@ export default function CatalogCategory() {
                       Виды наклеек
                     </button>
                     <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'stickers' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
-                      {['Стандартные', 'Светоотражающие', 'С люминофором', 'Тематические'].map((s) => (
+                      {['Универсальная', 'Индивидуальная', 'Инструкция'].map((s) => (
                         <label key={s} className="flex items-center gap-2 cursor-pointer group">
                           <input type="checkbox" checked={filterStickers.includes(s)}
                             onChange={(e) => setFilterStickers(e.target.checked ? [...filterStickers, s] : filterStickers.filter((x) => x !== s))}
@@ -359,7 +359,7 @@ export default function CatalogCategory() {
                       Покрытие
                     </button>
                     <div className={`absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'coating' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
-                      {['Окрашенные', 'Оцинкованные', 'Нержавеющая сталь', 'Порошковое'].map((c) => (
+                      {['Хромированные', 'Окрашенные'].map((c) => (
                         <label key={c} className="flex items-center gap-2 cursor-pointer group">
                           <input type="checkbox" checked={filterCoating.includes(c)}
                             onChange={(e) => setFilterCoating(e.target.checked ? [...filterCoating, c] : filterCoating.filter((x) => x !== c))}
