@@ -358,23 +358,42 @@ export default function AdminProducts() {
                     })}
                   </div>
                 )}
-                {(edit.characteristics || []).map((c, i) => (
+                {(edit.characteristics || []).map((c, i) => {
+                  const fg = availableFilterGroups.find((g) => g.characteristicLabel === c.label);
+                  const opts = fg?.options || [];
+                  return (
                   <div key={i} className="flex items-center gap-2 mb-1.5">
-                    <input placeholder="Название" value={c.label} onChange={(e) => {
-                      const chars = [...(edit.characteristics || [])];
-                      chars[i] = { ...chars[i], label: e.target.value };
-                      setEdit({ ...edit!, characteristics: chars });
-                    }} className="w-2/5 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
-                    <input placeholder="Значение" value={c.value} onChange={(e) => {
-                      const chars = [...(edit.characteristics || [])];
-                      chars[i] = { ...chars[i], value: e.target.value };
-                      setEdit({ ...edit!, characteristics: chars });
-                    }} className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
+                    {fg ? (
+                      <span className="w-2/5 text-xs text-gray-700 truncate">{c.label}</span>
+                    ) : (
+                      <input placeholder="Название" value={c.label} onChange={(e) => {
+                        const chars = [...(edit.characteristics || [])];
+                        chars[i] = { ...chars[i], label: e.target.value };
+                        setEdit({ ...edit!, characteristics: chars });
+                      }} className="w-2/5 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
+                    )}
+                    {opts.length > 0 ? (
+                      <select value={c.value} onChange={(e) => {
+                        const chars = [...(edit.characteristics || [])];
+                        chars[i] = { ...chars[i], value: e.target.value };
+                        setEdit({ ...edit!, characteristics: chars });
+                      }} className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]">
+                        <option value="">—</option>
+                        {opts.map((o) => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                    ) : (
+                      <input placeholder="Значение" value={c.value} onChange={(e) => {
+                        const chars = [...(edit.characteristics || [])];
+                        chars[i] = { ...chars[i], value: e.target.value };
+                        setEdit({ ...edit!, characteristics: chars });
+                      }} className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
+                    )}
                     <button type="button" onClick={() => {
                       setEdit({ ...edit!, characteristics: (edit.characteristics || []).filter((_, j) => j !== i) });
                     }} className="shrink-0 text-red-400 hover:text-red-600 text-lg leading-none">×</button>
                   </div>
-                ))}
+                  );
+                })}
                 <button type="button" onClick={() => {
                   setEdit({ ...edit!, characteristics: [...(edit.characteristics || []), { label: '', value: '' }] });
                 }} className="text-xs text-[#ef7d00] hover:underline">+ Добавить характеристику</button>
