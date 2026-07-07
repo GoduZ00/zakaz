@@ -165,6 +165,14 @@ export default function CatalogCategory() {
   }
 
   return (
+    <>
+      <style>{`
+        .price-range { pointer-events: none; }
+        .price-range::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }
+        .price-range::-moz-range-thumb { pointer-events: auto; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }
+        .price-range-min { z-index: 11; }
+        .price-range-max { z-index: 10; }
+      `}</style>
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="text-sm text-gray-500 mb-6">
@@ -308,11 +316,11 @@ export default function CatalogCategory() {
                         <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
                           value={priceMin}
                           onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax - 1))}
-                          className="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-auto cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:bg-[#ef7d00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:bg-[#ef7d00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow [&::-moz-range-thumb]:cursor-pointer" />
+                          className="price-range price-range-min absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer z-10" />
                         <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
                           value={priceMax}
                           onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin + 1))}
-                          className="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-auto cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:bg-[#ef7d00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:bg-[#ef7d00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow [&::-moz-range-thumb]:cursor-pointer" />
+                          className="price-range price-range-max absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer z-10" />
                       </div>
                       <div className="flex items-center gap-2">
                         <input type="number" value={priceMin} onChange={(e) => setPriceMin(Math.min(Number(e.target.value) || globalMin, priceMax - 1))}
@@ -479,5 +487,6 @@ export default function CatalogCategory() {
         </div>
       </div>
     </div>
+    </>
   );
 }
