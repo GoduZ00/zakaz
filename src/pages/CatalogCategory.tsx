@@ -7,13 +7,15 @@ import type { Product } from '../types';
 interface FilterGroupConfig {
   name: string;
   characteristicLabel: string;
+  options?: string[];
 }
 
-function getCharOptions(products: Product[], label: string): string[] {
+function getCharOptions(products: Product[], cfg: FilterGroupConfig): string[] {
+  if (cfg.options) return cfg.options;
   const values = new Set<string>();
   for (const p of products) {
     for (const c of (p.characteristics || [])) {
-      if (c.label === label && c.value) values.add(c.value);
+      if (c.label === cfg.characteristicLabel && c.value) values.add(c.value);
     }
   }
   return Array.from(values).sort();
@@ -21,15 +23,15 @@ function getCharOptions(products: Product[], label: string): string[] {
 
 const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
   'napolniteli-dlya-torgovykh-avtomatov': [
-    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы' },
-    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат' },
-    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек' },
-    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)' },
-    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)' },
-    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)' },
-    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)' },
-    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)' },
-    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)' },
+    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы', options: ['28', '32', '34', '45', '53', '58', '100', '48', '65', '75 мм'] },
+    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат', options: ['Игрушка в капсуле', 'Требуется упаковка в капсулу', 'Не требуется упаковка в капсулу'] },
+    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек', options: ['Значки', 'Животные', 'Ластики', 'Лизуны/ Слаймы / Тянучки', 'Украшения', 'Страшилки', 'Техника', 'Прочие', 'Антистресс', 'Наклейки', 'Сквиши', 'Фигурки', 'Фигурки людей'] },
+    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)', options: ['22', '23', '24', '25', '27', '14 мм', 'Порционные'] },
+    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)', options: ['Круглые', 'Фигурные', 'Овальные'] },
+    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)', options: ['Разноцветные', 'Разноцветные с рисунком', 'Одноцветные', 'Одноцветные с рисунком'] },
+    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)', options: ['Без начинки', 'С начинкой', 'Желейные', 'С жевательным центром'] },
+    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)', options: ['25', '27', '32', '45 мм'] },
+    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)', options: ['Круглые', 'Фигурные'] },
   ],
 };
 
@@ -105,7 +107,7 @@ export default function CatalogCategory() {
     if (!filterGroups) return {} as Record<string, string[]>;
     const opts: Record<string, string[]> = {};
     for (const g of filterGroups) {
-      opts[g.characteristicLabel] = getCharOptions(products, g.characteristicLabel);
+      opts[g.characteristicLabel] = getCharOptions(products, g);
     }
     return opts;
   }, [filterGroups, products]);
