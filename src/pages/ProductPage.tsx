@@ -25,7 +25,7 @@ function OneClickModal({ price, onClose }: { price: number; onClose: () => void 
         ) : (
           <>
             <h3 className="text-lg font-bold mb-2">Купить в 1 клик</h3>
-            <p className="text-sm text-gray-500 mb-4">На сумму {price} ₽</p>
+            <p className="text-sm text-gray-500 mb-4">На сумму {price} ₸</p>
             <input type="tel" placeholder="+7 (___) ___ __-__" value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ''))}
               className="w-full border border-gray-300 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-[#ef7d00] mb-3" />
@@ -61,7 +61,7 @@ export default function ProductPage() {
         trackViewed({
           id: String(data.id),
           name: data.name,
-          price: `${data.price} ₽`,
+          price: `${data.price} ₸`,
           img: data.images?.[0] || '/placeholder.png',
           url: `/product/${data.slug}`,
         });
@@ -229,20 +229,20 @@ export default function ProductPage() {
               {/* Price */}
               <div className="mb-5">
                 <div className="flex items-baseline gap-3 mb-1">
-                  <span className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₽</span>
+                  <span className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₸</span>
                   <span className="text-xs text-gray-400">/ шт</span>
                 </div>
                 <div className="space-y-1">
                   {product.price_wholesale && (
                     <div className="flex items-center gap-2 text-sm">
                       <span className="text-gray-400 text-xs">Мелкооптовая:</span>
-                      <span className="text-gray-700 font-medium">{product.price_wholesale} ₽</span>
+                      <span className="text-gray-700 font-medium">{product.price_wholesale} ₸</span>
                     </div>
                   )}
                   {product.price_opt && (
                     <div className="flex items-center gap-2 text-sm">
                       <span className="text-gray-400 text-xs">Оптом:</span>
-                      <span className="text-gray-700 font-medium">{product.price_opt} ₽</span>
+                      <span className="text-gray-700 font-medium">{product.price_opt} ₸</span>
                     </div>
                   )}
                 </div>

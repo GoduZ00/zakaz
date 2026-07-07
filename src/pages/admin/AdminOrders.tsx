@@ -50,7 +50,7 @@ export default function AdminOrders() {
                   <td className="px-4 py-3 font-medium">#{o.id}</td>
                   <td className="px-4 py-3">{o.customer_name}</td>
                   <td className="px-4 py-3 text-gray-500">{o.customer_phone}</td>
-                  <td className="px-4 py-3">{o.total ? `${o.total} ₽` : '—'}</td>
+                  <td className="px-4 py-3">{o.total ? `${o.total} ₸` : '—'}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2 py-0.5 rounded ${statusColors[o.status] || 'bg-gray-100 text-gray-500'}`}>
                       {statusLabels[o.status] || o.status}

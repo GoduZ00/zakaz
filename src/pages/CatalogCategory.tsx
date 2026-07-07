@@ -287,7 +287,7 @@ export default function CatalogCategory() {
                     <div className="px-4 pb-4 flex flex-col flex-1">
                       <Link to={`/product/${p.slug}`} className="text-sm text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
                       <div className="mt-auto">
-                        <div className="text-lg font-bold text-[#ef7d00]">{p.price} ₽</div>
+                        <div className="text-lg font-bold text-[#ef7d00]">{p.price} ₸</div>
                         <button onClick={() => addItem(p)} className="mt-2 w-full text-sm bg-[#ef7d00] text-white py-2 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
                       </div>
                     </div>
@@ -305,7 +305,7 @@ export default function CatalogCategory() {
                       <Link to={`/product/${p.slug}`} className="text-sm text-gray-800 leading-tight line-clamp-1 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
                       {p.article && <div className="text-xs text-gray-400 mt-0.5">Арт. {p.article}</div>}
                     </div>
-                    <div className="text-base font-bold text-[#ef7d00] shrink-0">{p.price} ₽</div>
+                    <div className="text-base font-bold text-[#ef7d00] shrink-0">{p.price} ₸</div>
                     <button onClick={() => addItem(p)} className="shrink-0 text-sm bg-[#ef7d00] text-white px-4 py-1.5 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
                   </div>
                 ))}
@@ -323,8 +323,8 @@ export default function CatalogCategory() {
                       <div className="text-sm text-gray-500 mt-2 line-clamp-3">{p.description}</div>
                       <div className="mt-auto flex items-center justify-between">
                         <div>
-                          <div className="text-xl font-bold text-[#ef7d00]">{p.price} ₽</div>
-                          {p.price_wholesale && <div className="text-xs text-gray-400">Опт: {p.price_wholesale} ₽</div>}
+                          <div className="text-xl font-bold text-[#ef7d00]">{p.price} ₸</div>
+                          {p.price_wholesale && <div className="text-xs text-gray-400">Опт: {p.price_wholesale} ₸</div>}
                         </div>
                         <button onClick={() => addItem(p)} className="text-sm bg-[#ef7d00] text-white px-6 py-2.5 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
                       </div>

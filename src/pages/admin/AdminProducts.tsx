@@ -355,7 +355,7 @@ export default function AdminProducts() {
                 <tr key={p.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">{p.name}</td>
                   <td className="px-4 py-3 text-gray-500">{p.article || '—'}</td>
-                  <td className="px-4 py-3">{p.price} ₽</td>
+                  <td className="px-4 py-3">{p.price} ₸</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2 py-0.5 rounded ${p.stock_status === 'in_stock' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                       {p.stock_status === 'in_stock' ? 'В наличии' : p.stock_status === 'out_of_stock' ? 'Нет' : 'Под заказ'}
