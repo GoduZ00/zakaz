@@ -32,6 +32,9 @@ export default function ProductPage() {
     });
   }, [slug]);
 
+  const prevImg = () => setActiveImg((p) => (p > 0 ? p - 1 : images.length - 1));
+  const nextImg = () => setActiveImg((p) => (p < images.length - 1 ? p + 1 : 0));
+
   if (loading) {
     return (
       <div className="bg-[#f8f8f8] min-h-screen font-sans">
@@ -61,16 +64,12 @@ export default function ProductPage() {
   }
 
   const images = product.images?.length ? product.images : ['/placeholder.png'];
+  const imagesLen = images.length;
   const sku = product.sku_variants?.length ? product.sku_variants : null;
   const currentSku = sku ? sku.find((s) => s.article === selectedSku) || sku[0] : undefined;
   const displayPrice = currentSku?.price ?? product.price;
 
-  const handleAdd = () => {
-    addItem(product, qty, currentSku);
-  };
-
-  const stockLabel = product.stock_status === 'in_stock' ? 'Есть в наличии' : product.stock_status === 'out_of_stock' ? 'Нет в наличии' : 'Под заказ';
-  const stockColor = product.stock_status === 'in_stock' ? 'text-green-600' : 'text-red-500';
+  const handleAdd = () => addItem(product, qty, currentSku);
 
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
@@ -85,127 +84,138 @@ export default function ProductPage() {
 
         <div className="bg-white border border-gray-200 rounded-sm">
           <div className="flex flex-col lg:flex-row">
-            {/* Image Gallery */}
+            {/* Left: Gallery */}
             <div className="w-full lg:w-1/2 p-6 pb-0 lg:pb-6">
-              <div className="product-detail-gallery-sticky">
-                <div className="bg-gray-50 rounded-lg flex items-center justify-center h-80 mb-3">
-                  <img src={images[activeImg]} alt={product.name} className="max-w-full max-h-full object-contain p-4" />
-                </div>
-                {images.length > 1 && (
-                  <div className="flex gap-2 justify-center">
-                    {images.map((img, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setActiveImg(i)}
-                        className={`w-16 h-16 border-2 rounded flex items-center justify-center p-1 transition-colors ${activeImg === i ? 'border-[#ef7d00]' : 'border-gray-200 hover:border-gray-400'}`}
-                      >
-                        <img src={img} alt="" className="max-w-full max-h-full object-contain" />
-                      </button>
-                    ))}
-                  </div>
+              <div className="relative bg-gray-50 rounded-lg flex items-center justify-center h-80 mb-3 group">
+                <img src={images[activeImg]} alt={product.name} className="max-w-full max-h-full object-contain p-4" />
+                {imagesLen > 1 && (
+                  <>
+                    <button onClick={prevImg} className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center text-gray-500 hover:text-gray-800 transition-all opacity-0 group-hover:opacity-100">
+                      <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M11 6L6 1L1 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
+                    <button onClick={nextImg} className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center text-gray-500 hover:text-gray-800 transition-all opacity-0 group-hover:opacity-100">
+                      <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                      {images.map((_, i) => (
+                        <button key={i} onClick={() => setActiveImg(i)} className={`w-2 h-2 rounded-full transition-all ${i === activeImg ? 'bg-[#ef7d00] w-4' : 'bg-gray-300'}`} />
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
+              {imagesLen > 1 && (
+                <div className="flex gap-2 justify-center">
+                  {images.map((img, i) => (
+                    <button key={i} onClick={() => setActiveImg(i)}
+                      className={`w-16 h-16 border-2 rounded flex items-center justify-center p-1 transition-colors ${i === activeImg ? 'border-[#ef7d00]' : 'border-gray-200 hover:border-gray-400'}`}>
+                      <img src={img} alt="" className="max-w-full max-h-full object-contain" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Product Info */}
+            {/* Right: Info */}
             <div className="flex-1 p-6 border-t lg:border-t-0 lg:border-l border-gray-200">
               {/* Toolbar */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1 border border-gray-200 rounded">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                    <span>Отложить</span>
+                  <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-200 rounded-sm hover:border-gray-300 transition-colors">
+                    <svg width="16" height="13" viewBox="0 0 16 13" fill="none"><path d="M8 12.4L2.1 6.5C0.6 5 0.5 2.8 2 1.3C3.5 -0.2 5.7 -0.1 7.2 1.3L8 2.1L8.8 1.3C10.3 -0.2 12.5 -0.3 14 1.2C15.5 2.7 15.4 4.9 13.9 6.4L8 12.4Z" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>
+                    Отложить
                   </button>
-                  <button className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1 border border-gray-200 rounded">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-                    <span>Сравнить</span>
+                  <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-200 rounded-sm hover:border-gray-300 transition-colors">
+                    <svg width="14" height="13" viewBox="0 0 14 13" fill="none"><rect x="1" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5"/><rect x="5.5" y="4" width="3" height="8" rx="1" stroke="currentColor" strokeWidth="1.5"/><rect x="10" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5"/></svg>
+                    Сравнить
                   </button>
                 </div>
                 {product.article && (
-                  <div className="text-xs text-gray-400">
-                    Артикул: <span className="text-gray-600">{product.article}</span>
-                  </div>
+                  <div className="text-xs text-gray-400">Артикул: <span className="text-gray-600 font-medium">{product.article}</span></div>
                 )}
               </div>
 
-              <h1 className="text-lg font-bold text-gray-900 mb-4">{product.name}</h1>
+              <h1 className="text-xl font-bold text-gray-900 mb-5">{product.name}</h1>
 
-              {/* SKU Variants */}
+              {/* SKU */}
               {sku && (
-                <div className="mb-5">
-                  <div className="text-sm text-gray-500 mb-3">Выберите вариант:</div>
-                  <div className="flex flex-wrap gap-2">
-                    {sku.map((v) => {
-                      const isActive = (selectedSku || sku[0].article) === v.article;
-                      return (
-                        <button
-                          key={v.article}
-                          onClick={() => { setSelectedSku(v.article); setQty(1); }}
-                          className={`px-4 py-2 text-sm border rounded transition-colors ${
-                            isActive
-                              ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium shadow-sm'
-                              : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                          }`}
-                        >
-                          {v.label}
-                          {v.price != null && <span className="ml-1 text-xs opacity-75">({v.price} ₽)</span>}
-                        </button>
-                      );
-                    })}
+                <div className="mb-5 space-y-4">
+                  <div>
+                    <div className="text-sm text-gray-500 mb-2">Выберите вариант:</div>
+                    <div className="flex flex-wrap gap-2">
+                      {sku.map((v) => {
+                        const active = (selectedSku || sku[0].article) === v.article;
+                        return (
+                          <button key={v.article} onClick={() => { setSelectedSku(v.article); setQty(1); }}
+                            className={`px-4 py-2.5 text-sm border rounded-sm transition-all ${
+                              active
+                                ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium shadow-sm'
+                                : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                            }`}>
+                            {v.label}
+                            {v.price != null && <span className="ml-1.5 text-xs opacity-70">({v.price} ₽)</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Stock */}
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-100">
                 <span className={`w-2 h-2 rounded-full ${product.stock_status === 'in_stock' ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className={`text-sm font-medium ${stockColor}`}>
-                  {stockLabel}
+                <span className={`text-sm font-medium ${product.stock_status === 'in_stock' ? 'text-green-700' : 'text-red-500'}`}>
+                  {product.stock_status === 'in_stock' ? 'Есть в наличии' : product.stock_status === 'out_of_stock' ? 'Нет в наличии' : 'Под заказ'}
                 </span>
-                {product.stock_status === 'in_stock' && (
-                  <span className="text-xs text-gray-400">, {product.stock_status === 'in_stock' ? 'в наличии' : ''}</span>
-                )}
               </div>
 
               {/* Price */}
-              <div className="bg-gray-50 rounded-lg p-4 mb-5">
-                <div className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₽</div>
-                <div className="flex gap-4 mt-2 text-xs">
+              <div className="mb-5">
+                <div className="flex items-baseline gap-3 mb-1">
+                  <span className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₽</span>
+                  <span className="text-xs text-gray-400">/ шт</span>
+                </div>
+                <div className="space-y-1">
                   {product.price_wholesale && (
-                    <div className="text-gray-500">
-                      <span className="text-gray-400">Оптом:</span> {product.price_wholesale} ₽
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-400 text-xs">Мелкооптовая:</span>
+                      <span className="text-gray-700 font-medium">{product.price_wholesale} ₽</span>
                     </div>
                   )}
                   {product.price_opt && (
-                    <div className="text-gray-500">
-                      <span className="text-gray-400">Крупный опт:</span> {product.price_opt} ₽
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-gray-400 text-xs">Оптом:</span>
+                      <span className="text-gray-700 font-medium">{product.price_opt} ₽</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Quantity + Add to Cart */}
-              <div className="flex items-center gap-3 mb-4">
+              {/* Cart controls */}
+              <div className="flex items-center gap-3 mb-3">
                 <div className="flex items-center border border-gray-300 rounded-sm">
-                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors">−</button>
-                  <span className="px-4 py-2 text-sm font-medium border-x border-gray-300 min-w-[3rem] text-center select-none">{qty}</span>
-                  <button onClick={() => setQty(qty + 1)} className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors">+</button>
+                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
+                    <svg width="11" height="1" viewBox="0 0 11 1" fill="currentColor"><rect width="11" height="1" rx="0.5"/></svg>
+                  </button>
+                  <span className="w-14 h-10 flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">{qty}</span>
+                  <button onClick={() => setQty(qty + 1)} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor"><path d="M11 5H6V0H5v5H0v1h5v5h1V6h5z"/></svg>
+                  </button>
                 </div>
-                <button onClick={handleAdd} className="flex-1 bg-[#ef7d00] text-white px-6 py-2.5 text-sm rounded-sm hover:bg-[#d66f00] transition-colors font-medium flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" /></svg>
+                <button onClick={handleAdd} className="flex-1 h-10 bg-[#ef7d00] text-white px-5 text-sm rounded-sm hover:bg-[#d66f00] transition-colors font-medium flex items-center justify-center gap-2">
+                  <svg width="19" height="16" viewBox="0 0 19 16" fill="none"><path d="M1 1h2l2 10h10l2-8H5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="7" cy="14" r="1.5" stroke="currentColor" strokeWidth="1.5"/><circle cx="15" cy="14" r="1.5" stroke="currentColor" strokeWidth="1.5"/></svg>
                   В корзину
                 </button>
               </div>
-
-              {/* One-click buy */}
-              <button className="w-full border border-[#ef7d00] text-[#ef7d00] px-6 py-2.5 text-sm rounded-sm hover:bg-orange-50 transition-colors font-medium">
+              <button className="w-full h-10 border border-[#ef7d00] text-[#ef7d00] text-sm rounded-sm hover:bg-orange-50 transition-colors font-medium">
                 Купить в 1 клик
               </button>
 
               {/* Description */}
               {product.description && (
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Описание</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Описание</h3>
                   <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{product.description}</div>
                 </div>
               )}
