@@ -9,6 +9,10 @@ interface FilterGroupConfig {
 }
 
 const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
+  'mekhanicheskie_torgovye_avtomaty_catalog': [
+    { name: 'Вид наклейки', characteristicLabel: 'Вид наклейки', options: ['Универсальная', 'Индивидуальная', 'Инструкция'] },
+    { name: 'Покрытие', characteristicLabel: 'Покрытие', options: ['Хромированные', 'Окрашенные'] },
+  ],
   'napolniteli-dlya-torgovykh-avtomatov': [
     { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы', options: ['28 мм', '32 мм', '34 мм', '45 мм', '53 мм', '58 мм', '100 мм', '48 мм', '65 мм', '75 мм'] },
     { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат', options: ['Игрушка в капсуле', 'Требуется упаковка в капсулу', 'Не требуется упаковка в капсулу'] },
