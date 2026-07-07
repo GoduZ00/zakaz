@@ -1,4 +1,12 @@
 import { Link } from 'react-router-dom';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+
+const contacts = [
+  { icon: <Phone className="w-5 h-5" />, title: 'Телефон', value: '+7 (701) 309-9969', href: 'tel:+77013099969' },
+  { icon: <Mail className="w-5 h-5" />, title: 'E-mail', value: 'info@', href: 'mailto:info@' },
+  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Республика Казахстан' },
+  { icon: <Clock className="w-5 h-5" />, title: 'Режим работы', value: 'Пн–Пт: 9:00 – 18:00' },
+];
 
 export default function Kontakty() {
   return (
@@ -8,7 +16,44 @@ export default function Kontakty() {
         <span className="mx-2">—</span>
         <span className="text-gray-900">Контакты</span>
       </nav>
-      <h1 className="text-3xl font-bold text-gray-900">КОНТАКТЫ</h1>
+
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">КОНТАКТЫ</h1>
+
+      <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div className="space-y-4">
+          {contacts.map((c) => (
+            <div key={c.title} className="flex items-center gap-4 bg-[#f9f9f9] rounded-lg p-5">
+              <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-[#ef7d00] shrink-0">{c.icon}</div>
+              <div>
+                <div className="text-xs text-gray-400 mb-0.5">{c.title}</div>
+                {c.href ? (
+                  <a href={c.href} className="text-sm font-medium text-gray-900 hover:text-[#ef7d00] transition-colors">{c.value}</a>
+                ) : (
+                  <div className="text-sm font-medium text-gray-900">{c.value}</div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-[#f9f9f9] rounded-lg p-6 flex flex-col justify-center">
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">Напишите нам</h2>
+          <p className="text-sm text-gray-500 leading-relaxed mb-4">
+            Вы можете отправить нам письмо в произвольной форме на e-mail, и мы обязательно ответим в рабочее время.
+          </p>
+          <a href="mailto:info@" className="inline-flex items-center gap-2 text-sm font-medium text-[#ef7d00] hover:underline">
+            <Mail className="w-4 h-4" /> info@
+          </a>
+        </div>
+      </div>
+
+      <div className="bg-[#f9f9f9] rounded-lg p-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Реквизиты</h2>
+        <div className="text-sm text-gray-600 space-y-1.5">
+          <p><span className="text-gray-400">ИП:</span> БАЙҒОЖИНОВ</p>
+          <p className="text-gray-400 mt-3 text-xs">Для уточнения полных реквизитов и выставления счёта свяжитесь с нами по телефону.</p>
+        </div>
+      </div>
     </div>
   );
 }
