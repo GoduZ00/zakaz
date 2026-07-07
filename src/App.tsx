@@ -15,6 +15,7 @@ import Catalog from './pages/Catalog';
 import CatalogCategory from './pages/CatalogCategory';
 import ProductPage from './pages/ProductPage';
 import Aktsii from './pages/Aktsii';
+import CartPage from './pages/CartPage';
 import KakZakazat from './pages/KakZakazat';
 import Klientam from './pages/Klientam';
 import OKompanii from './pages/OKompanii';
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/kontakty" element={<Layout><Kontakty /></Layout>} />
         <Route path="/login" element={<Layout><Login /></Layout>} />
         <Route path="/zvonok" element={<Layout><Zvonok /></Layout>} />
+        <Route path="/cart" element={<Layout><CartPage /></Layout>} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />

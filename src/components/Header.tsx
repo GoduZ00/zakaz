@@ -141,10 +141,10 @@ export default function Header() {
               </button>
             </div>
             <div className="h-8 w-px bg-gray-200"></div>
-            <button className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
+            <Link to="/cart" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
               <ShoppingCart className="w-7 h-7" />
               {count > 0 && <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold min-w-[1rem] h-4 flex items-center justify-center rounded-full px-1">{count}</span>}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
