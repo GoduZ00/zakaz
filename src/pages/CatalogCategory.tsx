@@ -4,6 +4,35 @@ import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import type { Product } from '../types';
 
+interface FilterGroupConfig {
+  name: string;
+  characteristicLabel: string;
+}
+
+const filterConfigByCategory: Record<string, FilterGroupConfig[] | null> = {
+  'napolniteli-dlya-torgovykh-avtomatov': [
+    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы' },
+    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат' },
+    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек' },
+    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)' },
+    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)' },
+    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)' },
+    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)' },
+    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)' },
+    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)' },
+  ],
+};
+
+function getCharOptions(products: Product[], label: string): string[] {
+  const values = new Set<string>();
+  for (const p of products) {
+    for (const c of (p.characteristics || [])) {
+      if (c.label === label && c.value) values.add(c.value);
+    }
+  }
+  return Array.from(values).sort();
+}
+
 interface SubCategory {
   id: number;
   name: string;
@@ -66,8 +95,21 @@ export default function CatalogCategory() {
   const [filterInStock, setFilterInStock] = useState(false);
   const [filterStickers, setFilterStickers] = useState<string[]>([]);
   const [filterCoating, setFilterCoating] = useState<string[]>([]);
+  const [charFilters, setCharFilters] = useState<Record<string, string[]>>({});
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const categorySlug = category?.slug || '';
+  const filterGroups = filterConfigByCategory[categorySlug];
+
+  const charOptions = useMemo(() => {
+    if (!filterGroups) return {} as Record<string, string[]>;
+    const opts: Record<string, string[]> = {};
+    for (const g of filterGroups) {
+      opts[g.characteristicLabel] = getCharOptions(products, g.characteristicLabel);
+    }
+    return opts;
+  }, [filterGroups, products]);
 
   useEffect(() => {
     if (!categoryId) return;
@@ -127,7 +169,21 @@ export default function CatalogCategory() {
     ? products.filter((p) => p.subcategory_id === activeSub)
     : products
   ).filter((p) => p.price >= priceMin && p.price <= priceMax)
-   .filter((p) => !filterInStock || p.stock_status === 'in_stock');
+   .filter((p) => !filterInStock || p.stock_status === 'in_stock')
+   .filter((p) => {
+     if (!filterStickers.length && !filterCoating.length) return true;
+     const chars = p.characteristics || [];
+     const stickerMatch = !filterStickers.length || filterStickers.some((s) => chars.some((c) => c.label === 'Вид наклейки' && c.value === s));
+     const coatingMatch = !filterCoating.length || filterCoating.some((c) => chars.some((ch) => ch.label === 'Покрытие' && ch.value === c));
+     return stickerMatch && coatingMatch;
+   })
+    .filter((p) => {
+      return (Object.entries(charFilters) as [string, string[]][]).every(([label, selected]) => {
+       if (!selected.length) return true;
+       const chars = p.characteristics || [];
+       return selected.some((v) => chars.some((c) => c.label === label && c.value === v));
+     });
+   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy === 'price_asc') return a.price - b.price;
@@ -334,41 +390,70 @@ export default function CatalogCategory() {
                     </div>
                   </div>
 
-                  {/* Sticker types filter group */}
-                  <div className="relative">
-                    <button onClick={() => setOpenFilter(openFilter === 'stickers' ? null : 'stickers')}
-                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
-                      Виды наклеек
-                    </button>
-                    <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'stickers' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
-                      {['Универсальная', 'Индивидуальная', 'Инструкция'].map((s) => (
-                        <label key={s} className="flex items-center gap-2 cursor-pointer group">
-                          <input type="checkbox" checked={filterStickers.includes(s)}
-                            onChange={(e) => setFilterStickers(e.target.checked ? [...filterStickers, s] : filterStickers.filter((x) => x !== s))}
-                            className="w-3 h-3 accent-[#ef7d00]" />
-                          <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{s}</span>
-                        </label>
-                      ))}
+                  {/* Category-specific filter groups */}
+                  {filterGroups ? filterGroups.map((fg) => (
+                    <div key={fg.characteristicLabel} className="relative">
+                      <button onClick={() => setOpenFilter(openFilter === fg.characteristicLabel ? null : fg.characteristicLabel)}
+                        className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === fg.characteristicLabel ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                        {fg.name}
+                      </button>
+                      <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === fg.characteristicLabel ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                        {(charOptions[fg.characteristicLabel] || []).map((opt) => (
+                          <label key={opt} className="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" checked={(charFilters[fg.characteristicLabel] || []).includes(opt)}
+                              onChange={(e) => setCharFilters((prev) => {
+                                const current = prev[fg.characteristicLabel] || [];
+                                const next = e.target.checked ? [...current, opt] : current.filter((x) => x !== opt);
+                                return { ...prev, [fg.characteristicLabel]: next };
+                              })}
+                              className="w-3 h-3 accent-[#ef7d00]" />
+                            <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{opt}</span>
+                          </label>
+                        ))}
+                        {(!charOptions[fg.characteristicLabel] || charOptions[fg.characteristicLabel].length === 0) && (
+                          <span className="text-[11px] text-gray-400">Нет вариантов</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )) : (
+                    <>
+                      {/* Sticker types filter group (legacy) */}
+                      <div className="relative">
+                        <button onClick={() => setOpenFilter(openFilter === 'stickers' ? null : 'stickers')}
+                          className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'stickers' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                          Виды наклеек
+                        </button>
+                        <div className={`absolute left-0 top-full mt-1 z-20 w-52 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'stickers' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                          {['Универсальная', 'Индивидуальная', 'Инструкция'].map((s) => (
+                            <label key={s} className="flex items-center gap-2 cursor-pointer group">
+                              <input type="checkbox" checked={filterStickers.includes(s)}
+                                onChange={(e) => setFilterStickers(e.target.checked ? [...filterStickers, s] : filterStickers.filter((x) => x !== s))}
+                                className="w-3 h-3 accent-[#ef7d00]" />
+                              <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{s}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Coating filter group */}
-                  <div className="relative">
-                    <button onClick={() => setOpenFilter(openFilter === 'coating' ? null : 'coating')}
-                      className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
-                      Покрытие
-                    </button>
-                    <div className={`absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'coating' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
-                      {['Хромированные', 'Окрашенные'].map((c) => (
-                        <label key={c} className="flex items-center gap-2 cursor-pointer group">
-                          <input type="checkbox" checked={filterCoating.includes(c)}
-                            onChange={(e) => setFilterCoating(e.target.checked ? [...filterCoating, c] : filterCoating.filter((x) => x !== c))}
-                            className="w-3 h-3 accent-[#ef7d00]" />
-                          <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{c}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+                      {/* Coating filter group (legacy) */}
+                      <div className="relative">
+                        <button onClick={() => setOpenFilter(openFilter === 'coating' ? null : 'coating')}
+                          className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-all duration-200 ${openFilter === 'coating' ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}>
+                          Покрытие
+                        </button>
+                        <div className={`absolute left-0 top-full mt-1 z-20 w-48 bg-white border border-gray-200 rounded-sm shadow-lg p-3 space-y-1.5 transition-all duration-200 ease-out ${openFilter === 'coating' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'}`}>
+                          {['Хромированные', 'Окрашенные'].map((c) => (
+                            <label key={c} className="flex items-center gap-2 cursor-pointer group">
+                              <input type="checkbox" checked={filterCoating.includes(c)}
+                                onChange={(e) => setFilterCoating(e.target.checked ? [...filterCoating, c] : filterCoating.filter((x) => x !== c))}
+                                className="w-3 h-3 accent-[#ef7d00]" />
+                              <span className="text-[11px] text-gray-600 group-hover:text-gray-800">{c}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   {/* In stock checkbox inline */}
                   <label className="flex items-center gap-1.5 cursor-pointer group ml-auto">
@@ -378,7 +463,7 @@ export default function CatalogCategory() {
                   </label>
 
                   {/* Reset */}
-                  <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setFilterStickers([]); setFilterCoating([]); setOpenFilter(null); }}
+                  <button onClick={() => { setPriceMin(globalMin); setPriceMax(globalMax); setFilterInStock(false); setFilterStickers([]); setFilterCoating([]); setCharFilters({}); setOpenFilter(null); }}
                     className="text-[11px] text-gray-400 hover:text-[#ef7d00] transition-colors shrink-0 flex items-center gap-1">
                     <svg className="w-3 h-3" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0a5 5 0 1 0 5 5h-1A4 4 0 1 1 5 1V0zm0 1V0l3 2.5L5 5V3.5a3.5 3.5 0 1 1-3.5 3.5h1A2.5 2.5 0 1 0 5 4.5V1z"/></svg>
                     Очистить
