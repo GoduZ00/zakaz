@@ -53,7 +53,7 @@ export default function ProductPage() {
   const [showOneClick, setShowOneClick] = useState(false);
   const [tab, setTab] = useState<'desc' | 'chars'>('desc');
   const [inWish, setInWish] = useState(false);
-  const [inCompare, setInCompare] = useState(false);
+
   const [wishLoading, setWishLoading] = useState(false);
 
   useEffect(() => {
@@ -83,15 +83,6 @@ export default function ProductPage() {
     });
   }, [user, product]);
 
-  useEffect(() => {
-    if (!product) { setInCompare(false); return; }
-    const stored = localStorage.getItem('zakaz_compare');
-    if (stored) {
-      const ids: number[] = JSON.parse(stored);
-      setInCompare(ids.includes(product.id));
-    }
-  }, [product]);
-
   const toggleWish = async () => {
     if (!user) { navigate('/login'); return; }
     if (!product) return;
@@ -106,21 +97,6 @@ export default function ProductPage() {
       showToast('«' + product.name + '» добавлен в избранное', product.images?.[0]);
     }
     setWishLoading(false);
-  };
-
-  const toggleCompare = () => {
-    if (!product) return;
-    const stored = localStorage.getItem('zakaz_compare');
-    let ids: number[] = stored ? JSON.parse(stored) : [];
-    if (inCompare) {
-      ids = ids.filter((id) => id !== product.id);
-      showToast('«' + product.name + '» удалён из сравнения');
-    } else {
-      ids.push(product.id);
-      showToast('«' + product.name + '» добавлен к сравнению');
-    }
-    localStorage.setItem('zakaz_compare', JSON.stringify(ids));
-    setInCompare(!inCompare);
   };
 
   const prevImg = () => setActiveImg((p) => (p > 0 ? p - 1 : (images?.length || 1) - 1));
@@ -223,15 +199,7 @@ export default function ProductPage() {
                     <svg width="16" height="13" viewBox="0 0 16 13" fill={inWish ? 'currentColor' : 'none'}><path d="M8 12.4L2.1 6.5C0.6 5 0.5 2.8 2 1.3C3.5 -0.2 5.7 -0.1 7.2 1.3L8 2.1L8.8 1.3C10.3 -0.2 12.5 -0.3 14 1.2C15.5 2.7 15.4 4.9 13.9 6.4L8 12.4Z" stroke={inWish ? 'none' : 'currentColor'} strokeWidth="1.5" fill={inWish ? 'currentColor' : 'none'}/></svg>
                     Отложить
                   </button>
-                  <button onClick={toggleCompare}
-                    className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded-sm transition-colors ${
-                      inCompare
-                        ? 'border-[#ef7d00] text-[#ef7d00] bg-orange-50'
-                        : 'border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}>
-                    <svg width="14" height="13" viewBox="0 0 14 13" fill="none"><rect x="1" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill={inCompare ? 'currentColor' : 'none'}/><rect x="5.5" y="4" width="3" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" fill={inCompare ? 'currentColor' : 'none'}/><rect x="10" y="1" width="3" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill={inCompare ? 'currentColor' : 'none'}/></svg>
-                    Сравнить
-                  </button>
+
                 </div>
                 {product.article && (
                   <div className="text-xs text-gray-400">Артикул: <span className="text-gray-600 font-medium">{product.article}</span></div>

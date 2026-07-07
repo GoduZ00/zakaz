@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, Phone, User, Search, BarChart2, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
+import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -148,10 +148,6 @@ export default function Header() {
           {/* Icons */}
           <div className="flex items-center gap-2 sm:gap-6 shrink-0">
             <div className="flex items-center gap-2 sm:gap-5">
-              <button className="relative text-gray-400 hover:text-[#ef7d00] transition-colors hidden sm:block">
-                <BarChart2 className="w-5 sm:w-6 h-5 sm:h-6" />
-                <span className="absolute -top-1.5 -right-2 bg-[#ef7d00] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">0</span>
-              </button>
               <Link to="/profile" className="relative text-gray-400 hover:text-[#ef7d00] transition-colors">
                 <Heart className="w-5 sm:w-6 h-5 sm:h-6" />
               </Link>
