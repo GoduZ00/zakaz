@@ -109,9 +109,11 @@ INSERT INTO subcategories (category_id, name, slug, sort_order) VALUES
   (2, 'Капсулы пустые', 'kapsuly-pustye', 6);
 
 -- Category filter groups (admin-configurable characteristic-based filters)
+-- subcategory_id = specific subcategory, category_id = "Все товары категории"
 CREATE TABLE category_filter_groups (
   id BIGSERIAL PRIMARY KEY,
-  category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+  category_id BIGINT REFERENCES categories(id) ON DELETE CASCADE,
+  subcategory_id BIGINT REFERENCES subcategories(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   characteristic_label TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,

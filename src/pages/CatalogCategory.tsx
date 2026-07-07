@@ -125,7 +125,15 @@ export default function CatalogCategory() {
       setActiveSub(activeSubId);
 
       if (cat) {
-        const { data: filterData } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('category_id', cat.id).order('sort_order');
+        let filterData;
+        if (activeSubId) {
+          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('subcategory_id', activeSubId).order('sort_order');
+          filterData = data;
+        }
+        if (!filterData || !filterData.length) {
+          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('category_id', cat.id).order('sort_order');
+          filterData = data;
+        }
         setFilterGroups(filterData?.length ? filterData : null);
 
         const subIds = subs.map((s) => s.id);
