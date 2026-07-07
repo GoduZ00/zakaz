@@ -310,7 +310,7 @@ export default function CatalogCategory() {
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <span className="text-xs font-medium text-gray-800 leading-tight break-words hyphens-auto">{sub.name}</span>
+                    <span className="text-xs font-medium text-gray-800 leading-tight break-words hyphens-auto min-w-0">{sub.name}</span>
                   </Link>
                 ))}
               </div>
