@@ -28,66 +28,65 @@ export function ProductCard({ product, onAddToCart, className = '' }: ProductCar
   const hasOpt = typeof product.price_opt === 'number';
 
   return (
-    <div
-      className={`group bg-white border border-gray-200 shadow-[0_1px_4px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-shadow duration-200 flex flex-col overflow-hidden ${className}`}
-    >
+    <div className={`group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden ${className}`}>
       <Link to={`/product/${product.slug}`} className="block">
-        <div className="bg-white p-4 pb-3 sm:p-5 sm:pb-4 border-b border-orange-100">
+        <div className="bg-white p-3 sm:p-4 border-b border-orange-100">
           <div className="aspect-square bg-white flex items-center justify-center overflow-hidden">
             <img
               src={image}
               alt={product.name}
-              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </div>
         </div>
       </Link>
 
-      <div className="flex flex-col flex-1 px-4 py-4 sm:px-5 sm:py-5">
+      <div className="flex flex-col flex-1 p-4 sm:p-5">
         <Link
           to={`/product/${product.slug}`}
-          className="text-[20px] sm:text-[22px] leading-[1.15] text-gray-900 hover:text-[#ef7d00] transition-colors line-clamp-2 min-h-[2.7em] mb-4"
+          className="text-[15px] sm:text-base leading-snug text-gray-800 hover:text-[#ef7d00] transition-colors line-clamp-2 min-h-[2.6rem] mb-3"
         >
           {product.name}
         </Link>
 
-        <div className="flex items-center gap-2 text-[15px] mb-1">
-          <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${product.stock_status === 'in_stock' ? 'bg-lime-500' : 'bg-red-500'}`} />
-          <div className={`${product.stock_status === 'in_stock' ? 'text-lime-600' : 'text-red-500'} border-b border-dotted border-lime-300 pb-0.5 leading-tight`}>
-            {stockText}
+        <div className="flex items-start gap-2 text-sm mb-2">
+          <span className={`mt-2 w-2 h-2 rounded-full shrink-0 ${product.stock_status === 'in_stock' ? 'bg-lime-500' : 'bg-red-500'}`} />
+          <div className="min-w-0">
+            <div className={`${product.stock_status === 'in_stock' ? 'text-lime-600' : 'text-red-500'} leading-snug`}>
+              {stockText}
+            </div>
+            {product.article && (
+              <div className="text-gray-400 text-sm mt-1">
+                Арт.: <span className="text-gray-500">{product.article}</span>
+              </div>
+            )}
           </div>
         </div>
 
-        {product.article && (
-          <div className="text-gray-400 text-[15px] mb-5">
-            Арт.: <span className="text-gray-500">{product.article}</span>
-          </div>
-        )}
-
-        <div className="space-y-4">
+        <div className="mt-2 space-y-3">
           {hasWholesale && (
             <div>
-              <div className="text-gray-400 text-[18px] leading-none mb-1">Мелкооптовая</div>
-              <div className="text-[28px] leading-none font-extrabold text-gray-900">
-                {formatPrice(product.price_wholesale!)} <span className="text-[20px] font-extrabold">₸</span>
+              <div className="text-gray-400 text-sm mb-0.5">Мелкооптовая</div>
+              <div className="text-[22px] leading-none font-bold text-gray-900">
+                {formatPrice(product.price_wholesale!)} <span className="text-base font-semibold">₸</span>
               </div>
             </div>
           )}
 
           {hasOpt && (
             <div>
-              <div className="text-gray-400 text-[18px] leading-none mb-1">Оптом</div>
-              <div className="text-[28px] leading-none font-extrabold text-gray-900">
-                {formatPrice(product.price_opt!)} <span className="text-[20px] font-extrabold">₸</span>
+              <div className="text-gray-400 text-sm mb-0.5">Оптом</div>
+              <div className="text-[22px] leading-none font-bold text-gray-900">
+                {formatPrice(product.price_opt!)} <span className="text-base font-semibold">₸</span>
               </div>
             </div>
           )}
 
           {!hasWholesale && !hasOpt && (
             <div>
-              <div className="text-gray-400 text-[18px] leading-none mb-1">Цена</div>
-              <div className="text-[28px] leading-none font-extrabold text-gray-900">
-                {formatPrice(product.price)} <span className="text-[20px] font-extrabold">₸</span>
+              <div className="text-gray-400 text-sm mb-0.5">Цена</div>
+              <div className="text-[22px] leading-none font-bold text-gray-900">
+                {formatPrice(product.price)} <span className="text-base font-semibold">₸</span>
               </div>
             </div>
           )}
@@ -96,7 +95,7 @@ export function ProductCard({ product, onAddToCart, className = '' }: ProductCar
         {onAddToCart && (
           <button
             onClick={() => onAddToCart(product)}
-            className="mt-5 w-full h-12 rounded-[4px] bg-[#ef7d00] text-white text-[15px] font-semibold hover:bg-[#d66f00] transition-colors"
+            className="mt-4 w-full h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors"
           >
             В корзину
           </button>
