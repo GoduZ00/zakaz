@@ -182,12 +182,11 @@ export default function AdminProducts() {
       images: edit.images || [],
       sku_variants: edit.sku_variants || [],
     };
-    if (edit.id) {
-      await supabase.from('products').update(payload).eq('id', edit.id);
-    } else {
-      await supabase.from('products').insert(payload);
-    }
+    const { error } = edit.id
+      ? await supabase.from('products').update(payload).eq('id', edit.id)
+      : await supabase.from('products').insert(payload);
     setSaving(false);
+    if (error) { alert('Ошибка: ' + error.message); return; }
     setEdit(null);
     fetchProducts();
   };
@@ -279,8 +278,15 @@ export default function AdminProducts() {
                 </div>
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Метка упаковки</label>
-                  <input value={edit.box_label || 'кор'} onChange={(e) => setEdit({ ...edit, box_label: e.target.value })}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+                  <select value={edit.box_label || 'кор'} onChange={(e) => setEdit({ ...edit, box_label: e.target.value })}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]">
+                    <option value="кор">кор</option>
+                    <option value="уп">уп</option>
+                    <option value="ящ">ящ</option>
+                    <option value="блок">блок</option>
+                    <option value="меш">меш</option>
+                    <option value="пач">пач</option>
+                  </select>
                 </div>
               </div>
 
