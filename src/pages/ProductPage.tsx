@@ -6,12 +6,16 @@ import { useAuth } from '../context/AuthContext';
 import { trackViewed } from '../components/ViewedItems';
 import type { Product, SkuVariant } from '../types';
 
+const WHATSAPP_NUMBER = '77073099969';
+
 function OneClickModal({ price, onClose }: { price: number; onClose: () => void }) {
   const [phone, setPhone] = useState('');
   const [sent, setSent] = useState(false);
   const handleSubmit = async () => {
     if (phone.length < 10) return;
     await supabase.from('orders').insert({ customer_name: '', customer_phone: phone, total: price, items: [{ one_click: true }] });
+    const text = encodeURIComponent(`НОВЫЙ ЗАКАЗ (1 клик)\n\nТелефон: ${phone}\nСумма: ${price} ₸`);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
     setSent(true);
   };
   return (

@@ -1,6 +1,27 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
+const WHATSAPP_NUMBER = '77073099969';
+
+function sendWhatsAppOrder(items: any[], total: number) {
+  const lines = ['НОВЫЙ ЗАКАЗ', ''];
+
+  items.forEach((item, i) => {
+    const name = item.product.name;
+    const skuLabel = item.sku ? ` (${item.sku.label})` : '';
+    const price = item.sku?.price ?? item.product.price;
+    lines.push(`${i + 1}. ${name}${skuLabel}`);
+    lines.push(`   ${item.quantity} × ${price} ₸ = ${price * item.quantity} ₸`);
+  });
+
+  lines.push('');
+  lines.push(`Итого: ${total} ₸`);
+  lines.push('Доставка: Бесплатно');
+
+  const text = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
+}
+
 export default function CartPage() {
   const { items, count, total, updateQuantity, removeItem, clearCart } = useCart();
 
@@ -94,7 +115,8 @@ export default function CartPage() {
                   <span className="text-[#ef7d00]">{total} ₸</span>
                 </div>
               </div>
-              <button className="w-full bg-[#ef7d00] text-white py-2.5 text-sm rounded hover:bg-[#d66f00] transition-colors font-medium mb-2">
+              <button onClick={() => sendWhatsAppOrder(items, total)}
+                className="w-full bg-[#ef7d00] text-white py-2.5 text-sm rounded hover:bg-[#d66f00] transition-colors font-medium mb-2">
                 Оформить заказ
               </button>
               <button onClick={clearCart}
