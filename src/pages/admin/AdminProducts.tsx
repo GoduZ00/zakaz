@@ -282,11 +282,8 @@ export default function AdminProducts() {
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]">
                     <option value="">—</option>
                     <option value="кор">кор</option>
-                    <option value="уп">уп</option>
-                    <option value="ящ">ящ</option>
-                    <option value="блок">блок</option>
-                    <option value="меш">меш</option>
-                    <option value="пач">пач</option>
+                    <option value="упак">упак</option>
+                    <option value="шт">шт</option>
                   </select>
                 </div>
               </div>
