@@ -130,3 +130,17 @@ CREATE TABLE category_filter_groups (
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Footer sections (admin-editable)
+CREATE TABLE footer_sections (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  links JSONB NOT NULL DEFAULT '[]',
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO footer_sections (title, links, sort_order) VALUES
+  ('О КОМПАНИИ', '[{"label":"Новости","url":"#"},{"label":"Статьи","url":"#"},{"label":"Партнеры","url":"#"},{"label":"Сертификаты","url":"#"},{"label":"Отзывы","url":"#"},{"label":"Реквизиты","url":"#"}]', 1),
+  ('КАК ЗАКАЗАТЬ', '[{"label":"Оплата","url":"#"},{"label":"Самовывоз","url":"#"},{"label":"Документы","url":"#"},{"label":"Доставка по Москве и МО","url":"#"},{"label":"Доставка по регионам","url":"#"},{"label":"Таможенный союз","url":"#"}]', 2),
+  ('КЛИЕНТАМ', '[{"label":"Прайс-лист","url":"#"},{"label":"Дисплеи","url":"#"},{"label":"Видео","url":"#"},{"label":"Купоны на скидку и промо","url":"#"},{"label":"Вопросы и ответы","url":"#"},{"label":"Сертификаты","url":"#"}]', 3);

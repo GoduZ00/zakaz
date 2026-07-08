@@ -1,46 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+
+interface FooterLink {
+  label: string;
+  url: string;
+}
+
+interface FooterSection {
+  id: number;
+  title: string;
+  links: FooterLink[];
+  sort_order: number;
+}
 
 export default function Footer() {
+  const [sections, setSections] = useState<FooterSection[]>([]);
+
+  useEffect(() => {
+    supabase.from('footer_sections').select('*').order('sort_order').then(({ data }) => {
+      if (data) setSections(data);
+    });
+  }, []);
+
   return (
     <footer className="bg-[#333333] text-gray-300 pt-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-          
-          <div>
-            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest mb-6">О КОМПАНИИ</h4>
-            <ul className="space-y-3 text-[13px] text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Новости</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Статьи</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Партнеры</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Сертификаты</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Отзывы</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Реквизиты</a></li>
-            </ul>
-          </div>
 
-          <div>
-            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest mb-6">КАК ЗАКАЗАТЬ</h4>
-            <ul className="space-y-3 text-[13px] text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Оплата</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Самовывоз</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Документы</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Доставка по Москве и МО</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Доставка по регионам</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Таможенный союз</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest mb-6">КЛИЕНТАМ</h4>
-            <ul className="space-y-3 text-[13px] text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Прайс-лист</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Дисплеи</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Видео</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Купоны на скидку и промо</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Вопросы и ответы</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Сертификаты</a></li>
-            </ul>
-          </div>
+          {sections.map((section) => (
+            <div key={section.id}>
+              <h4 className="text-white text-[11px] font-bold uppercase tracking-widest mb-6">{section.title}</h4>
+              <ul className="space-y-3 text-[13px] text-gray-400">
+                {section.links.map((link, i) => (
+                  <li key={i}>
+                    <a href={link.url} className="hover:text-white transition-colors">{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           <div className="flex flex-col relative bg-[#3a3a3a] p-5 rounded-sm">
             <ul className="space-y-4 text-[13px]">
@@ -50,7 +48,6 @@ export default function Footer() {
                   <a href="tel:87013099969" className="font-bold text-white text-base hover:text-[#ef7d00] transition-colors leading-none mb-1">8-701-309-9969</a>
                 </div>
               </li>
-              {/* email disabled */}
               <li className="flex items-start gap-3">
                 <svg className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 <span className="text-white leading-tight">Алматы қ. Асыл-Арман 20</span>

@@ -10,6 +10,7 @@ const navItems = [
   { label: 'Категории', path: '/admin/categories' },
   { label: 'Акции', path: '/admin/promotions' },
   { label: 'Заказы', path: '/admin/orders' },
+  { label: 'Футтер', path: '/admin/footer' },
 ];
 
 export default function AdminLayout() {

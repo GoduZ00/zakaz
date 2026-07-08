@@ -57,3 +57,10 @@ CREATE POLICY "Public read" ON category_filter_groups FOR SELECT USING (true);
 CREATE POLICY "Admin insert" ON category_filter_groups FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin update" ON category_filter_groups FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Admin delete" ON category_filter_groups FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Footer sections
+ALTER TABLE footer_sections ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON footer_sections FOR SELECT USING (true);
+CREATE POLICY "Admin insert" ON footer_sections FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Admin update" ON footer_sections FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin delete" ON footer_sections FOR DELETE USING (auth.role() = 'authenticated');
