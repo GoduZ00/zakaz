@@ -273,7 +273,7 @@ export default function AdminProducts() {
                 </div>
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Кол-во в упаковке</label>
-                  <input type="number" min="1" value={edit.box_quantity ?? 1000} onChange={(e) => setEdit({ ...edit, box_quantity: parseInt(e.target.value) || 1000 })}
+                  <input type="number" min="1" value={edit.box_quantity ?? ''} onChange={(e) => setEdit({ ...edit, box_quantity: e.target.value ? parseInt(e.target.value) : null })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
                 <div>
