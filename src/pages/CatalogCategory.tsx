@@ -46,6 +46,7 @@ interface CategoryInfo {
   id: number;
   name: string;
   slug: string;
+  opt_tooltip?: string;
 }
 
 const subIcons: Record<string, string> = {
@@ -122,7 +123,7 @@ export default function CatalogCategory() {
       let subs: SubCategory[] = [];
       let activeSubId: number | null = null;
 
-      const { data: catData } = await supabase.from('categories').select('id, name, slug').eq('slug', categoryId).single();
+      const { data: catData } = await supabase.from('categories').select('id, name, slug, opt_tooltip').eq('slug', categoryId).single();
       if (catData) {
         cat = catData;
         const { data: subData } = await supabase.from('subcategories').select('id, name, slug').eq('category_id', cat.id).order('sort_order');
@@ -130,7 +131,7 @@ export default function CatalogCategory() {
       } else {
         const { data: subData } = await supabase.from('subcategories').select('id, name, slug, category_id').eq('slug', categoryId).single();
         if (subData) {
-          const { data: catData2 } = await supabase.from('categories').select('id, name, slug').eq('id', subData.category_id).single();
+          const { data: catData2 } = await supabase.from('categories').select('id, name, slug, opt_tooltip').eq('id', subData.category_id).single();
           cat = catData2 || null;
           const { data: allSubs } = await supabase.from('subcategories').select('id, name, slug').eq('category_id', subData.category_id).order('sort_order');
           subs = allSubs || [];
@@ -680,7 +681,7 @@ export default function CatalogCategory() {
             ) : viewMode === 'grid' ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                 {sortedProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} onAddToCart={addItem} />
+                  <ProductCard key={p.id} product={p} onAddToCart={addItem} optTooltip={category?.opt_tooltip} />
                 ))}
               </div>
             ) : viewMode === 'list-sm' ? (

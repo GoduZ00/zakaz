@@ -4,6 +4,7 @@ CREATE TABLE categories (
   name TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
   image TEXT,
+  opt_tooltip TEXT,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

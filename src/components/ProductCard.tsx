@@ -5,6 +5,7 @@ interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
   className?: string;
+  optTooltip?: string;
 }
 
 function formatPrice(value: number) {
@@ -21,7 +22,7 @@ function getStockText(product: Product) {
   return 'Под заказ';
 }
 
-export function ProductCard({ product, onAddToCart, className = '' }: ProductCardProps) {
+export function ProductCard({ product, onAddToCart, className = '', optTooltip }: ProductCardProps) {
   const image = product.images?.[0] || '/placeholder.png';
   const stockText = getStockText(product);
   const hasWholesale = typeof product.price_wholesale === 'number';
@@ -68,16 +69,31 @@ export function ProductCard({ product, onAddToCart, className = '' }: ProductCar
             <div>
               <div className="text-gray-400 text-sm mb-0.5">Мелкооптовая</div>
               <div className="text-[22px] leading-none font-bold text-gray-900">
-                {formatPrice(product.price_wholesale!)} <span className="text-base font-semibold">₸</span>
+                {formatPrice(product.price_wholesale!)} <span className="text-base font-semibold">₸/шт</span>
+              </div>
+              <div className="text-xs text-gray-500 mt-0.5">
+                {formatPrice(product.price_wholesale! * 1000)} ₸/кор (1000 шт.)
               </div>
             </div>
           )}
 
           {hasOpt && (
             <div>
-              <div className="text-gray-400 text-sm mb-0.5">Оптом</div>
+              <div className="text-gray-400 text-sm mb-0.5 flex items-center gap-1">
+                <span>Оптом</span>
+                <div className="relative inline-flex items-center group">
+                  <span className="inline-flex items-center justify-center w-3.5 h-3.5 text-[10px] font-bold border border-gray-300 rounded-full text-gray-400 cursor-help leading-none">?</span>
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 hidden group-hover:block z-20">
+                    <div className="bg-gray-800 text-white text-[11px] px-2 py-1 rounded shadow-lg whitespace-nowrap">{optTooltip || 'Оптовая цена'}</div>
+                    <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] border-transparent border-t-gray-800"></div>
+                  </div>
+                </div>
+              </div>
               <div className="text-[22px] leading-none font-bold text-gray-900">
-                {formatPrice(product.price_opt!)} <span className="text-base font-semibold">₸</span>
+                {formatPrice(product.price_opt!)} <span className="text-base font-semibold">₸/шт</span>
+              </div>
+              <div className="text-xs text-gray-500 mt-0.5">
+                {formatPrice(product.price_opt! * 1000)} ₸/кор (1000 шт.)
               </div>
             </div>
           )}
