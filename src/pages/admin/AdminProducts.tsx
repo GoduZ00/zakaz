@@ -34,6 +34,7 @@ interface Product {
   price: number;
   price_wholesale: number | null;
   price_opt: number | null;
+  box_quantity: number;
   stock_status: string;
   quantity: number;
   description: string | null;
@@ -171,6 +172,7 @@ export default function AdminProducts() {
       price_opt: edit.price_opt || null,
       stock_status: edit.stock_status || 'in_stock',
       quantity: edit.quantity ?? 0,
+      box_quantity: edit.box_quantity ?? 1000,
       description: edit.description || null,
       characteristics: edit.characteristics || [],
       is_active: edit.is_active ?? true,
@@ -266,6 +268,11 @@ export default function AdminProducts() {
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Количество на складе</label>
                   <input type="number" min="0" value={edit.quantity ?? 0} onChange={(e) => setEdit({ ...edit, quantity: parseInt(e.target.value) || 0 })}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Краткие упак. кор. шт.</label>
+                  <input type="number" min="1" value={edit.box_quantity ?? 1000} onChange={(e) => setEdit({ ...edit, box_quantity: parseInt(e.target.value) || 1000 })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
               </div>

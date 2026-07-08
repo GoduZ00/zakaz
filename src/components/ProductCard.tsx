@@ -27,6 +27,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
   const stockText = getStockText(product);
   const hasWholesale = typeof product.price_wholesale === 'number';
   const hasOpt = typeof product.price_opt === 'number';
+  const boxQty = product.box_quantity || 1000;
 
   return (
     <div className={`group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden ${className}`}>
@@ -72,7 +73,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
                 {formatPrice(product.price_wholesale!)} <span className="text-base font-semibold">₸/шт</span>
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {formatPrice(product.price_wholesale! * 1000)} ₸/кор (1000 шт.)
+                {formatPrice(product.price_wholesale! * boxQty)} ₸/кор ({boxQty} шт.)
               </div>
             </div>
           )}
@@ -81,9 +82,9 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
             <div>
               <div className="text-gray-400 text-sm mb-0.5 flex items-center gap-1">
                 <span>Оптом</span>
-                <div className="relative inline-flex items-center group">
-                  <span className="inline-flex items-center justify-center w-3.5 h-3.5 text-[10px] font-bold border border-gray-300 rounded-full text-gray-400 cursor-help leading-none">?</span>
-                  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 hidden group-hover:block z-20">
+                <div className="relative inline-flex items-center">
+                  <span className="peer inline-flex items-center justify-center w-3.5 h-3.5 text-[10px] font-bold border border-gray-300 rounded-full text-gray-400 cursor-help leading-none">?</span>
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 hidden peer-hover:block z-20">
                     <div className="bg-gray-800 text-white text-[11px] px-2 py-1 rounded shadow-lg whitespace-nowrap">{optTooltip || 'Оптовая цена'}</div>
                     <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] border-transparent border-t-gray-800"></div>
                   </div>
@@ -93,7 +94,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
                 {formatPrice(product.price_opt!)} <span className="text-base font-semibold">₸/шт</span>
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {formatPrice(product.price_opt! * 1000)} ₸/кор (1000 шт.)
+                {formatPrice(product.price_opt! * boxQty)} ₸/кор ({boxQty} шт.)
               </div>
             </div>
           )}
