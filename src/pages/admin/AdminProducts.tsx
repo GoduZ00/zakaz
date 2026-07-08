@@ -35,6 +35,7 @@ interface Product {
   price_wholesale: number | null;
   price_opt: number | null;
   box_quantity: number;
+  box_label: string;
   stock_status: string;
   quantity: number;
   description: string | null;
@@ -173,6 +174,7 @@ export default function AdminProducts() {
       stock_status: edit.stock_status || 'in_stock',
       quantity: edit.quantity ?? 0,
       box_quantity: edit.box_quantity ?? 1000,
+      box_label: edit.box_label || 'кор',
       description: edit.description || null,
       characteristics: edit.characteristics || [],
       is_active: edit.is_active ?? true,
@@ -271,8 +273,13 @@ export default function AdminProducts() {
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Краткие упак. кор. шт.</label>
+                  <label className="text-xs text-gray-500 mb-1 block">Кол-во в упаковке</label>
                   <input type="number" min="1" value={edit.box_quantity ?? 1000} onChange={(e) => setEdit({ ...edit, box_quantity: parseInt(e.target.value) || 1000 })}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Метка упаковки</label>
+                  <input value={edit.box_label || 'кор'} onChange={(e) => setEdit({ ...edit, box_label: e.target.value })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
               </div>

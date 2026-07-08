@@ -17,6 +17,7 @@ export interface Product {
   stock_status: string;
   quantity: number;
   box_quantity?: number;
+  box_label?: string;
   images: string[];
   sku_variants: SkuVariant[];
   is_active: boolean;

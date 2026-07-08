@@ -37,6 +37,7 @@ CREATE TABLE products (
   images TEXT[] DEFAULT '{}',
   sku_variants JSONB DEFAULT '[]',
   box_quantity INTEGER DEFAULT 1000,
+  box_label TEXT DEFAULT 'кор',
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
