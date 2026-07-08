@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
+import { ProductCard } from '../components/ProductCard';
 import type { Product } from '../types';
 
 export default function SearchPage() {
@@ -12,12 +13,22 @@ export default function SearchPage() {
   const { addItem } = useCart();
 
   useEffect(() => {
-    if (!q.trim()) { setProducts([]); setLoading(false); return; }
-    setLoading(true);
-    supabase.from('products').select('*').ilike('name', `%${q}%`).eq('is_active', true).order('id', { ascending: false }).then(({ data }) => {
-      setProducts(data || []);
+    if (!q.trim()) {
+      setProducts([]);
       setLoading(false);
-    });
+      return;
+    }
+    setLoading(true);
+    supabase
+      .from('products')
+      .select('*')
+      .ilike('name', `%${q}%`)
+      .eq('is_active', true)
+      .order('id', { ascending: false })
+      .then(({ data }) => {
+        setProducts(data || []);
+        setLoading(false);
+      });
   }, [q]);
 
   return (
@@ -44,24 +55,7 @@ export default function SearchPage() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {products.map((p) => (
-            <div key={p.id} className="group border border-gray-100 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow bg-white">
-              <Link to={`/product/${p.slug}`}>
-                <div className="aspect-square bg-gray-50 rounded mb-3 flex items-center justify-center overflow-hidden">
-                  {p.images?.[0] ? (
-                    <img src={p.images[0]} alt={p.name} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-gray-200 text-4xl font-bold">?</span>
-                  )}
-                </div>
-              </Link>
-              <Link to={`/product/${p.slug}`}>
-                <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 leading-tight min-h-[2.5rem] hover:text-[#ef7d00] transition-colors">{p.name}</h3>
-              </Link>
-              <div className="flex items-center justify-between mt-auto">
-                <span className="text-lg font-bold text-gray-900">{p.price} ₸</span>
-                <button onClick={() => addItem(p, 1)} className="w-8 h-8 bg-[#ef7d00] text-white rounded-full flex items-center justify-center hover:bg-[#d66f00] transition-colors text-lg leading-none">+</button>
-              </div>
-            </div>
+            <ProductCard key={p.id} product={p} onAddToCart={addItem} />
           ))}
         </div>
       )}

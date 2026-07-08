@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
+import { ProductCard } from '../components/ProductCard';
 import type { Product } from '../types';
 
 interface FilterGroupConfig {
@@ -679,18 +680,7 @@ export default function CatalogCategory() {
             ) : viewMode === 'grid' ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                 {sortedProducts.map((p) => (
-                  <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                    <Link to={`/product/${p.slug}`} className="p-4 flex items-center justify-center h-44">
-                      <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
-                    </Link>
-                    <div className="px-4 pb-4 flex flex-col flex-1">
-                      <Link to={`/product/${p.slug}`} className="text-sm text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
-                      <div className="mt-auto">
-                        <div className="text-lg font-bold text-[#ef7d00]">{p.price} ₸</div>
-                        <button onClick={() => addItem(p)} className="mt-2 w-full text-sm bg-[#ef7d00] text-white py-2 rounded hover:bg-[#d66f00] transition-colors">В корзину</button>
-                      </div>
-                    </div>
-                  </div>
+                  <ProductCard key={p.id} product={p} onAddToCart={addItem} />
                 ))}
               </div>
             ) : viewMode === 'list-sm' ? (

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
+import { ProductCard } from '../components/ProductCard';
 import type { Product } from '../types';
 
 export default function Profile() {
@@ -11,7 +12,11 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) { navigate('/login'); return; }
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     (async () => {
       const { data } = await supabase.from('wishlists').select('product_id').eq('user_id', user.id);
       if (data?.length) {
@@ -44,19 +49,19 @@ export default function Profile() {
       </nav>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
         <div className="w-full lg:w-64 shrink-0">
           <div className="bg-white border border-gray-200 rounded-sm p-5">
             <div className="text-sm font-semibold text-gray-900 mb-1">{user.email}</div>
             <div className="text-xs text-gray-400 mb-4">Пользователь</div>
-            <button onClick={handleLogout}
-              className="w-full text-sm text-gray-500 hover:text-red-500 border border-gray-200 rounded-sm px-3 py-2 transition-colors">
+            <button
+              onClick={handleLogout}
+              className="w-full text-sm text-gray-500 hover:text-red-500 border border-gray-200 rounded-sm px-3 py-2 transition-colors"
+            >
               Выйти
             </button>
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <h1 className="text-xl font-bold text-gray-900 mb-6">Избранное</h1>
 
@@ -73,18 +78,14 @@ export default function Profile() {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {wishlist.map((p) => (
-                <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                  <Link to={`/product/${p.slug}`} className="p-4 flex items-center justify-center h-36">
-                    <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
-                  </Link>
-                  <div className="px-4 pb-4 flex flex-col flex-1">
-                    <Link to={`/product/${p.slug}`} className="text-xs text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
-                    <div className="mt-auto">
-                      <div className="text-sm font-bold text-[#ef7d00]">{p.price} ₸</div>
-                      <button onClick={() => removeWish(p.id)}
-                        className="mt-2 text-xs text-gray-400 hover:text-red-500 transition-colors">Удалить</button>
-                    </div>
-                  </div>
+                <div key={p.id} className="relative">
+                  <ProductCard product={p} />
+                  <button
+                    onClick={() => removeWish(p.id)}
+                    className="mt-2 text-xs text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    Удалить из избранного
+                  </button>
                 </div>
               ))}
             </div>
