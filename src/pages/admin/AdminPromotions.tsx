@@ -84,7 +84,7 @@ export default function AdminPromotions() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Акции</h1>
-        <button onClick={() => setEdit({ title: '', slug: '', is_active: true })}
+        <button onClick={() => setEdit({ title: '', is_active: true })}
           className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
       </div>
 
@@ -96,11 +96,6 @@ export default function AdminPromotions() {
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Название *</label>
                 <input value={edit.title || ''} onChange={(e) => setEdit({ ...edit, title: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Slug (URL)</label>
-                <input value={edit.slug || ''} onChange={(e) => setEdit({ ...edit, slug: e.target.value })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
               </div>
               <div>
