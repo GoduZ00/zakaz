@@ -244,12 +244,12 @@ export default function AdminProducts() {
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Мелкоопт</label>
+                  <label className="text-xs text-gray-500 mb-1 block">Мелкооптовая</label>
                   <input type="number" step="0.01" value={edit.price_wholesale ?? ''} onChange={(e) => setEdit({ ...edit, price_wholesale: parseFloat(e.target.value) || null })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Опт</label>
+                  <label className="text-xs text-gray-500 mb-1 block">Оптом</label>
                   <input type="number" step="0.01" value={edit.price_opt ?? ''} onChange={(e) => setEdit({ ...edit, price_opt: parseFloat(e.target.value) || null })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
