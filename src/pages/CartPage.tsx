@@ -16,7 +16,7 @@ function sendWhatsAppOrder(items: any[], total: number) {
 
   lines.push('');
   lines.push(`Итого: ${total} ₸`);
-  lines.push('Самовывоз');
+
 
   const text = encodeURIComponent(lines.join('\n'));
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
@@ -105,10 +105,6 @@ export default function CartPage() {
                 <div className="flex justify-between text-gray-500">
                   <span>Товаров ({count})</span>
                   <span>{total} ₸</span>
-                </div>
-                <div className="flex justify-between text-gray-500">
-                  <span>Самовывоз</span>
-                  <span className="text-green-600">Бесплатно</span>
                 </div>
                 <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold text-gray-900">
                   <span>Итого</span>
