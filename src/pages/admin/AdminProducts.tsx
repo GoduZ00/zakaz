@@ -174,7 +174,7 @@ export default function AdminProducts() {
       stock_status: edit.stock_status || 'in_stock',
       quantity: edit.quantity ?? 0,
       box_quantity: edit.box_quantity ?? 1000,
-      box_label: edit.box_label || 'кор',
+      box_label: edit.box_label || null,
       description: edit.description || null,
       characteristics: edit.characteristics || [],
       is_active: edit.is_active ?? true,
@@ -278,8 +278,9 @@ export default function AdminProducts() {
                 </div>
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Метка упаковки</label>
-                  <select value={edit.box_label || 'кор'} onChange={(e) => setEdit({ ...edit, box_label: e.target.value })}
+                  <select value={edit.box_label ?? 'кор'} onChange={(e) => setEdit({ ...edit, box_label: e.target.value })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]">
+                    <option value="">—</option>
                     <option value="кор">кор</option>
                     <option value="уп">уп</option>
                     <option value="ящ">ящ</option>

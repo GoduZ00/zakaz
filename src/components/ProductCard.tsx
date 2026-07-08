@@ -28,7 +28,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
   const hasWholesale = typeof product.price_wholesale === 'number';
   const hasOpt = typeof product.price_opt === 'number';
   const boxQty = product.box_quantity || 1000;
-  const boxLabel = product.box_label || 'кор';
+  const boxLabel = product.box_label || '';
 
   return (
     <div className={`group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden ${className}`}>
@@ -74,7 +74,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
                 {formatPrice(product.price_wholesale!)} <span className="text-base font-semibold">₸/шт</span>
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {formatPrice(product.price_wholesale! * boxQty)} ₸/{boxLabel} ({boxQty} шт.)
+                {boxLabel ? `${formatPrice(product.price_wholesale! * boxQty)} ₸/${boxLabel} (${boxQty} шт.)` : `${formatPrice(product.price_wholesale! * boxQty)} ₸ (${boxQty} шт.)`}
               </div>
             </div>
           )}
@@ -95,7 +95,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
                 {formatPrice(product.price_opt!)} <span className="text-base font-semibold">₸/шт</span>
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {formatPrice(product.price_opt! * boxQty)} ₸/{boxLabel} ({boxQty} шт.)
+                {boxLabel ? `${formatPrice(product.price_opt! * boxQty)} ₸/${boxLabel} (${boxQty} шт.)` : `${formatPrice(product.price_opt! * boxQty)} ₸ (${boxQty} шт.)`}
               </div>
             </div>
           )}
