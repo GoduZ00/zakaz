@@ -1,47 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
-const promotions = [
-  {
-    id: 1,
-    title: 'Распродажа!',
-    date: '8 апреля 2025',
-    discount: '20%',
-    img: 'https://placehold.co/600x400/ef7d00/ffffff?text=Распродажа',
-    active: true,
-  },
-  {
-    id: 2,
-    title: 'Скидка на монетоприемники',
-    date: '15 марта 2025',
-    discount: '15%',
-    img: 'https://placehold.co/600x400/1a3673/ffffff?text=Скидка',
-    active: true,
-  },
-  {
-    id: 3,
-    title: 'Бесплатная доставка',
-    date: '1 февраля 2025',
-    discount: '0%',
-    img: 'https://placehold.co/600x400/22c55e/ffffff?text=Доставка',
-    active: true,
-  },
-  {
-    id: 4,
-    title: 'Подарок при заказе',
-    date: '10 января 2025',
-    discount: 'Подарок',
-    img: 'https://placehold.co/600x400/a855f7/ffffff?text=Подарок',
-    active: false,
-  },
-];
+interface Promotion {
+  id: number;
+  title: string;
+  description: string | null;
+  discount: string | null;
+  image: string | null;
+  is_active: boolean;
+  start_date: string | null;
+  end_date: string | null;
+  created_at: string;
+}
 
 export default function Aktsii() {
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [filter, setFilter] = useState<'current' | 'old'>('current');
 
+  useEffect(() => {
+    supabase.from('promotions').select('*').order('created_at', { ascending: false }).then(({ data }) => {
+      if (data) setPromotions(data);
+    });
+  }, []);
+
   const items = filter === 'current'
-    ? promotions.filter(p => p.active)
-    : promotions.filter(p => !p.active);
+    ? promotions.filter(p => p.is_active)
+    : promotions.filter(p => !p.is_active);
 
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
@@ -92,21 +77,25 @@ export default function Aktsii() {
               >
                 <div
                   className="h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${item.img})` }}
+                  style={{ backgroundImage: `url(${item.image || 'https://placehold.co/600x400/ef7d00/ffffff?text=Акция'})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute top-3 right-3">
-                  <span className="inline-block bg-[#ef7d00] text-white text-xs font-bold px-3 py-1 rounded-sm">
-                    {item.discount}
-                  </span>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="text-white/80 text-xs mb-1">
-                    <svg className="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 9 12">
-                      <path d="M710,75l-7,7h3l-1,5,7-7h-3Z" transform="translate(-703 -75)" />
-                    </svg>
-                    {item.date}
+                {item.discount && (
+                  <div className="absolute top-3 right-3">
+                    <span className="inline-block bg-[#ef7d00] text-white text-xs font-bold px-3 py-1 rounded-sm">
+                      {item.discount}
+                    </span>
                   </div>
+                )}
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  {item.end_date && (
+                    <div className="text-white/80 text-xs mb-1">
+                      <svg className="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 9 12">
+                        <path d="M710,75l-7,7h3l-1,5,7-7h-3Z" transform="translate(-703 -75)" />
+                      </svg>
+                      до {item.end_date}
+                    </div>
+                  )}
                   <h3 className="text-white font-bold text-sm leading-tight">
                     {item.title}
                   </h3>
