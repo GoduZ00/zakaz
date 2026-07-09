@@ -81,6 +81,16 @@ export default function AdminProducts() {
   const fileRef = useRef<HTMLInputElement>(null);
   const skuFileRef = useRef<HTMLInputElement>(null);
   const [skuUploadIdx, setSkuUploadIdx] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return products;
+    const q = search.toLowerCase();
+    return products.filter((p) =>
+      p.name.toLowerCase().includes(q) ||
+      (p.article && p.article.toLowerCase().includes(q))
+    );
+  }, [products, search]);
 
   const fetchProducts = async () => {
     const { data } = await supabase.from('products').select('*').order('id', { ascending: false });
@@ -197,7 +207,11 @@ export default function AdminProducts() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Товары</h1>
-        <button onClick={() => setEdit({ name: '', price: 0, stock_status: 'in_stock', quantity: 0, is_active: true, images: [], sku_variants: [], characteristics: [] })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00]">+ Добавить</button>
+        <div className="flex items-center gap-3">
+          <input type="text" placeholder="Поиск по названию или артикулу..." value={search} onChange={(e) => setSearch(e.target.value)}
+            className="border border-gray-300 rounded px-3 py-2 text-sm w-72 focus:outline-none focus:border-[#ef7d00]" />
+          <button onClick={() => setEdit({ name: '', price: 0, stock_status: 'in_stock', quantity: 0, is_active: true, images: [], sku_variants: [], characteristics: [] })} className="bg-[#ef7d00] text-white px-4 py-2 text-sm rounded hover:bg-[#d66f00] shrink-0">+ Добавить</button>
+        </div>
       </div>
 
       {edit && (
@@ -453,10 +467,11 @@ export default function AdminProducts() {
 
       {loading ? (
         <div className="text-gray-400 text-sm">Загрузка...</div>
-      ) : products.length === 0 ? (
-        <div className="bg-white rounded shadow p-8 text-center text-gray-400 text-sm">Нет товаров</div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white rounded shadow p-8 text-center text-gray-400 text-sm">{search ? 'Ничего не найдено' : 'Нет товаров'}</div>
       ) : (
         <div className="bg-white rounded shadow overflow-hidden">
+          {search && <div className="px-4 py-2 text-xs text-gray-400 border-b border-gray-100">Найдено: {filtered.length}</div>}
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-600">
               <tr>
@@ -468,7 +483,7 @@ export default function AdminProducts() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {products.map((p) => (
+              {filtered.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">{p.name}</td>
                   <td className="px-4 py-3 text-gray-500">{p.article || '—'}</td>
