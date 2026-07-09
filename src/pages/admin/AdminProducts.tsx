@@ -317,6 +317,7 @@ export default function AdminProducts() {
                     <option value="кор">кор</option>
                     <option value="упак">упак</option>
                     <option value="шт">шт</option>
+                    <option value="кг">кг</option>
                   </select>
                 </div>
               </div>

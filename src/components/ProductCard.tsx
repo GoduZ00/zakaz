@@ -48,12 +48,12 @@ function renderBlock(pricePerPiece: number, label: string, tooltip: string | und
             {formatPrice(pricePerPiece * boxQty)} ₸<span className="text-base font-semibold"> / {boxLabel}</span>
           </div>
           <div className="text-xs text-gray-500 mt-0.5">
-            {formatPrice(pricePerPiece)} ₸ /шт · {boxQty} шт. в {boxLabel}
+            {boxLabel === 'кг' ? `${formatPrice(pricePerPiece)} ₸ /кг` : `${formatPrice(pricePerPiece)} ₸ /шт · ${boxQty} шт. в ${boxLabel}`}
           </div>
         </>
       ) : (
         <div className="text-[22px] leading-none font-bold text-gray-900">
-          {formatPrice(pricePerPiece)} ₸<span className="text-base font-semibold"> /шт</span>
+          {formatPrice(pricePerPiece)} ₸<span className="text-base font-semibold"> /{boxLabel === 'кг' ? 'кг' : 'шт'}</span>
         </div>
       )}
     </div>

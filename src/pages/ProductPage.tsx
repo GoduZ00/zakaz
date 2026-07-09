@@ -279,21 +279,21 @@ export default function ProductPage() {
                     <>
                       <div className="flex items-baseline gap-3 mb-1">
                         <span className="text-2xl font-bold text-[#ef7d00]">{r(displayPrice)} ₸</span>
-                        <span className="text-xs text-gray-400">{pack ? `/ ${bl}` : '/ шт'}</span>
+                        <span className="text-xs text-gray-400">{pack ? `/ ${bl}` : bl === 'кг' ? '/ кг' : '/ шт'}</span>
                       </div>
                       <div className="space-y-1">
                         {product.price_wholesale && (
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-gray-400 text-xs">Розничная:</span>
                             <span className="text-gray-700 font-medium">{r(product.price_wholesale)} ₸</span>
-                            {pack && <span className="text-xs text-gray-400">/шт · {bq} шт. в {bl}</span>}
+                            {pack && <span className="text-xs text-gray-400">{bl === 'кг' ? `/кг · ${bq} кг` : `/шт · ${bq} шт. в ${bl}`}</span>}
                           </div>
                         )}
                         {product.price_opt && (
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-gray-400 text-xs">Оптовая:</span>
                             <span className="text-gray-700 font-medium">{r(product.price_opt)} ₸</span>
-                            {pack && <span className="text-xs text-gray-400">/шт · {bq} шт. в {bl}</span>}
+                            {pack && <span className="text-xs text-gray-400">{bl === 'кг' ? `/кг · ${bq} кг` : `/шт · ${bq} шт. в ${bl}`}</span>}
                           </div>
                         )}
                       </div>
