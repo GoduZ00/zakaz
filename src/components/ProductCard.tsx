@@ -9,7 +9,7 @@ interface ProductCardProps {
 }
 
 function formatPrice(value: number) {
-  return new Intl.NumberFormat('ru-RU').format(Math.round(value));
+  return new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number(value.toFixed(2)));
 }
 
 function getStockText(product: Product) {

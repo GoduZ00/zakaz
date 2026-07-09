@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const r = (v: number) => Math.round(v);
+const r = (v: number) => Number(v.toFixed(2));
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';

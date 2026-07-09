@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 
 const WHATSAPP_NUMBER = '77073099969';
 
-function r(v: number) { return Math.round(v); }
+function r(v: number) { return Number(v.toFixed(2)); }
 
 function getItemBasePrice(item: any): number {
   return item.sku?.price ?? item.product.price_wholesale ?? item.product.price;
