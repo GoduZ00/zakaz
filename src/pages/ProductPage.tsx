@@ -263,24 +263,35 @@ export default function ProductPage() {
 
               {/* Price */}
               <div className="mb-5">
-                <div className="flex items-baseline gap-3 mb-1">
-                  <span className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₸</span>
-                  <span className="text-xs text-gray-400">/ шт</span>
-                </div>
-                <div className="space-y-1">
-                  {product.price_wholesale && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-gray-400 text-xs">Мелкооптовая:</span>
-                      <span className="text-gray-700 font-medium">{product.price_wholesale} ₸</span>
-                    </div>
-                  )}
-                  {product.price_opt && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-gray-400 text-xs">Оптом:</span>
-                      <span className="text-gray-700 font-medium">{product.price_opt} ₸</span>
-                    </div>
-                  )}
-                </div>
+                {(() => {
+                  const bq = product.box_quantity || 1;
+                  const bl = product.box_label || 'упак';
+                  const pack = bq > 1;
+                  return (
+                    <>
+                      <div className="flex items-baseline gap-3 mb-1">
+                        <span className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₸</span>
+                        <span className="text-xs text-gray-400">{pack ? `/ ${bl}` : '/ шт'}</span>
+                      </div>
+                      <div className="space-y-1">
+                        {product.price_wholesale && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-gray-400 text-xs">Розничная:</span>
+                            <span className="text-gray-700 font-medium">{product.price_wholesale} ₸</span>
+                            {pack && <span className="text-xs text-gray-400">/шт · {bq} шт. в {bl}</span>}
+                          </div>
+                        )}
+                        {product.price_opt && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-gray-400 text-xs">Оптовая:</span>
+                            <span className="text-gray-700 font-medium">{product.price_opt} ₸</span>
+                            {pack && <span className="text-xs text-gray-400">/шт · {bq} шт. в {bl}</span>}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
 
               {/* Cart controls */}
