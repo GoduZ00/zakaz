@@ -126,18 +126,44 @@ export default function CartPage() {
                     </Link>
                     {item.sku && <div className="text-xs text-gray-400 mt-0.5">{item.sku.label}</div>}
                     {item.product.article && <div className="text-xs text-gray-400 mt-0.5">Арт. {item.product.article}</div>}
-                    <div className="text-sm font-semibold text-[#ef7d00] mt-1">{itemPrice} ₸</div>
-                    {tier !== 'retail' && getItemBasePrice(item) !== itemPrice && (
-                      <div className="text-xs text-gray-400 line-through">{getItemBasePrice(item)} ₸</div>
-                    )}
+                    {(() => {
+                      const bq = item.product.box_quantity || 1;
+                      const pack = bq > 1;
+                      return (
+                        <>
+                          <div className="text-sm font-semibold text-[#ef7d00] mt-1">
+                            {pack ? `${itemPrice * bq} ₸` : `${itemPrice} ₸`}
+                          </div>
+                          {tier !== 'retail' && getItemBasePrice(item) !== itemPrice && (
+                            <div className="text-xs text-gray-400 line-through">{pack ? `${getItemBasePrice(item) * bq} ₸` : `${getItemBasePrice(item)} ₸`}</div>
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
-                  <div className="flex items-center border border-gray-300 rounded-sm shrink-0">
-                    <button onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.sku?.article)}
-                      className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none">−</button>
-                    <span className="w-12 h-9 flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.sku?.article)}
-                      className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none">+</button>
-                  </div>
+                  {(() => {
+                    const bq = item.product.box_quantity || 1;
+                    const isPack = bq > 1;
+                    const displayQty = isPack ? Math.floor(item.quantity / bq) : item.quantity;
+                    const step = isPack ? bq : 1;
+                    const minQty = isPack ? bq : 1;
+                    return (
+                      <div className="flex items-center border border-gray-300 rounded-sm shrink-0">
+                        <button onClick={() => {
+                          const next = item.quantity - step;
+                          if (next < minQty) { removeItem(item.product.id, item.sku?.article); return; }
+                          updateQuantity(item.product.id, next, item.sku?.article);
+                        }}
+                          className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none">−</button>
+                        <span className="w-14 h-9 flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">
+                          {displayQty}
+                          {isPack && <span className="text-[10px] text-gray-400 ml-0.5">{item.product.box_label || 'упак'}</span>}
+                        </span>
+                        <button onClick={() => updateQuantity(item.product.id, item.quantity + step, item.sku?.article)}
+                          className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none">+</button>
+                      </div>
+                    );
+                  })()}
                   <div className="text-sm font-semibold text-gray-900 w-24 text-right shrink-0">{itemPrice * item.quantity} ₸</div>
                   <button onClick={() => removeItem(item.product.id, item.sku?.article)}
                     className="shrink-0 text-gray-400 hover:text-red-500 transition-colors p-1">

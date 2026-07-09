@@ -82,7 +82,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => setItems([]), []);
 
-  const count = items.reduce((s, i) => s + i.quantity, 0);
+  const count = items.length;
   const total = items.reduce((s, i) => s + (i.sku?.price ?? i.product.price) * i.quantity, 0);
 
   return (
