@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+
+const r = (v: number) => Math.round(v);
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
@@ -276,21 +278,21 @@ export default function ProductPage() {
                   return (
                     <>
                       <div className="flex items-baseline gap-3 mb-1">
-                        <span className="text-2xl font-bold text-[#ef7d00]">{displayPrice} ₸</span>
+                        <span className="text-2xl font-bold text-[#ef7d00]">{r(displayPrice)} ₸</span>
                         <span className="text-xs text-gray-400">{pack ? `/ ${bl}` : '/ шт'}</span>
                       </div>
                       <div className="space-y-1">
                         {product.price_wholesale && (
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-gray-400 text-xs">Розничная:</span>
-                            <span className="text-gray-700 font-medium">{product.price_wholesale} ₸</span>
+                            <span className="text-gray-700 font-medium">{r(product.price_wholesale)} ₸</span>
                             {pack && <span className="text-xs text-gray-400">/шт · {bq} шт. в {bl}</span>}
                           </div>
                         )}
                         {product.price_opt && (
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-gray-400 text-xs">Оптовая:</span>
-                            <span className="text-gray-700 font-medium">{product.price_opt} ₸</span>
+                            <span className="text-gray-700 font-medium">{r(product.price_opt)} ₸</span>
                             {pack && <span className="text-xs text-gray-400">/шт · {bq} шт. в {bl}</span>}
                           </div>
                         )}

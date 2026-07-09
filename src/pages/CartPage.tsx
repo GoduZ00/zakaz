@@ -5,6 +5,8 @@ import { supabase } from '../lib/supabase';
 
 const WHATSAPP_NUMBER = '77073099969';
 
+function r(v: number) { return Math.round(v); }
+
 function getItemBasePrice(item: any): number {
   return item.sku?.price ?? item.product.price_wholesale ?? item.product.price;
 }
@@ -27,11 +29,11 @@ function sendWhatsAppOrder(items: any[], getPrice: (item: any) => number) {
     const subtotal = price * item.quantity;
     total += subtotal;
     lines.push(`${i + 1}. ${name}${skuLabel}`);
-    lines.push(`   ${item.quantity} × ${price} ₸ = ${subtotal} ₸`);
+    lines.push(`   ${item.quantity} × ${r(price)} ₸ = ${r(subtotal)} ₸`);
   });
 
   lines.push('');
-  lines.push(`Итого: ${total} ₸`);
+  lines.push(`Итого: ${r(total)} ₸`);
 
   const text = encodeURIComponent(lines.join('\n'));
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
@@ -132,10 +134,10 @@ export default function CartPage() {
                       return (
                         <>
                           <div className="text-sm font-semibold text-[#ef7d00] mt-1">
-                            {pack ? `${itemPrice * bq} ₸` : `${itemPrice} ₸`}
+                            {pack ? `${r(itemPrice * bq)} ₸` : `${r(itemPrice)} ₸`}
                           </div>
                           {tier !== 'retail' && getItemBasePrice(item) !== itemPrice && (
-                            <div className="text-xs text-gray-400 line-through">{pack ? `${getItemBasePrice(item) * bq} ₸` : `${getItemBasePrice(item)} ₸`}</div>
+                            <div className="text-xs text-gray-400 line-through">{pack ? `${r(getItemBasePrice(item) * bq)} ₸` : `${r(getItemBasePrice(item))} ₸`}</div>
                           )}
                         </>
                       );
@@ -164,7 +166,7 @@ export default function CartPage() {
                       </div>
                     );
                   })()}
-                  <div className="text-sm font-semibold text-gray-900 w-24 text-right shrink-0">{itemPrice * item.quantity} ₸</div>
+                  <div className="text-sm font-semibold text-gray-900 w-24 text-right shrink-0">{r(itemPrice * item.quantity)} ₸</div>
                   <button onClick={() => removeItem(item.product.id, item.sku?.article)}
                     className="shrink-0 text-gray-400 hover:text-red-500 transition-colors p-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -182,17 +184,17 @@ export default function CartPage() {
               <div className="space-y-2 text-sm mb-4">
                 <div className="flex justify-between text-gray-500">
                   <span>Товаров ({count})</span>
-                  <span>{tierTotal} ₸</span>
+                  <span>{r(tierTotal)} ₸</span>
                 </div>
                 {tier !== 'retail' && (
                   <div className="flex justify-between text-xs text-gray-400">
                     <span>Базовая сумма</span>
-                    <span className="line-through">{baseTotal} ₸</span>
+                    <span className="line-through">{r(baseTotal)} ₸</span>
                   </div>
                 )}
                 <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold text-gray-900">
                   <span>Итого</span>
-                  <span className="text-[#ef7d00]">{tierTotal} ₸</span>
+                  <span className="text-[#ef7d00]">{r(tierTotal)} ₸</span>
                 </div>
               </div>
               <button onClick={() => sendWhatsAppOrder(items, getPrice)}
