@@ -148,3 +148,15 @@ INSERT INTO footer_sections (title, links, sort_order) VALUES
   ('О КОМПАНИИ', '[{"label":"Новости","url":"#"},{"label":"Статьи","url":"#"},{"label":"Партнеры","url":"#"},{"label":"Сертификаты","url":"#"},{"label":"Отзывы","url":"#"},{"label":"Реквизиты","url":"#"}]', 1),
   ('КАК ЗАКАЗАТЬ', '[{"label":"Оплата","url":"#"},{"label":"Самовывоз","url":"#"},{"label":"Документы","url":"#"},{"label":"Доставка по Москве и МО","url":"#"},{"label":"Доставка по регионам","url":"#"},{"label":"Таможенный союз","url":"#"}]', 2),
   ('КЛИЕНТАМ', '[{"label":"Прайс-лист","url":"#"},{"label":"Дисплеи","url":"#"},{"label":"Видео","url":"#"},{"label":"Купоны на скидку и промо","url":"#"},{"label":"Вопросы и ответы","url":"#"},{"label":"Сертификаты","url":"#"}]', 3);
+
+-- Price thresholds (cart auto-switch tiers, admin-editable)
+CREATE TABLE price_thresholds (
+  id BIGSERIAL PRIMARY KEY,
+  tier TEXT NOT NULL UNIQUE,
+  threshold NUMERIC(10,2) NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO price_thresholds (tier, threshold) VALUES
+  ('opt', 50000),
+  ('large_wholesale', 100000);

@@ -39,6 +39,7 @@ const AdminFilterGroups = lazy(() => import('./pages/admin/AdminFilterGroups'));
 const AdminNews = lazy(() => import('./pages/admin/AdminNews'));
 const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
 const AdminFooter = lazy(() => import('./pages/admin/AdminFooter'));
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 
 function Layout({ children }: { children: ReactNode }) {
   return (
@@ -109,6 +110,7 @@ export default function App() {
             <Route path="promotions" element={withSuspense(<AdminPromotions />)} />
             <Route path="orders" element={withSuspense(<AdminOrders />)} />
             <Route path="footer" element={withSuspense(<AdminFooter />)} />
+            <Route path="settings" element={withSuspense(<AdminSettings />)} />
           </Route>
         </Routes>
       </CartProvider>

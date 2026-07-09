@@ -1,29 +1,74 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { supabase } from '../lib/supabase';
 
 const WHATSAPP_NUMBER = '77073099969';
 
-function sendWhatsAppOrder(items: any[], total: number) {
+function getItemBasePrice(item: any): number {
+  return item.sku?.price ?? item.product.price_wholesale ?? item.product.price;
+}
+
+function getItemTierPrice(item: any, tier: string): number {
+  if (item.sku?.price) return item.sku.price;
+  if (tier === 'large_wholesale') return item.product.price_large_wholesale ?? item.product.price_opt ?? item.product.price_wholesale ?? item.product.price;
+  if (tier === 'opt') return item.product.price_opt ?? item.product.price_wholesale ?? item.product.price;
+  return item.product.price_wholesale ?? item.product.price;
+}
+
+function sendWhatsAppOrder(items: any[], getPrice: (item: any) => number) {
   const lines = ['НОВЫЙ ЗАКАЗ', ''];
+  let total = 0;
 
   items.forEach((item, i) => {
     const name = item.product.name;
     const skuLabel = item.sku ? ` (${item.sku.label})` : '';
-    const price = item.sku?.price ?? item.product.price;
+    const price = getPrice(item);
+    const subtotal = price * item.quantity;
+    total += subtotal;
     lines.push(`${i + 1}. ${name}${skuLabel}`);
-    lines.push(`   ${item.quantity} × ${price} ₸ = ${price * item.quantity} ₸`);
+    lines.push(`   ${item.quantity} × ${price} ₸ = ${subtotal} ₸`);
   });
 
   lines.push('');
   lines.push(`Итого: ${total} ₸`);
-
 
   const text = encodeURIComponent(lines.join('\n'));
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
 }
 
 export default function CartPage() {
-  const { items, count, total, updateQuantity, removeItem, clearCart } = useCart();
+  const { items, count, updateQuantity, removeItem, clearCart } = useCart();
+  const [thresholds, setThresholds] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    supabase.from('price_thresholds').select('*').then(({ data }) => {
+      if (data) {
+        const map: Record<string, number> = {};
+        for (const t of data) map[t.tier] = t.threshold;
+        setThresholds(map);
+      }
+    });
+  }, []);
+
+  const baseTotal = items.reduce((s, i) => s + getItemBasePrice(i) * i.quantity, 0);
+
+  let tier = 'retail';
+  if (thresholds.large_wholesale && baseTotal >= thresholds.large_wholesale) {
+    tier = 'large_wholesale';
+  } else if (thresholds.opt && baseTotal >= thresholds.opt) {
+    tier = 'opt';
+  }
+
+  const getPrice = (item: any) => getItemTierPrice(item, tier);
+
+  const tierTotal = items.reduce((s, i) => s + getPrice(i) * i.quantity, 0);
+
+  const tierLabel = (t: string) => {
+    if (t === 'large_wholesale') return 'Крупнооптовая цена';
+    if (t === 'opt') return 'Оптовая цена';
+    return '';
+  };
 
   if (items.length === 0) {
     return (
@@ -59,12 +104,17 @@ export default function CartPage() {
 
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Корзина</h1>
 
+        {tier !== 'retail' && (
+          <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-sm mb-4">
+            На сумму от {thresholds[tier]?.toLocaleString('ru-RU')} ₸ применяется <strong>{tierLabel(tier)}</strong>
+          </div>
+        )}
+
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Items list */}
           <div className="flex-1 space-y-3">
             {items.map((item) => {
               const key = item.sku ? `${item.product.id}_${item.sku.article}` : `${item.product.id}`;
-              const itemPrice = item.sku?.price ?? item.product.price;
+              const itemPrice = getPrice(item);
               return (
                 <div key={key} className="bg-white border border-gray-200 rounded-sm p-4 flex items-center gap-4">
                   <Link to={`/product/${item.product.slug}`} className="w-20 h-20 shrink-0 flex items-center justify-center bg-gray-50 rounded">
@@ -77,6 +127,9 @@ export default function CartPage() {
                     {item.sku && <div className="text-xs text-gray-400 mt-0.5">{item.sku.label}</div>}
                     {item.product.article && <div className="text-xs text-gray-400 mt-0.5">Арт. {item.product.article}</div>}
                     <div className="text-sm font-semibold text-[#ef7d00] mt-1">{itemPrice} ₸</div>
+                    {tier !== 'retail' && getItemBasePrice(item) !== itemPrice && (
+                      <div className="text-xs text-gray-400 line-through">{getItemBasePrice(item)} ₸</div>
+                    )}
                   </div>
                   <div className="flex items-center border border-gray-300 rounded-sm shrink-0">
                     <button onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.sku?.article)}
@@ -97,21 +150,26 @@ export default function CartPage() {
             })}
           </div>
 
-          {/* Summary */}
           <div className="w-full lg:w-80 shrink-0">
             <div className="bg-white border border-gray-200 rounded-sm p-5 sticky top-24">
               <h2 className="text-sm font-semibold text-gray-900 mb-4">Ваш заказ</h2>
               <div className="space-y-2 text-sm mb-4">
                 <div className="flex justify-between text-gray-500">
                   <span>Товаров ({count})</span>
-                  <span>{total} ₸</span>
+                  <span>{tierTotal} ₸</span>
                 </div>
+                {tier !== 'retail' && (
+                  <div className="flex justify-between text-xs text-gray-400">
+                    <span>Базовая сумма</span>
+                    <span className="line-through">{baseTotal} ₸</span>
+                  </div>
+                )}
                 <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold text-gray-900">
                   <span>Итого</span>
-                  <span className="text-[#ef7d00]">{total} ₸</span>
+                  <span className="text-[#ef7d00]">{tierTotal} ₸</span>
                 </div>
               </div>
-              <button onClick={() => sendWhatsAppOrder(items, total)}
+              <button onClick={() => sendWhatsAppOrder(items, getPrice)}
                 className="w-full bg-[#ef7d00] text-white py-2.5 text-sm rounded hover:bg-[#d66f00] transition-colors font-medium mb-2">
                 Оформить заказ
               </button>

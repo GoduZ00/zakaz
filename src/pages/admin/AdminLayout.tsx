@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Акции', path: '/admin/promotions' },
   { label: 'Заказы', path: '/admin/orders' },
   { label: 'Футтер', path: '/admin/footer' },
+  { label: 'Настройки', path: '/admin/settings' },
 ];
 
 export default function AdminLayout() {

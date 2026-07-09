@@ -64,3 +64,10 @@ CREATE POLICY "Public read" ON footer_sections FOR SELECT USING (true);
 CREATE POLICY "Admin insert" ON footer_sections FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin update" ON footer_sections FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Admin delete" ON footer_sections FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Price thresholds
+ALTER TABLE price_thresholds ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON price_thresholds FOR SELECT USING (true);
+CREATE POLICY "Admin insert" ON price_thresholds FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Admin update" ON price_thresholds FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin delete" ON price_thresholds FOR DELETE USING (auth.role() = 'authenticated');
