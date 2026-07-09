@@ -34,6 +34,7 @@ interface Product {
   price: number;
   price_wholesale: number | null;
   price_opt: number | null;
+  price_large_wholesale: number | null;
   box_quantity: number;
   box_label: string;
   stock_status: string;
@@ -171,6 +172,7 @@ export default function AdminProducts() {
       price: edit.price ?? 0,
       price_wholesale: edit.price_wholesale || null,
       price_opt: edit.price_opt || null,
+      price_large_wholesale: edit.price_large_wholesale || null,
       stock_status: edit.stock_status || 'in_stock',
       quantity: edit.quantity ?? 0,
       box_quantity: edit.box_quantity ?? 1000,
@@ -237,20 +239,25 @@ export default function AdminProducts() {
               </div>
 
               {/* Prices */}
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-4 gap-3">
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Цена *</label>
                   <input type="number" step="0.01" value={edit.price ?? ''} onChange={(e) => setEdit({ ...edit, price: parseFloat(e.target.value) || 0 })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Розничная цена</label>
+                  <label className="text-xs text-gray-500 mb-1 block">Розничная</label>
                   <input type="number" step="0.01" value={edit.price_wholesale ?? ''} onChange={(e) => setEdit({ ...edit, price_wholesale: parseFloat(e.target.value) || null })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Крупнооптовая цена</label>
+                  <label className="text-xs text-gray-500 mb-1 block">Оптовая</label>
                   <input type="number" step="0.01" value={edit.price_opt ?? ''} onChange={(e) => setEdit({ ...edit, price_opt: parseFloat(e.target.value) || null })}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Крупноопт</label>
+                  <input type="number" step="0.01" value={edit.price_large_wholesale ?? ''} onChange={(e) => setEdit({ ...edit, price_large_wholesale: parseFloat(e.target.value) || null })}
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
                 </div>
               </div>

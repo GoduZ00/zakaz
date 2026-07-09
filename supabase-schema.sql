@@ -32,6 +32,7 @@ CREATE TABLE products (
   price NUMERIC(10,2) NOT NULL DEFAULT 0,
   price_wholesale NUMERIC(10,2),
   price_opt NUMERIC(10,2),
+  price_large_wholesale NUMERIC(10,2),
   stock_status TEXT DEFAULT 'in_stock',
   quantity INTEGER DEFAULT 0,
   images TEXT[] DEFAULT '{}',

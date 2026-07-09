@@ -14,6 +14,7 @@ export interface Product {
   price: number;
   price_wholesale: number | null;
   price_opt: number | null;
+  price_large_wholesale: number | null;
   stock_status: string;
   quantity: number;
   box_quantity?: number;
