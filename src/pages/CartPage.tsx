@@ -28,8 +28,13 @@ function sendWhatsAppOrder(items: any[], getPrice: (item: any) => number) {
     const price = getPrice(item);
     const subtotal = price * item.quantity;
     total += subtotal;
+    const bq = item.product.box_quantity || 1;
+    const pack = bq > 1;
+    const displayQty = pack ? Math.floor(item.quantity / bq) : item.quantity;
+    const unit = pack ? (item.product.box_label || 'упак') : 'шт';
+    const unitPrice = pack ? r(price * bq) : r(price);
     lines.push(`${i + 1}. ${name}${skuLabel}`);
-    lines.push(`   ${item.quantity} × ${r(price)} ₸ = ${r(subtotal)} ₸`);
+    lines.push(`   ${displayQty} ${unit} × ${unitPrice} ₸ = ${r(subtotal)} ₸`);
   });
 
   lines.push('');
