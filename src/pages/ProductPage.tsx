@@ -54,6 +54,12 @@ export default function ProductPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [selectedSku, setSelectedSku] = useState<string>('');
   const [qty, setQty] = useState(1);
+
+  useEffect(() => {
+    if (product && (product.box_quantity ?? 0) > 1 && qty === 1) {
+      setQty(product.box_quantity!);
+    }
+  }, [product]);
   const [showOneClick, setShowOneClick] = useState(false);
   const [tab, setTab] = useState<'desc' | 'chars'>('desc');
   const [inWish, setInWish] = useState(false);
@@ -297,7 +303,7 @@ export default function ProductPage() {
               {/* Cart controls */}
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex items-center border border-gray-300 rounded-sm">
-                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
+                  <button onClick={() => setQty(Math.max(product.box_quantity || 1, qty - 1))} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
                     <svg width="11" height="1" viewBox="0 0 11 1" fill="currentColor"><rect width="11" height="1" rx="0.5"/></svg>
                   </button>
                   <span className="w-14 h-10 flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">{qty}</span>

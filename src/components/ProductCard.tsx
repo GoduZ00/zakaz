@@ -3,7 +3,7 @@ import type { Product } from '../types';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart?: (product: Product) => void;
+  onAddToCart?: (product: Product, qty?: number) => void;
   className?: string;
   optTooltip?: string;
 }
@@ -115,7 +115,10 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
 
         {onAddToCart && (
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={() => {
+              const packQty = product.box_quantity && product.box_quantity > 1 ? product.box_quantity : 1;
+              onAddToCart(product, packQty);
+            }}
             className="mt-4 w-full h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors"
           >
             В корзину
