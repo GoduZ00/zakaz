@@ -154,11 +154,11 @@ export default function CatalogCategory() {
       if (cat) {
         let filterData;
         if (activeSubId) {
-          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('subcategory_id', activeSubId).order('sort_order');
+          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', activeSubId).order('sort_order');
           filterData = data;
         }
         if (!filterData || !filterData.length) {
-          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('category_id', cat.id).order('sort_order');
+          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('category_id', cat.id).order('sort_order');
           filterData = data;
         }
         // Fall back to hardcoded config if DB has no entries for this category

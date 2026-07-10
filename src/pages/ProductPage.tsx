@@ -56,6 +56,7 @@ export default function ProductPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [selectedSku, setSelectedSku] = useState<string>('');
   const [qty, setQty] = useState(1);
+  const [filterGroups, setFilterGroups] = useState<{ name: string; characteristicLabel: string; options: string[] }[]>([]);
 
   useEffect(() => {
     if (product && (product.box_quantity ?? 0) > 1 && qty === 1) {
@@ -71,7 +72,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
-    supabase.from('products').select('*').eq('slug', slug).eq('is_active', true).single().then(({ data }) => {
+    supabase.from('products').select('*').eq('slug', slug).eq('is_active', true).single().then(async ({ data }) => {
       setProduct(data);
       if (data) {
         setSelectedSku(data.sku_variants?.[0]?.article || '');
@@ -83,6 +84,11 @@ export default function ProductPage() {
           img: data.images?.[0] || '/placeholder.png',
           url: `/product/${data.slug}`,
         });
+        // Load filter groups for characteristic options
+        if (data.subcategory_id) {
+          const { data: fgData } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', data.subcategory_id).order('sort_order');
+          if (fgData?.length) setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] })));
+        }
       }
       setLoading(false);
     });
@@ -269,21 +275,36 @@ export default function ProductPage() {
                 )}
               </div>
 
-              {/* Key characteristics badges */}
-              {(() => {
-                const keys = ['Номинал', 'Распределитель', 'Товар'];
-                const chars = product.characteristics?.filter((c) => keys.includes(c.label) && c.value) || [];
-                if (!chars.length) return null;
-                return (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {chars.map((c) => (
-                      <span key={c.label} className="text-xs px-3 py-1 rounded border border-[#ef7d00] text-[#ef7d00] bg-orange-50 font-medium">
-                        {c.label}: {c.value}
-                      </span>
-                    ))}
-                  </div>
-                );
-              })()}
+              {/* Characteristic options (from filter groups) */}
+              {filterGroups.length > 0 && (
+                <div className="space-y-3 mb-4">
+                  {filterGroups.map((fg) => {
+                    const currentVal = product.characteristics?.find((c) => c.label === fg.characteristicLabel)?.value || '';
+                    const options = fg.options.length ? fg.options : [...new Set(product.characteristics?.filter((c) => c.label === fg.characteristicLabel).map((c) => c.value))];
+                    if (!options.length) return null;
+                    return (
+                      <div key={fg.characteristicLabel}>
+                        <div className="text-xs text-gray-500 mb-1.5">{fg.name}</div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {options.map((opt) => {
+                            const active = opt === currentVal;
+                            return (
+                              <span key={opt}
+                                className={`text-xs px-3 py-1 rounded-sm border transition-all ${
+                                  active
+                                    ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium'
+                                    : 'border-gray-200 text-gray-500 bg-white'
+                                }`}>
+                                {opt}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Price */}
               <div className="mb-5">
