@@ -131,6 +131,7 @@ CREATE TABLE category_filter_groups (
   subcategory_id BIGINT REFERENCES subcategories(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   characteristic_label TEXT NOT NULL,
+  options JSONB DEFAULT NULL,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
