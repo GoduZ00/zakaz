@@ -58,6 +58,8 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1);
   const [filterGroups, setFilterGroups] = useState<{ name: string; characteristicLabel: string; options: string[] }[]>([]);
   const [subSlug, setSubSlug] = useState('');
+  const [selChars, setSelChars] = useState<Record<string, string>>({});
+  const [subId, setSubId] = useState<number | null>(null);
 
   useEffect(() => {
     if (product && (product.box_quantity ?? 0) > 1 && qty === 1) {
@@ -93,7 +95,12 @@ export default function ProductPage() {
           ]);
           if (fgData?.length) setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] })));
           if (subData) setSubSlug(subData.slug);
+          setSubId(data.subcategory_id);
         }
+        // Init characteristic selection from product
+        const init: Record<string, string> = {};
+        for (const c of data.characteristics || []) { init[c.label] = c.value; }
+        setSelChars(init);
       }
       setLoading(false);
     });
@@ -280,11 +287,11 @@ export default function ProductPage() {
                 )}
               </div>
 
-              {/* Characteristic options (from filter groups) */}
+              {/* Characteristic selectors */}
               {filterGroups.length > 0 && (
                 <div className="space-y-3 mb-4">
                   {filterGroups.map((fg) => {
-                    const currentVal = product.characteristics?.find((c) => c.label === fg.characteristicLabel)?.value || '';
+                    const currentVal = selChars[fg.characteristicLabel] || '';
                     const options = fg.options.length ? fg.options : [...new Set(product.characteristics?.filter((c) => c.label === fg.characteristicLabel).map((c) => c.value))];
                     if (!options.length) return null;
                     return (
@@ -294,10 +301,34 @@ export default function ProductPage() {
                           {options.map((opt) => {
                             const active = opt === currentVal;
                             return (
-                              <button key={opt} onClick={() => { if (opt !== currentVal && subSlug) navigate(`/catalog/${subSlug}?${fg.characteristicLabel}=${encodeURIComponent(opt)}`); }}
-                                className={`text-xs px-3 py-1 rounded-sm border transition-all cursor-pointer ${
+                              <button key={opt}
+                                disabled={active}
+                                onClick={async () => {
+                                  const next = { ...selChars, [fg.characteristicLabel]: opt };
+                                  // Find product in same subcategory matching ALL selected characteristics
+                                  const { data: matches } = await supabase
+                                    .from('products')
+                                    .select('slug')
+                                    .eq('subcategory_id', subId)
+                                    .eq('is_active', true)
+                                    .contains('characteristics', JSON.stringify([{ label: fg.characteristicLabel, value: opt }]));
+                                  if (!matches?.length) return;
+                                  // Try to find a product that matches all selected chars
+                                  for (const m of matches) {
+                                    const { data: full } = await supabase.from('products').select('characteristics').eq('slug', m.slug).single();
+                                    if (full) {
+                                      const allMatch = Object.entries(next).every(([l, v]) =>
+                                        (full.characteristics as any[])?.some((c: any) => c.label === l && c.value === v)
+                                      );
+                                      if (allMatch) { navigate(`/product/${m.slug}`); return; }
+                                    }
+                                  }
+                                  // Fallback: just match the changed characteristic
+                                  navigate(`/product/${matches[0].slug}`);
+                                }}
+                                className={`text-xs px-3 py-1.5 rounded-sm border transition-all cursor-pointer ${
                                   active
-                                    ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium'
+                                    ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium cursor-default'
                                     : 'border-gray-200 text-gray-500 bg-white hover:border-gray-400 hover:text-gray-700'
                                 }`}>
                                 {opt}
