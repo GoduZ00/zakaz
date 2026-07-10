@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/ProductCard';
@@ -93,7 +93,6 @@ const faqItems = [
 
 export default function CatalogCategory() {
   const { categoryId } = useParams();
-  const [searchParams] = useSearchParams();
   const { addItem } = useCart();
 
   const [category, setCategory] = useState<CategoryInfo | null>(null);
@@ -155,11 +154,11 @@ export default function CatalogCategory() {
       if (cat) {
         let filterData;
         if (activeSubId) {
-          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', activeSubId).order('sort_order');
+          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('subcategory_id', activeSubId).order('sort_order');
           filterData = data;
         }
         if (!filterData || !filterData.length) {
-          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('category_id', cat.id).order('sort_order');
+          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label').eq('category_id', cat.id).order('sort_order');
           filterData = data;
         }
         // Fall back to hardcoded config if DB has no entries for this category
@@ -168,17 +167,6 @@ export default function CatalogCategory() {
           filterData = subHardcoded || filterConfigByCategory[cat.slug];
         }
         setFilterGroups(filterData?.length ? filterData : null);
-
-        // Apply filters from URL query params
-        const initialFilters: Record<string, string[]> = {};
-        let hasFilter = false;
-        if (filterData?.length) {
-          for (const fg of filterData as FilterGroupConfig[]) {
-            const vals = searchParams.getAll(fg.characteristicLabel);
-            if (vals.length) { initialFilters[fg.characteristicLabel] = vals; hasFilter = true; }
-          }
-        }
-        if (hasFilter) setCharFilters(initialFilters);
 
         const subIds = subs.map((s) => s.id);
         let query = supabase.from('products').select('*').in('subcategory_id', subIds).eq('is_active', true);

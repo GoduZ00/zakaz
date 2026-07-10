@@ -7,7 +7,6 @@ interface FilterGroup {
   subcategory_id: number | null;
   name: string;
   characteristic_label: string;
-  options: string[] | null;
   sort_order: number;
 }
 
@@ -47,7 +46,7 @@ export default function AdminFilterGroups() {
   const save = async () => {
     if (!edit || !edit.name || !edit.characteristic_label) return;
     setSaving(true);
-    const payload: any = { name: edit.name, characteristic_label: edit.characteristic_label, options: Array.isArray(edit.options) && edit.options.length ? edit.options : null, sort_order: edit.sort_order ?? 0 };
+    const payload: any = { name: edit.name, characteristic_label: edit.characteristic_label, sort_order: edit.sort_order ?? 0 };
     if (edit.scope === 'subcategory') {
       payload.category_id = null;
       payload.subcategory_id = edit.subcategory_id;
@@ -130,13 +129,6 @@ export default function AdminFilterGroups() {
                 <div className="text-[11px] text-gray-400 mt-1">Должна совпадать с label в характеристиках товара</div>
               </div>
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Варианты (через запятую)</label>
-                <input value={Array.isArray(edit.options) ? edit.options.join(', ') : ''}
-                  onChange={(e) => setEdit({ ...edit, options: e.target.value ? e.target.value.split(',').map((s) => s.trim()).filter(Boolean) : [] })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" placeholder="50, 100, 100+100" />
-                <div className="text-[11px] text-gray-400 mt-1">Оставьте пустым, чтобы варианты собирались из товаров</div>
-              </div>
-              <div>
                 <label className="text-xs text-gray-500 mb-1 block">Порядок сортировки</label>
                 <input type="number" value={edit.sort_order ?? 0} onChange={(e) => setEdit({ ...edit, sort_order: Number(e.target.value) })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
@@ -169,7 +161,6 @@ export default function AdminFilterGroups() {
                       <div className="text-sm text-gray-800">{g.name}</div>
                       <div className="text-[11px] text-gray-400">
                         {scopeLabel(g)} · Характеристика: {g.characteristic_label} · Порядок: {g.sort_order}
-                        {g.options?.length ? ` · Варианты: ${g.options.join(', ')}` : ''}
                       </div>
                     </div>
                     <div className="flex gap-1 shrink-0">

@@ -56,11 +56,6 @@ export default function ProductPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [selectedSku, setSelectedSku] = useState<string>('');
   const [qty, setQty] = useState(1);
-  const [filterGroups, setFilterGroups] = useState<{ name: string; characteristicLabel: string; options: string[] }[]>([]);
-  const [subSlug, setSubSlug] = useState('');
-  const [selChars, setSelChars] = useState<Record<string, string>>({});
-  const [subId, setSubId] = useState<number | null>(null);
-  const [subProducts, setSubProducts] = useState<{ slug: string; characteristics: any[] }[]>([]);
 
   useEffect(() => {
     if (product && (product.box_quantity ?? 0) > 1 && qty === 1) {
@@ -76,7 +71,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
-    supabase.from('products').select('*').eq('slug', slug).eq('is_active', true).single().then(async ({ data }) => {
+    supabase.from('products').select('*').eq('slug', slug).eq('is_active', true).single().then(({ data }) => {
       setProduct(data);
       if (data) {
         setSelectedSku(data.sku_variants?.[0]?.article || '');
@@ -88,36 +83,6 @@ export default function ProductPage() {
           img: data.images?.[0] || '/placeholder.png',
           url: `/product/${data.slug}`,
         });
-        // Load filter groups for characteristic options
-        let hasGroups = false;
-        if (data.subcategory_id) {
-          const [{ data: fgData }, { data: subData }] = await Promise.all([
-            supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', data.subcategory_id).order('sort_order'),
-            supabase.from('subcategories').select('slug').eq('id', data.subcategory_id).single(),
-          ]);
-          if (fgData?.length) { setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] }))); hasGroups = true; }
-          if (subData) setSubSlug(subData.slug);
-          setSubId(data.subcategory_id);
-        }
-        // Load all products in same subcategory for characteristic switching
-        if (data.subcategory_id) {
-          const { data: all } = await supabase.from('products').select('slug, characteristics').eq('subcategory_id', data.subcategory_id).eq('is_active', true);
-          if (all) setSubProducts(all as any);
-        }
-        // Fallback: if no filter groups in DB, build from product characteristics
-        if (!hasGroups) {
-          const keys = ['Номинал', 'Распределитель', 'Товар'];
-          const groups: { name: string; characteristicLabel: string; options: string[] }[] = [];
-          for (const key of keys) {
-            const vals = [...new Set((data.characteristics || []).filter((c: any) => c.label === key).map((c: any) => c.value))];
-            if (vals.length) groups.push({ name: key, characteristicLabel: key, options: vals });
-          }
-          if (groups.length) setFilterGroups(groups);
-        }
-        // Init characteristic selection from product
-        const init: Record<string, string> = {};
-        for (const c of data.characteristics || []) { init[c.label] = c.value; }
-        setSelChars(init);
       }
       setLoading(false);
     });
@@ -304,50 +269,6 @@ export default function ProductPage() {
                 )}
               </div>
 
-              {/* Characteristic selectors */}
-              {filterGroups.length > 0 && (
-                <div className="space-y-3 mb-4">
-                  {filterGroups.map((fg) => {
-                    const currentVal = selChars[fg.characteristicLabel] || '';
-                    const options = fg.options.length ? fg.options : [...new Set(product.characteristics?.filter((c) => c.label === fg.characteristicLabel).map((c) => c.value))];
-                    if (!options.length) return null;
-                    return (
-                      <div key={fg.characteristicLabel}>
-                        <div className="text-xs text-gray-500 mb-1.5">{fg.name}</div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {options.map((opt) => {
-                            const active = opt === currentVal;
-                            return (
-                              <button key={opt}
-                                onClick={async () => {
-                                  const next = { ...selChars, [fg.characteristicLabel]: opt };
-                                  // Find first product matching ALL selected characteristics
-                                  const match = subProducts.find((p) =>
-                                    p.slug !== slug &&
-                                    Object.entries(next).every(([l, v]) =>
-                                      p.characteristics?.some((c: any) => c.label === l && c.value === v)
-                                    )
-                                  );
-                                  if (match) { navigate(`/product/${match.slug}`); return; }
-                                  // Fallback: navigate to catalog filtered by this characteristic
-                                  if (subSlug) navigate(`/catalog/${subSlug}?${fg.characteristicLabel}=${encodeURIComponent(opt)}`);
-                                }}
-                                className={`text-xs px-3 py-1.5 rounded-sm border transition-all cursor-pointer ${
-                                  active
-                                    ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium cursor-default'
-                                    : 'border-gray-200 text-gray-500 bg-white hover:border-gray-400 hover:text-gray-700'
-                                }`}>
-                                {opt}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
               {/* Price */}
               <div className="mb-5">
                 {(() => {
@@ -425,7 +346,7 @@ export default function ProductPage() {
                     <div className="char_block bordered rounded3 js-scrolled border border-gray-200 rounded-sm overflow-hidden">
                       <table className="props_list nbg w-full text-sm">
                         <tbody className="js-offers-prop">
-                          {product.characteristics.filter((c) => !['Номинал', 'Распределитель', 'Товар'].includes(c.label)).map((c, i) => (
+                          {product.characteristics.map((c, i) => (
                             <tr key={i} className={`js-prop-replace ${i % 2 === 0 ? '' : 'bg-gray-50'}`} itemScope itemType="http://schema.org/PropertyValue">
                               <td className="char_name px-4 py-2.5 w-1/2 text-gray-500 align-top">
                                 <div className="props_item">
