@@ -402,58 +402,58 @@ export default function AdminProducts() {
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Характеристики</label>
                 {availableFilterGroups.length > 0 && (
-                  <div className="mb-2 flex flex-wrap gap-1">
+                  <div className="space-y-3 mb-3">
                     {availableFilterGroups.map((fg) => {
-                      const exists = (edit.characteristics || []).some((c) => c.label === fg.characteristicLabel);
+                      const opts = fg.options || [];
+                      if (!opts.length) return null;
+                      const chars = edit.characteristics || [];
                       return (
-                        <button key={fg.characteristicLabel} type="button" onClick={() => {
-                          if (!exists) {
-                            setEdit({ ...edit!, characteristics: [...(edit.characteristics || []), { label: fg.characteristicLabel, value: '' }] });
-                          }
-                        }}
-                          className={`text-xs px-2 py-1 rounded border transition-colors ${exists ? 'border-green-300 bg-green-50 text-green-700' : 'border-gray-200 text-gray-500 hover:border-[#ef7d00] hover:text-[#ef7d00]'}`}>
-                          + {fg.name}
-                        </button>
+                        <div key={fg.characteristicLabel}>
+                          <div className="text-xs text-gray-700 font-medium mb-1">{fg.name}</div>
+                          <div className="flex flex-wrap gap-2">
+                            {opts.map((opt) => {
+                              const checked = chars.some((c) => c.label === fg.characteristicLabel && c.value === opt);
+                              return (
+                                <label key={opt} className="flex items-center gap-1.5 cursor-pointer text-xs text-gray-600 hover:text-gray-800">
+                                  <input type="checkbox" checked={checked}
+                                    onChange={() => {
+                                      const newChars = checked
+                                        ? chars.filter((c) => !(c.label === fg.characteristicLabel && c.value === opt))
+                                        : [...chars, { label: fg.characteristicLabel, value: opt }];
+                                      setEdit({ ...edit!, characteristics: newChars });
+                                    }}
+                                    className="w-3.5 h-3.5 accent-[#ef7d00]" />
+                                  {opt}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
                       );
                     })}
                   </div>
                 )}
-                {(edit.characteristics || []).map((c, i) => {
-                  const fg = availableFilterGroups.find((g) => g.characteristicLabel === c.label);
-                  const opts = fg?.options || [];
-                  return (
-                  <div key={i} className="flex items-center gap-2 mb-1.5">
-                    {fg ? (
-                      <span className="w-2/5 text-xs text-gray-700 truncate">{c.label}</span>
-                    ) : (
+                <div className="space-y-1.5">
+                  {(edit.characteristics || []).filter((c) => !availableFilterGroups.some((g) => g.characteristicLabel === c.label && (g.options?.length || 0) > 0)).map((c, i) => (
+                    <div key={i} className="flex items-center gap-2">
                       <input placeholder="Название" value={c.label} onChange={(e) => {
                         const chars = [...(edit.characteristics || [])];
-                        chars[i] = { ...chars[i], label: e.target.value };
+                        const idx = (edit.characteristics || []).indexOf(c);
+                        chars[idx] = { ...chars[idx], label: e.target.value };
                         setEdit({ ...edit!, characteristics: chars });
                       }} className="w-2/5 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
-                    )}
-                    {opts.length > 0 ? (
-                      <select value={c.value} onChange={(e) => {
-                        const chars = [...(edit.characteristics || [])];
-                        chars[i] = { ...chars[i], value: e.target.value };
-                        setEdit({ ...edit!, characteristics: chars });
-                      }} className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]">
-                        <option value="">—</option>
-                        {opts.map((o) => <option key={o} value={o}>{o}</option>)}
-                      </select>
-                    ) : (
                       <input placeholder="Значение" value={c.value} onChange={(e) => {
                         const chars = [...(edit.characteristics || [])];
-                        chars[i] = { ...chars[i], value: e.target.value };
+                        const idx = (edit.characteristics || []).indexOf(c);
+                        chars[idx] = { ...chars[idx], value: e.target.value };
                         setEdit({ ...edit!, characteristics: chars });
                       }} className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" />
-                    )}
-                    <button type="button" onClick={() => {
-                      setEdit({ ...edit!, characteristics: (edit.characteristics || []).filter((_, j) => j !== i) });
-                    }} className="shrink-0 text-red-400 hover:text-red-600 text-lg leading-none">×</button>
-                  </div>
-                  );
-                })}
+                      <button type="button" onClick={() => {
+                        setEdit({ ...edit!, characteristics: (edit.characteristics || []).filter((_, j) => j !== (edit.characteristics || []).indexOf(c)) });
+                      }} className="shrink-0 text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+                    </div>
+                  ))}
+                </div>
                 <button type="button" onClick={() => {
                   setEdit({ ...edit!, characteristics: [...(edit.characteristics || []), { label: '', value: '' }] });
                 }} className="text-xs text-[#ef7d00] hover:underline">+ Добавить характеристику</button>
