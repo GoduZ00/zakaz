@@ -419,7 +419,7 @@ export default function ProductPage() {
                     <div className="char_block bordered rounded3 js-scrolled border border-gray-200 rounded-sm overflow-hidden">
                       <table className="props_list nbg w-full text-sm">
                         <tbody className="js-offers-prop">
-                          {product.characteristics.map((c, i) => (
+                          {product.characteristics.filter((c) => !['Номинал', 'Распределитель', 'Товар'].includes(c.label)).map((c, i) => (
                             <tr key={i} className={`js-prop-replace ${i % 2 === 0 ? '' : 'bg-gray-50'}`} itemScope itemType="http://schema.org/PropertyValue">
                               <td className="char_name px-4 py-2.5 w-1/2 text-gray-500 align-top">
                                 <div className="props_item">
