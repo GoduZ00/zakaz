@@ -323,11 +323,14 @@ export default function ProductPage() {
                                   const next = { ...selChars, [fg.characteristicLabel]: opt };
                                   // Find first product matching ALL selected characteristics
                                   const match = subProducts.find((p) =>
+                                    p.slug !== slug &&
                                     Object.entries(next).every(([l, v]) =>
                                       p.characteristics?.some((c: any) => c.label === l && c.value === v)
                                     )
                                   );
-                                  if (match && match.slug !== slug) navigate(`/product/${match.slug}`);
+                                  if (match) { navigate(`/product/${match.slug}`); return; }
+                                  // Fallback: navigate to catalog filtered by this characteristic
+                                  if (subSlug) navigate(`/catalog/${subSlug}?${fg.characteristicLabel}=${encodeURIComponent(opt)}`);
                                 }}
                                 className={`text-xs px-3 py-1.5 rounded-sm border transition-all cursor-pointer ${
                                   active
