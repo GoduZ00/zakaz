@@ -194,7 +194,7 @@ export default function ProductPage() {
   const isActiveByArticle = (article: string) => (selectedSku || sku?.[0]?.article || '') === article;
   const displayPrice = currentSku?.price ?? product.price;
 
-  const handleAdd = () => addItem(product, qty, currentSku);
+  const handleAdd = () => addItem(product, qty, currentSku, Object.keys(selChars).length ? selChars : undefined);
 
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">

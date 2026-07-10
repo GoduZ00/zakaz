@@ -37,4 +37,5 @@ export interface CartItem {
   product: Product;
   quantity: number;
   sku?: SkuVariant;
+  options?: Record<string, string>;
 }

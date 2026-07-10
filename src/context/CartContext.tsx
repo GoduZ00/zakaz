@@ -9,7 +9,7 @@ interface ToastInfo {
 interface CartContextValue {
   items: CartItem[];
   count: number;
-  addItem: (product: Product, qty?: number, sku?: SkuVariant) => void;
+  addItem: (product: Product, qty?: number, sku?: SkuVariant, options?: Record<string, string>) => void;
   removeItem: (productId: number, article?: string) => void;
   updateQuantity: (productId: number, qty: number, article?: string) => void;
   clearCart: () => void;
@@ -46,7 +46,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearToast = useCallback(() => setToast(null), []);
   const showToast = useCallback((text: string, image?: string) => setToast({ text, image }), []);
 
-  const addItem = useCallback((product: Product, qty = 1, sku?: SkuVariant) => {
+  const addItem = useCallback((product: Product, qty = 1, sku?: SkuVariant, options?: Record<string, string>) => {
     setItems((prev) => {
       const key = sku ? `${product.id}_${sku.article}` : `${product.id}`;
       const idx = prev.findIndex((i) => {
@@ -55,10 +55,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       });
       if (idx >= 0) {
         const next = [...prev];
-        next[idx] = { ...next[idx], quantity: next[idx].quantity + qty };
+        next[idx] = { ...next[idx], quantity: next[idx].quantity + qty, options: next[idx].options || options };
         return next;
       }
-      return [...prev, { product, quantity: qty, sku }];
+      return [...prev, { product, quantity: qty, sku, options }];
     });
     setToast({ text: `«${product.name}» добавлен в корзину`, image: product.images?.[0] });
   }, []);

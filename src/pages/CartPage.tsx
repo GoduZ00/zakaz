@@ -24,7 +24,7 @@ function sendWhatsAppOrder(items: any[], getPrice: (item: any) => number) {
 
   items.forEach((item, i) => {
     const name = item.product.name;
-    const skuLabel = item.sku ? ` (${item.sku.label})` : '';
+    const optLabel = item.options ? ` (${Object.entries(item.options).map(([l, v]) => `${l}: ${v}`).join(', ')})` : item.sku ? ` (${item.sku.label})` : '';
     const price = getPrice(item);
     const subtotal = price * item.quantity;
     total += subtotal;
@@ -33,7 +33,7 @@ function sendWhatsAppOrder(items: any[], getPrice: (item: any) => number) {
     const displayQty = pack ? Math.floor(item.quantity / bq) : item.quantity;
     const unit = pack ? (item.product.box_label || 'упак') : 'шт';
     const unitPrice = pack ? r(price * bq) : r(price);
-    lines.push(`${i + 1}. ${name}${skuLabel}`);
+    lines.push(`${i + 1}. ${name}${optLabel}`);
     lines.push(`   ${displayQty} ${unit} × ${unitPrice} ₸ = ${r(subtotal)} ₸`);
   });
 
@@ -131,7 +131,7 @@ export default function CartPage() {
                     <Link to={`/product/${item.product.slug}`} className="text-sm font-medium text-gray-900 hover:text-[#ef7d00] transition-colors line-clamp-2">
                       {item.product.name}
                     </Link>
-                    {item.sku && <div className="text-xs text-gray-400 mt-0.5">{item.sku.label}</div>}
+                    {item.options ? <div className="text-xs text-gray-400 mt-0.5">{Object.entries(item.options).map(([l, v]) => `${l}: ${v}`).join(', ')}</div> : item.sku && <div className="text-xs text-gray-400 mt-0.5">{item.sku.label}</div>}
                     {item.product.article && <div className="text-xs text-gray-400 mt-0.5">Арт. {item.product.article}</div>}
                     {(() => {
                       const bq = item.product.box_quantity || 1;
