@@ -67,6 +67,8 @@ export default function ProductPage() {
       setQty(product.box_quantity!);
     }
   }, [product]);
+
+
   const [showOneClick, setShowOneClick] = useState(false);
   const [tab, setTab] = useState<'desc' | 'chars'>('desc');
   const [inWish, setInWish] = useState(false);
@@ -114,9 +116,17 @@ export default function ProductPage() {
           }
           if (groups.length) setFilterGroups(groups);
         }
-        // Init characteristic selection from product
+        // Init characteristic selection from first SKU variant or product characteristics
         const init: Record<string, string> = {};
-        for (const c of data.characteristics || []) { init[c.label] = c.value; }
+        const firstSku = data.sku_variants?.[0];
+        if (firstSku && firstSku.label.includes(':')) {
+          firstSku.label.split(', ').forEach((part: string) => {
+            const [l, v] = part.split(':');
+            if (l && v) init[l.trim()] = v.trim();
+          });
+        } else {
+          for (const c of data.characteristics || []) { init[c.label] = c.value; }
+        }
         setSelChars(init);
       }
       setLoading(false);
@@ -319,19 +329,7 @@ export default function ProductPage() {
                             const active = opt === currentVal;
                             return (
                               <button key={opt}
-                                onClick={async () => {
-                                  const next = { ...selChars, [fg.characteristicLabel]: opt };
-                                  // Find first product matching ALL selected characteristics
-                                  const match = subProducts.find((p) =>
-                                    p.slug !== slug &&
-                                    Object.entries(next).every(([l, v]) =>
-                                      p.characteristics?.some((c: any) => c.label === l && c.value === v)
-                                    )
-                                  );
-                                  if (match) { navigate(`/product/${match.slug}`); return; }
-                                  // Fallback: navigate to catalog filtered by this characteristic
-                                  if (subSlug) navigate(`/catalog/${subSlug}?${fg.characteristicLabel}=${encodeURIComponent(opt)}`);
-                                }}
+                                onClick={() => setSelChars({ ...selChars, [fg.characteristicLabel]: opt })}
                                 className={`text-xs px-3 py-1.5 rounded-sm border transition-all cursor-pointer ${
                                   active
                                     ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium cursor-default'
