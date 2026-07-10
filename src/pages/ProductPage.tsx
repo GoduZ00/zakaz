@@ -88,14 +88,25 @@ export default function ProductPage() {
           url: `/product/${data.slug}`,
         });
         // Load filter groups for characteristic options
+        let hasGroups = false;
         if (data.subcategory_id) {
           const [{ data: fgData }, { data: subData }] = await Promise.all([
             supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', data.subcategory_id).order('sort_order'),
             supabase.from('subcategories').select('slug').eq('id', data.subcategory_id).single(),
           ]);
-          if (fgData?.length) setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] })));
+          if (fgData?.length) { setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] }))); hasGroups = true; }
           if (subData) setSubSlug(subData.slug);
           setSubId(data.subcategory_id);
+        }
+        // Fallback: if no filter groups in DB, build from product characteristics
+        if (!hasGroups) {
+          const keys = ['Номинал', 'Распределитель', 'Товар'];
+          const groups: { name: string; characteristicLabel: string; options: string[] }[] = [];
+          for (const key of keys) {
+            const vals = [...new Set((data.characteristics || []).filter((c: any) => c.label === key).map((c: any) => c.value))];
+            if (vals.length) groups.push({ name: key, characteristicLabel: key, options: vals });
+          }
+          if (groups.length) setFilterGroups(groups);
         }
         // Init characteristic selection from product
         const init: Record<string, string> = {};
