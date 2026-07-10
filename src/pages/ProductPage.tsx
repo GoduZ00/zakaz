@@ -57,6 +57,7 @@ export default function ProductPage() {
   const [selectedSku, setSelectedSku] = useState<string>('');
   const [qty, setQty] = useState(1);
   const [filterGroups, setFilterGroups] = useState<{ name: string; characteristicLabel: string; options: string[] }[]>([]);
+  const [subSlug, setSubSlug] = useState('');
 
   useEffect(() => {
     if (product && (product.box_quantity ?? 0) > 1 && qty === 1) {
@@ -86,8 +87,12 @@ export default function ProductPage() {
         });
         // Load filter groups for characteristic options
         if (data.subcategory_id) {
-          const { data: fgData } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', data.subcategory_id).order('sort_order');
+          const [{ data: fgData }, { data: subData }] = await Promise.all([
+            supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', data.subcategory_id).order('sort_order'),
+            supabase.from('subcategories').select('slug').eq('id', data.subcategory_id).single(),
+          ]);
           if (fgData?.length) setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] })));
+          if (subData) setSubSlug(subData.slug);
         }
       }
       setLoading(false);
@@ -289,14 +294,14 @@ export default function ProductPage() {
                           {options.map((opt) => {
                             const active = opt === currentVal;
                             return (
-                              <span key={opt}
-                                className={`text-xs px-3 py-1 rounded-sm border transition-all ${
+                              <button key={opt} onClick={() => { if (opt !== currentVal && subSlug) navigate(`/catalog/${subSlug}?${fg.characteristicLabel}=${encodeURIComponent(opt)}`); }}
+                                className={`text-xs px-3 py-1 rounded-sm border transition-all cursor-pointer ${
                                   active
                                     ? 'border-[#ef7d00] bg-orange-50 text-[#ef7d00] font-medium'
-                                    : 'border-gray-200 text-gray-500 bg-white'
+                                    : 'border-gray-200 text-gray-500 bg-white hover:border-gray-400 hover:text-gray-700'
                                 }`}>
                                 {opt}
-                              </span>
+                              </button>
                             );
                           })}
                         </div>
