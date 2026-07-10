@@ -26,6 +26,14 @@ const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
   ],
 };
 
+const filterConfigBySubcategory: Record<string, FilterGroupConfig[]> = {
+  'torgovye-avtomaty': [
+    { name: 'Номинал', characteristicLabel: 'Номинал', options: ['50', '100', '100+100'] },
+    { name: 'Распределитель', characteristicLabel: 'Распределитель', options: ['22мм', '25мм', '32мм', 'порционный'] },
+    { name: 'Товар', characteristicLabel: 'Товар', options: ['ЖР', 'Конфеты', 'Мяч', 'Игрушки'] },
+  ],
+};
+
 interface Product {
   id: number;
   name: string;
@@ -74,7 +82,7 @@ export default function AdminProducts() {
     if (!subcat) return [];
     const cat = categories.find((c) => c.id === subcat.category_id);
     if (!cat) return [];
-    return filterConfigByCategory[cat.slug] || [];
+    return filterConfigBySubcategory[subcat.slug] || filterConfigByCategory[cat.slug] || [];
   }, [edit?.subcategory_id, subcategories, categories]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);

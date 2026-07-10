@@ -36,6 +36,14 @@ const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
   ],
 };
 
+const filterConfigBySubcategory: Record<string, FilterGroupConfig[]> = {
+  'torgovye-avtomaty': [
+    { name: 'Номинал', characteristicLabel: 'Номинал', options: ['50', '100', '100+100'] },
+    { name: 'Распределитель', characteristicLabel: 'Распределитель', options: ['22мм', '25мм', '32мм', 'порционный'] },
+    { name: 'Товар', characteristicLabel: 'Товар', options: ['ЖР', 'Конфеты', 'Мяч', 'Игрушки'] },
+  ],
+};
+
 interface SubCategory {
   id: number;
   name: string;
@@ -155,8 +163,8 @@ export default function CatalogCategory() {
         }
         // Fall back to hardcoded config if DB has no entries for this category
         if (!filterData || !filterData.length) {
-          const hardcoded = filterConfigByCategory[cat.slug];
-          if (hardcoded) filterData = hardcoded;
+          const subHardcoded = activeSubId ? filterConfigBySubcategory[subs.find((s) => s.id === activeSubId)?.slug || ''] : undefined;
+          filterData = subHardcoded || filterConfigByCategory[cat.slug];
         }
         setFilterGroups(filterData?.length ? filterData : null);
 
