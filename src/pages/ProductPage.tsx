@@ -269,6 +269,22 @@ export default function ProductPage() {
                 )}
               </div>
 
+              {/* Key characteristics badges */}
+              {(() => {
+                const keys = ['Номинал', 'Распределитель', 'Товар'];
+                const chars = product.characteristics?.filter((c) => keys.includes(c.label) && c.value) || [];
+                if (!chars.length) return null;
+                return (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {chars.map((c) => (
+                      <span key={c.label} className="text-xs px-3 py-1 rounded border border-[#ef7d00] text-[#ef7d00] bg-orange-50 font-medium">
+                        {c.label}: {c.value}
+                      </span>
+                    ))}
+                  </div>
+                );
+              })()}
+
               {/* Price */}
               <div className="mb-5">
                 {(() => {

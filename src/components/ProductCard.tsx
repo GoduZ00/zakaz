@@ -70,6 +70,9 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
   const boxLabel = product.box_label || 'упак';
   const perPiece = product.price_wholesale ?? product.price;
 
+  const keyChars = ['Номинал', 'Распределитель', 'Товар'];
+  const visibleChars = product.characteristics?.filter((c) => keyChars.includes(c.label) && c.value) || [];
+
   return (
     <div className={`group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden ${className}`}>
       <Link to={`/product/${product.slug}`} className="block">
@@ -91,6 +94,16 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
         >
           {product.name}
         </Link>
+
+        {visibleChars.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {visibleChars.map((c) => (
+              <span key={c.label} className="text-[11px] px-2 py-0.5 rounded border border-[#ef7d00] text-[#ef7d00] bg-orange-50">
+                {c.label}: {c.value}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-start gap-2 text-sm mb-2">
           <span className={`mt-2 w-2 h-2 rounded-full shrink-0 ${product.stock_status === 'in_stock' ? 'bg-lime-500' : 'bg-red-500'}`} />
