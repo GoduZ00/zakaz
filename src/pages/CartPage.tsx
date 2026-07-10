@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabase';
+import { Helmet } from 'react-helmet-async';
 
 const WHATSAPP_NUMBER = '77073099969';
 
@@ -81,6 +82,7 @@ export default function CartPage() {
     return (
       <div className="bg-[#f8f8f8] min-h-screen font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <Helmet><title>Корзина — Vending Trade</title><meta name="description" content="Корзина Vending Trade. Оформление заказа." /></Helmet>
           <nav className="text-sm text-gray-500 mb-6">
             <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
             <span className="mx-2">—</span>
@@ -103,6 +105,7 @@ export default function CartPage() {
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <Helmet><title>Корзина — Vending Trade</title><meta name="description" content="Корзина Vending Trade. Оформление заказа." /></Helmet>
         <nav className="text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
           <span className="mx-2">—</span>

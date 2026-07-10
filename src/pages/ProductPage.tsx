@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 const r = (v: number) => Number(v.toFixed(2));
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -198,6 +199,30 @@ export default function ProductPage() {
 
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
+      {product && (
+        <Helmet>
+          <title>{product.name} — Vending Trade</title>
+          <meta name="description" content={`${product.name} — купить в Казахстане. Цена: ${displayPrice} ₸. ${product.description?.slice(0, 150) || ''}`} />
+          <meta property="og:title" content={`${product.name} — Vending Trade`} />
+          <meta property="og:description" content={`${product.name} — цена ${displayPrice} ₸.`} />
+          {product.images?.[0] && <meta property="og:image" content={product.images[0]} />}
+          <script type="application/ld+json">{JSON.stringify({
+            '@context': 'https://schema.org/',
+            '@type': 'Product',
+            name: product.name,
+            description: product.description?.slice(0, 300) || product.name,
+            image: product.images?.[0] || undefined,
+            sku: product.article || undefined,
+            offers: {
+              '@type': 'Offer',
+              price: displayPrice,
+              priceCurrency: 'KZT',
+              availability: product.stock_status === 'in_stock' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              url: `https://www.vendingtrade.kz/product/${product.slug}`,
+            },
+          })}</script>
+        </Helmet>
+      )}
       {showOneClick && <OneClickModal price={displayPrice * qty} onClose={() => setShowOneClick(false)} />}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="text-sm text-gray-500 mb-6">

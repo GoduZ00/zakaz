@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Helmet } from 'react-helmet-async';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Register() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
+      <Helmet><title>Регистрация — Vending Trade</title><meta name="description" content="Регистрация на сайте Vending Trade." /></Helmet>
       <nav className="text-sm text-gray-500 mb-8">
         <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
         <span className="mx-2">—</span>

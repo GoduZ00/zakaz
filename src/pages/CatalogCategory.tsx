@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/ProductCard';
@@ -265,6 +266,12 @@ export default function CatalogCategory() {
 
   return (
     <>
+      <Helmet>
+        <title>{category?.name ? `${category.name} — Vending Trade` : 'Каталог — Vending Trade'}</title>
+        <meta name="description" content={`${category?.name || 'Каталог'} — товары для вендинга. Купить в Казахстане с доставкой.`} />
+        <meta property="og:title" content={`${category?.name || 'Каталог'} — Vending Trade`} />
+        <meta property="og:description" content={`${category?.name || 'Каталог'} — все для вендинг-бизнеса.`} />
+      </Helmet>
       <style>{`
         .price-range { pointer-events: none; }
         .price-range::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }

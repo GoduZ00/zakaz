@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const categories = [
   {
@@ -16,6 +17,12 @@ const categories = [
 export default function Catalog() {
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
+      <Helmet>
+        <title>Каталог — Vending Trade</title>
+        <meta name="description" content="Каталог товаров для вендинга: торговые автоматы, наполнители, игрушки в капсулах, сладости. Всё для вендинг-бизнеса в Казахстане." />
+        <meta property="og:title" content="Каталог — Vending Trade" />
+        <meta property="og:description" content="Товары для вендинга: автоматы, наполнители, капсулы, игрушки." />
+      </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <nav className="text-sm text-gray-500 mb-7">
           <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>

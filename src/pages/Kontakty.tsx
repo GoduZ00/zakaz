@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const contacts = [
   { icon: <Phone className="w-5 h-5" />, title: 'Телефон', value: '+7 (701) 309-9969', href: 'tel:+77013099969' },
@@ -11,6 +12,7 @@ const contacts = [
 export default function Kontakty() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Helmet><title>Контакты — Vending Trade</title><meta name="description" content="Контакты Vending Trade: адрес, телефон, email. Свяжитесь с нами." /></Helmet>
       <nav className="text-sm text-gray-500 mb-6">
         <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
         <span className="mx-2">—</span>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 
 interface Promotion {
@@ -30,6 +31,11 @@ export default function Aktsii() {
 
   return (
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
+      <Helmet>
+        <title>Акции — Vending Trade</title>
+        <meta name="description" content="Акции и специальные предложения на товары для вендинга. Скидки на торговые автоматы, наполнители, игрушки." />
+        <meta property="og:title" content="Акции — Vending Trade" />
+      </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <nav className="text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>

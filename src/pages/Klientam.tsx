@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CreditCard, Building2, Wallet, Truck, RefreshCw, ChevronDown } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const faq = [
   { q: 'Как оформить заказ?', a: 'Вы можете оформить заказ через корзину на сайте, позвонив по телефону +7 (701) 309-9969 или отправив письмо на наш e-mail. Заказ доступен как зарегистрированным, так и незарегистрированным пользователям.' },
@@ -22,6 +23,7 @@ export default function Klientam() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Helmet><title>Клиентам — Vending Trade</title><meta name="description" content="Информация для клиентов Vending Trade: доставка, оплата, гарантия." /></Helmet>
       <nav className="text-sm text-gray-500 mb-6">
         <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
         <span className="mx-2">—</span>

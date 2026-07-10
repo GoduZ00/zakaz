@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
 import type { Product } from '../types';
+import { Helmet } from 'react-helmet-async';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
@@ -42,6 +43,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
+      <Helmet><title>Профиль — Vending Trade</title><meta name="description" content="Личный кабинет Vending Trade." /></Helmet>
       <nav className="text-sm text-gray-500 mb-8">
         <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
         <span className="mx-2">—</span>
