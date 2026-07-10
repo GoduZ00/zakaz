@@ -60,6 +60,7 @@ export default function ProductPage() {
   const [subSlug, setSubSlug] = useState('');
   const [selChars, setSelChars] = useState<Record<string, string>>({});
   const [subId, setSubId] = useState<number | null>(null);
+  const [subProducts, setSubProducts] = useState<{ slug: string; characteristics: any[] }[]>([]);
 
   useEffect(() => {
     if (product && (product.box_quantity ?? 0) > 1 && qty === 1) {
@@ -97,6 +98,11 @@ export default function ProductPage() {
           if (fgData?.length) { setFilterGroups(fgData.map((g: any) => ({ name: g.name, characteristicLabel: g.characteristic_label, options: Array.isArray(g.options) ? g.options : [] }))); hasGroups = true; }
           if (subData) setSubSlug(subData.slug);
           setSubId(data.subcategory_id);
+        }
+        // Load all products in same subcategory for characteristic switching
+        if (data.subcategory_id) {
+          const { data: all } = await supabase.from('products').select('slug, characteristics').eq('subcategory_id', data.subcategory_id).eq('is_active', true);
+          if (all) setSubProducts(all as any);
         }
         // Fallback: if no filter groups in DB, build from product characteristics
         if (!hasGroups) {
@@ -313,29 +319,15 @@ export default function ProductPage() {
                             const active = opt === currentVal;
                             return (
                               <button key={opt}
-                                disabled={active}
                                 onClick={async () => {
                                   const next = { ...selChars, [fg.characteristicLabel]: opt };
-                                  // Find product in same subcategory matching ALL selected characteristics
-                                  const { data: matches } = await supabase
-                                    .from('products')
-                                    .select('slug')
-                                    .eq('subcategory_id', subId)
-                                    .eq('is_active', true)
-                                    .contains('characteristics', JSON.stringify([{ label: fg.characteristicLabel, value: opt }]));
-                                  if (!matches?.length) return;
-                                  // Try to find a product that matches all selected chars
-                                  for (const m of matches) {
-                                    const { data: full } = await supabase.from('products').select('characteristics').eq('slug', m.slug).single();
-                                    if (full) {
-                                      const allMatch = Object.entries(next).every(([l, v]) =>
-                                        (full.characteristics as any[])?.some((c: any) => c.label === l && c.value === v)
-                                      );
-                                      if (allMatch) { navigate(`/product/${m.slug}`); return; }
-                                    }
-                                  }
-                                  // Fallback: just match the changed characteristic
-                                  navigate(`/product/${matches[0].slug}`);
+                                  // Find first product matching ALL selected characteristics
+                                  const match = subProducts.find((p) =>
+                                    Object.entries(next).every(([l, v]) =>
+                                      p.characteristics?.some((c: any) => c.label === l && c.value === v)
+                                    )
+                                  );
+                                  if (match && match.slug !== slug) navigate(`/product/${match.slug}`);
                                 }}
                                 className={`text-xs px-3 py-1.5 rounded-sm border transition-all cursor-pointer ${
                                   active
