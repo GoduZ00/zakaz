@@ -8,26 +8,37 @@ import type { Product } from '../types';
 
 export default function Catalog() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<{ id: number; name: string; slug: string }[]>([]);
+  const [subcategories, setSubcategories] = useState<{ id: number; name: string; slug: string; category_name: string }[]>([]);
+  const [activeSub, setActiveSub] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState('price_asc');
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
 
   useEffect(() => {
     (async () => {
-      const [{ data: catData }, { data: prodData }] = await Promise.all([
-        supabase.from('categories').select('id, name, slug').order('sort_order'),
+      const [{ data: subData }, { data: prodData }] = await Promise.all([
+        supabase.from('subcategories').select('id, name, slug, category_id').order('sort_order'),
         supabase.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
       ]);
-      if (catData) setCategories(catData);
+      if (subData) {
+        const { data: cats } = await supabase.from('categories').select('id, name');
+        const catMap = Object.fromEntries((cats || []).map((c) => [c.id, c.name]));
+        setSubcategories(subData.map((s) => ({ ...s, category_name: catMap[s.category_id] || '' })));
+      }
       if (prodData) setProducts(prodData);
       setLoading(false);
     })();
   }, []);
 
+  const filtered = useMemo(() => {
+    let result = products;
+    if (activeSub) result = result.filter((p) => p.subcategory_id === activeSub);
+    return result;
+  }, [products, activeSub]);
+
   const sorted = useMemo(() => {
-    return [...products].sort((a, b) => sortBy === 'price_desc' ? b.price - a.price : a.price - b.price);
-  }, [products, sortBy]);
+    return [...filtered].sort((a, b) => sortBy === 'price_desc' ? b.price - a.price : a.price - b.price);
+  }, [filtered, sortBy]);
 
   if (loading) {
     return (
@@ -55,19 +66,32 @@ export default function Catalog() {
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Весь ассортимент</h1>
 
         <div className="flex gap-8">
-          {/* Category sidebar */}
+          {/* Subcategory sidebar */}
           <aside className="w-56 shrink-0 hidden lg:block">
             <div className="bg-white border border-gray-200 rounded-sm">
-              <div className="block px-4 py-3 text-sm font-medium bg-[#ef7d00] text-white">Категории</div>
+              <div className="block px-4 py-3 text-sm font-medium bg-[#ef7d00] text-white">Подкатегории</div>
               <ul className="py-1">
-                {categories.map((cat) => (
-                  <li key={cat.id}>
-                    <Link
-                      to={`/catalog/${cat.slug}`}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:text-[#ef7d00] transition-colors break-words"
+                <li>
+                  <button
+                    onClick={() => setActiveSub(null)}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${!activeSub ? 'text-[#ef7d00] font-medium' : 'text-gray-600 hover:text-[#ef7d00]'}`}
+                  >
+                    Все товары
+                  </button>
+                </li>
+                {subcategories.map((sub) => (
+                  <li key={sub.id}>
+                    <button
+                      onClick={() => setActiveSub(activeSub === sub.id ? null : sub.id)}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors break-words ${
+                        activeSub === sub.id
+                          ? 'text-[#ef7d00] font-medium'
+                          : 'text-gray-600 hover:text-[#ef7d00]'
+                      }`}
                     >
-                      {cat.name}
-                    </Link>
+                      {sub.name}
+                      <span className="block text-[10px] text-gray-400">{sub.category_name}</span>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -94,16 +118,26 @@ export default function Catalog() {
               </div>
             </div>
 
-            {/* Mobile category chips */}
+            {/* Mobile subcategory chips */}
             <div className="flex lg:hidden gap-2 mb-4 overflow-x-auto pb-2">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  to={`/catalog/${cat.slug}`}
-                  className="whitespace-nowrap text-xs px-3 py-1.5 rounded-full border bg-white text-gray-600 border-gray-200 hover:border-gray-400 transition-colors"
+              <button
+                onClick={() => setActiveSub(null)}
+                className={`whitespace-nowrap text-xs px-3 py-1.5 rounded-full border transition-colors shrink-0 ${!activeSub ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'}`}
+              >
+                Все
+              </button>
+              {subcategories.map((sub) => (
+                <button
+                  key={sub.id}
+                  onClick={() => setActiveSub(activeSub === sub.id ? null : sub.id)}
+                  className={`whitespace-nowrap text-xs px-3 py-1.5 rounded-full border transition-colors shrink-0 ${
+                    activeSub === sub.id
+                      ? 'bg-[#ef7d00] text-white border-[#ef7d00]'
+                      : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                  }`}
                 >
-                  {cat.name}
-                </Link>
+                  {sub.name}
+                </button>
               ))}
             </div>
 
