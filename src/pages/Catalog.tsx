@@ -93,14 +93,8 @@ export default function Catalog() {
   return (
     <>
       <style>{`
-        .price-range { pointer-events: none; }
-        .price-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: #ef7d00; border-radius: 50%; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.25); cursor: pointer; pointer-events: auto; position: relative !important; z-index: 10 !important; }
-        .price-range::-moz-range-thumb { width: 16px; height: 16px; background: #ef7d00; border-radius: 50%; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.25); cursor: pointer; border: none; pointer-events: auto; position: relative !important; z-index: 10 !important; }
-        .price-range::-webkit-slider-runnable-track { background: transparent; border: none; height: 4px; }
-        .price-range::-moz-range-track { background: transparent; border: none; height: 4px; }
-        .price-range-min { z-index: 11 !important; }
-        .price-range-max { z-index: 10 !important; }
-        .price-track-active { position: relative !important; z-index: 1 !important; }
+        .price-slider-input { opacity: 0; cursor: pointer; }
+        .price-slider-thumb { position: absolute; top: 50%; width: 16px; height: 16px; background: #ef7d00; border-radius: 50%; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.25); transform: translate(-50%, -50%); pointer-events: none; }
       `}</style>
       <Helmet>
           <title>Каталог — Vending Trade</title>
@@ -156,21 +150,23 @@ export default function Catalog() {
                 <div className="text-sm font-medium text-gray-700 mb-3">Цена</div>
                 <div className="relative h-8">
                   <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full -translate-y-1/2" />
-                  <div className="absolute top-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none -translate-y-1/2 price-track-active"
+                  <div className="absolute top-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none -translate-y-1/2"
                     style={{
                       left: `${((priceMin - globalMin) / (globalMax - globalMin || 1)) * 100}%`,
                       right: `${100 - ((priceMax - globalMin) / (globalMax - globalMin || 1)) * 100}%`,
                     }} />
+                  <div className="price-slider-thumb"
+                    style={{ left: `${((priceMin - globalMin) / (globalMax - globalMin || 1)) * 100}%` }} />
+                  <div className="price-slider-thumb"
+                    style={{ left: `${((Math.min(priceMax, globalMax) - globalMin) / (globalMax - globalMin || 1)) * 100}%` }} />
                   <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
                     value={priceMin}
                     onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax))}
-                    className="price-range price-range-min absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer m-0 p-0"
-                    style={{ top: '50%', transform: 'translateY(-50%)' }} />
+                    className="price-slider-input absolute inset-0 w-full h-full m-0 p-0 z-20" />
                   <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
                     value={priceMax === Infinity ? globalMax : priceMax}
                     onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin))}
-                    className="price-range price-range-max absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer m-0 p-0"
-                    style={{ top: '50%', transform: 'translateY(-50%)' }} />
+                    className="price-slider-input absolute inset-0 w-full h-full m-0 p-0 z-10" />
                 </div>
                 <div className="flex items-center justify-between w-full mt-2">
                   <span className="text-xs text-gray-500">{priceMin.toLocaleString('ru-RU')} ₸</span>
