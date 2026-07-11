@@ -107,6 +107,7 @@ export default function Catalog() {
           <meta property="og:title" content="Каталог — Vending Trade" />
           <meta property="og:description" content="Товары для вендинга: автоматы, наполнители, капсулы, игрушки." />
         </Helmet>
+        <div className="bg-[#f8f8f8] min-h-screen font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <nav className="text-sm text-gray-500 mb-6">
             <Link to="/" className="hover:text-[#ef7d00] transition-colors">Главная</Link>
