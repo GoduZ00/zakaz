@@ -93,13 +93,13 @@ export default function Catalog() {
   return (
     <>
       <style>{`
-        .price-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }
-        .price-range::-moz-range-thumb { width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; border: none; }
+        .price-range { pointer-events: none; }
+        .price-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; pointer-events: auto; }
+        .price-range::-moz-range-thumb { width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; border: none; pointer-events: auto; }
+        .price-range::-webkit-slider-runnable-track { background: transparent; border: transparent; }
+        .price-range::-moz-range-track { background: transparent; border: none; }
         .price-range-min { z-index: 11; }
         .price-range-max { z-index: 10; }
-        .price-range { pointer-events: none; }
-        .price-range::-webkit-slider-thumb { pointer-events: auto; }
-        .price-range::-moz-range-thumb { pointer-events: auto; }
       `}</style>
       <Helmet>
           <title>Каталог — Vending Trade</title>
