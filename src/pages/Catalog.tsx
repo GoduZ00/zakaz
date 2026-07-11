@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
@@ -28,7 +28,6 @@ const subIcons: Record<string, string> = {
 };
 
 export default function Catalog() {
-  const [searchParams] = useSearchParams();
   const { addItem } = useCart();
 
   const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
@@ -93,15 +92,7 @@ export default function Catalog() {
 
   return (
     <>
-      <style>{`
-        .price-range { pointer-events: none; }
-        .price-range::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }
-        .price-range::-moz-range-thumb { pointer-events: auto; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }
-        .price-range-min { z-index: 11; }
-        .price-range-max { z-index: 10; }
-      `}</style>
-      <div className="bg-[#f8f8f8] min-h-screen font-sans">
-        <Helmet>
+      <Helmet>
           <title>Каталог — Vending Trade</title>
           <meta name="description" content="Каталог товаров для вендинга: торговые автоматы, наполнители, игрушки в капсулах, сладости. Всё для вендинг-бизнеса в Казахстане." />
           <meta property="og:title" content="Каталог — Vending Trade" />
@@ -152,20 +143,13 @@ export default function Catalog() {
               {/* Price filter */}
               <div className="bg-white border border-gray-200 rounded-sm mt-4 p-4">
                 <div className="text-sm font-medium text-gray-700 mb-3">Цена</div>
-                <div className="relative h-6 mb-2">
-                  <input type="range" min={globalMin} max={globalMax} step={10} value={priceMin}
-                    onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax))}
-                    className="absolute w-full price-range price-range-min" />
-                  <input type="range" min={globalMin} max={globalMax} step={10} value={priceMax}
-                    onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin))}
-                    className="absolute w-full price-range price-range-max" />
-                  <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 rounded -translate-y-1/2" />
-                  <div className="absolute top-1/2 h-1 bg-[#ef7d00] rounded -translate-y-1/2"
-                    style={{ left: `${((priceMin - globalMin) / (globalMax - globalMin || 1)) * 100}%`, right: `${100 - ((priceMax - globalMin) / (globalMax - globalMin || 1)) * 100}%` }} />
-                </div>
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>{priceMin} ₸</span>
-                  <span>{priceMax} ₸</span>
+                <div className="flex items-center gap-2">
+                  <input type="number" value={priceMin} onChange={(e) => setPriceMin(Math.max(globalMin, Math.min(Number(e.target.value), priceMax)))}
+                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" placeholder="От" />
+                  <span className="text-xs text-gray-400">—</span>
+                  <input type="number" value={priceMax === Infinity ? '' : priceMax} onChange={(e) => setPriceMax(Math.min(globalMax, Math.max(Number(e.target.value) || globalMax, priceMin)))}
+                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" placeholder="До" />
+                  <span className="text-xs text-gray-500">₸</span>
                 </div>
               </div>
             </aside>
@@ -176,10 +160,10 @@ export default function Catalog() {
               <div className="mb-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {subcategories.map((sub) => (
-                    <Link
+                    <button
                       key={sub.id}
-                      to={`/catalog/${sub.slug}`}
-                      className={`flex items-center gap-3 p-3 bg-white border rounded-sm shadow-sm hover:shadow-md transition-shadow ${
+                      onClick={() => handleSubClick(sub.id)}
+                      className={`flex items-center gap-3 p-3 bg-white border rounded-sm shadow-sm hover:shadow-md transition-shadow text-left ${
                         activeSub === sub.id ? 'border-[#ef7d00]' : 'border-gray-200'
                       }`}
                     >
@@ -187,7 +171,7 @@ export default function Catalog() {
                         <img src={subIcons[sub.slug] || ''} alt={sub.name} className="w-full h-full object-contain" />
                       </div>
                       <span className="text-xs font-medium text-gray-800 leading-tight break-words hyphens-auto min-w-0">{sub.name}</span>
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
