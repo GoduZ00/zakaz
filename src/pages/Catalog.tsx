@@ -155,7 +155,7 @@ export default function Catalog() {
                 <div className="text-sm font-medium text-gray-700 mb-3">Цена</div>
                 <div className="relative h-8">
                   <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full -translate-y-1/2" />
-                  <div className="absolute top-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none -translate-y-1/2"
+                  <div className="absolute top-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none -translate-y-1/2 z-[1]"
                     style={{
                       left: `${((priceMin - globalMin) / (globalMax - globalMin || 1)) * 100}%`,
                       right: `${100 - ((priceMax - globalMin) / (globalMax - globalMin || 1)) * 100}%`,
