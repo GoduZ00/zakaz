@@ -92,6 +92,15 @@ export default function Catalog() {
 
   return (
     <>
+      <style>{`
+        .price-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; }
+        .price-range::-moz-range-thumb { width: 14px; height: 14px; background: #ef7d00; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; border: none; }
+        .price-range-min { z-index: 11; }
+        .price-range-max { z-index: 10; }
+        .price-range { pointer-events: none; }
+        .price-range::-webkit-slider-thumb { pointer-events: auto; }
+        .price-range::-moz-range-thumb { pointer-events: auto; }
+      `}</style>
       <Helmet>
           <title>Каталог — Vending Trade</title>
           <meta name="description" content="Каталог товаров для вендинга: торговые автоматы, наполнители, игрушки в капсулах, сладости. Всё для вендинг-бизнеса в Казахстане." />
@@ -141,15 +150,35 @@ export default function Catalog() {
               </div>
 
               {/* Price filter */}
-              <div className="bg-white border border-gray-200 rounded-sm mt-4 p-4">
-                <div className="text-sm font-medium text-gray-700 mb-3">Цена</div>
+              <div className="bg-white border border-gray-200 rounded-sm mt-4 p-4 space-y-3">
+                <div className="flex items-center justify-between text-xs text-gray-700">
+                  <span>{priceMin.toLocaleString('ru-RU')} ₸</span>
+                  <span>{priceMax === Infinity ? globalMax.toLocaleString('ru-RU') : priceMax.toLocaleString('ru-RU')} ₸</span>
+                </div>
+                <div className="relative h-6">
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full" />
+                  <div className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#ef7d00] rounded-full pointer-events-none"
+                    style={{
+                      left: `${((priceMin - globalMin) / (globalMax - globalMin || 1)) * 100}%`,
+                      right: `${100 - ((priceMax - globalMin) / (globalMax - globalMin || 1)) * 100}%`,
+                    }} />
+                  <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
+                    value={priceMin}
+                    onChange={(e) => setPriceMin(Math.min(Number(e.target.value), priceMax))}
+                    className="price-range price-range-min absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer z-10" />
+                  <input type="range" min={globalMin} max={globalMax} step={Math.max(1, Math.round((globalMax - globalMin) / 100))}
+                    value={priceMax === Infinity ? globalMax : priceMax}
+                    onChange={(e) => setPriceMax(Math.max(Number(e.target.value), priceMin))}
+                    className="price-range price-range-max absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer z-10" />
+                </div>
                 <div className="flex items-center gap-2">
-                  <input type="number" value={priceMin} onChange={(e) => setPriceMin(Math.max(globalMin, Math.min(Number(e.target.value), priceMax)))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" placeholder="От" />
-                  <span className="text-xs text-gray-400">—</span>
-                  <input type="number" value={priceMax === Infinity ? '' : priceMax} onChange={(e) => setPriceMax(Math.min(globalMax, Math.max(Number(e.target.value) || globalMax, priceMin)))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[#ef7d00]" placeholder="До" />
-                  <span className="text-xs text-gray-500">₸</span>
+                  <input type="number" value={priceMin}
+                    onChange={(e) => setPriceMin(Math.max(globalMin, Math.min(Number(e.target.value), priceMax)))}
+                    className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
+                  <span className="text-gray-400 text-[11px]">—</span>
+                  <input type="number" value={priceMax === Infinity ? '' : priceMax}
+                    onChange={(e) => setPriceMax(Math.min(globalMax, Math.max(Number(e.target.value) || globalMax, priceMin)))}
+                    className="w-full text-[11px] border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-[#ef7d00]" />
                 </div>
               </div>
             </aside>
