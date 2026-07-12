@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
 
 const categories = [
-  { title: 'Торговые автоматы', slug: 'torgovye-avtomaty' },
-  { title: 'Жевательная резинка', slug: 'zhevatelnaya-rezinka' },
-  { title: 'Конфеты', slug: 'konfety' },
-  { title: 'Мячи-прыгуны', slug: 'myachi-pryguny' },
-  { title: 'Игрушки', slug: 'igrushki' },
-  { title: 'Бахилы в капсулах', slug: 'bakhily-v-kapsulakh' },
-  { title: 'Капсулы пустые', slug: 'kapsuly-pustye' },
-  { title: 'Стойки, кронштейны, швеллеры', slug: 'stoyki-kronshteyny-shvellery' },
-  { title: 'Детали и части', slug: 'detali-i-chasti' },
+  { title: 'Торговые автоматы', slug: 'torgovye-avtomaty', image: '/images/categories/nakleyki.png' },
+  { title: 'Жевательная резинка', slug: 'zhevatelnaya-rezinka', image: '/images/categories/1.jfif' },
+  { title: 'Конфеты', slug: 'konfety', image: '/images/categories/2.jfif' },
+  { title: 'Мячи-прыгуны', slug: 'myachi-pryguny', image: '/images/categories/3.jfif' },
+  { title: 'Игрушки', slug: 'igrushki', image: '/images/categories/4.jfif' },
+  { title: 'Бахилы в капсулах', slug: 'bakhily-v-kapsulakh', image: '/images/categories/5.png' },
+  { title: 'Капсулы пустые', slug: 'kapsuly-pustye', image: '/images/categories/6.png' },
+  { title: 'Стойки, кронштейны, швеллеры', slug: 'stoyki-kronshteyny-shvellery', image: '/images/categories/stoyki-kronshteyny-shvellery.png' },
+  { title: 'Детали и части', slug: 'detali-i-chasti', image: '/images/categories/torgovye-avtomaty.png' },
 ];
 
 export default function Categories() {
@@ -24,7 +24,7 @@ export default function Categories() {
           >
             <div className="w-36 h-36 rounded-full bg-[#fdf4e7] flex items-center justify-center mb-6 overflow-hidden border border-[#fae5cc]">
               <img
-                src=""
+                src={cat.image}
                 alt={cat.title}
                 loading="lazy"
                 decoding="async"
