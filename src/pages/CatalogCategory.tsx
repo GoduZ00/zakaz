@@ -59,7 +59,7 @@ interface CategoryInfo {
 }
 
 const subIcons: Record<string, string> = {
-  'torgovye-avtomaty': '/images/categories/nakleyki.png',
+  'torgovye-avtomaty': '/images/categories/8.png',
   'monetopriemniki': '/images/categories/monetopriemniki.png',
   'raspredeliteli': '/images/categories/detali-i-chasti.png',
   'detali-i-chasti': '/images/categories/torgovye-avtomaty.png',

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const categories = [
-  { title: 'Торговые автоматы', slug: 'torgovye-avtomaty', image: '/images/categories/nakleyki.png' },
+  { title: 'Торговые автоматы', slug: 'torgovye-avtomaty', image: '/images/categories/8.png' },
   { title: 'Жевательная резинка', slug: 'zhevatelnaya-rezinka', image: '/images/categories/1.jfif' },
   { title: 'Конфеты', slug: 'konfety', image: '/images/categories/2.jfif' },
   { title: 'Мячи-прыгуны', slug: 'myachi-pryguny', image: '/images/categories/3.jfif' },
