@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { trackViewed } from '../components/ViewedItems';
 import type { Product, SkuVariant } from '../types';
 
-const WHATSAPP_NUMBER = '77073099969';
+const WHATSAPP_NUMBER = '87013099969';
 
 function OneClickModal({ price, onClose }: { price: number; onClose: () => void }) {
   const [phone, setPhone] = useState('');
