@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabase';
 import { Helmet } from 'react-helmet-async';
 
-const WHATSAPP_NUMBER = '87013099969';
+const WHATSAPP_NUMBER = '77013099969';
 
 function r(v: number) { return Number(v.toFixed(2)); }
 
