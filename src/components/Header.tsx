@@ -13,6 +13,11 @@ interface CatalogSection {
   subcategories: { name: string; slug: string }[];
 }
 
+const fallbackImages: Record<string, string> = {
+  'mekhanicheskie_torgovye_avtomaty_catalog': '/images/categories/8.png',
+  'napolniteli-dlya-torgovykh-avtomatov': '/images/categories/7.png',
+};
+
 const howToOrderItems = [
   { title: 'Оформление заказа', desc: 'Добавьте товары в корзину и оформите заказ' },
   { title: 'Способы оплаты', desc: 'Наличные, банковская карта, безналичный расчет' },
@@ -191,7 +196,7 @@ export default function Header() {
                           <img
                             alt={section.name}
                             className="w-20 h-20 object-contain mix-blend-multiply shrink-0 rounded-full"
-                            src={section.image || '/images/categories/8.png'}
+                            src={section.image || fallbackImages[section.slug] || '/images/categories/8.png'}
                           />
                           <div>
                             <Link to={`/catalog/${section.slug}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
