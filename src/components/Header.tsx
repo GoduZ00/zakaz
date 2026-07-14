@@ -1,37 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
-const catalogItems = [
-  {
-    id: 'mekhanicheskie_torgovye_avtomaty_catalog',
-    name: 'Механические торговые автоматы',
-    img: '/images/categories/8.png',
-    items: [
-      { name: 'Торговые автоматы', slug: 'torgovye-avtomaty' },
-      { name: 'Монетоприемники и пластины к ним', slug: 'monetopriemniki' },
-      { name: 'Распределители', slug: 'raspredeliteli' },
-      { name: 'Детали и части', slug: 'detali-i-chasti' },
-      { name: 'Стойки, кронштейны, швеллеры', slug: 'stoyki-kronshteyny-shvellery' },
-      { name: 'Наклейки', slug: 'nakleyki' },
-    ],
-  },
-  {
-    id: 'napolniteli-dlya-torgovykh-avtomatov',
-    name: 'Наполнители для торговых автоматов',
-    img: '/images/categories/7.png',
-    items: [
-      { name: 'Жевательная резинка', slug: 'zhevatelnaya-rezinka' },
-      { name: 'Конфеты', slug: 'konfety' },
-      { name: 'Мячи-прыгуны', slug: 'myachi-pryguny' },
-      { name: 'Игрушки', slug: 'igrushki' },
-      { name: 'Бахилы в капсулах', slug: 'bakhily-v-kapsulakh' },
-      { name: 'Капсулы пустые', slug: 'kapsuly-pustye' },
-    ],
-  },
-];
+interface CatalogSection {
+  id: number;
+  name: string;
+  slug: string;
+  image: string | null;
+  subcategories: { name: string; slug: string }[];
+}
 
 const howToOrderItems = [
   { title: 'Оформление заказа', desc: 'Добавьте товары в корзину и оформите заказ' },
@@ -89,11 +69,18 @@ export default function Header() {
   const { count } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [sticky, setSticky] = useState(false);
+  const [catalogSections, setCatalogSections] = useState<CatalogSection[]>([]);
 
   useEffect(() => {
     const onScroll = () => setSticky(window.scrollY > 36);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    supabase.from('categories').select('id, name, slug, image, subcategories(id, name, slug)').order('sort_order').then(({ data }) => {
+      if (data) setCatalogSections(data as CatalogSection[]);
+    });
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -199,17 +186,17 @@ export default function Header() {
                 >
                   <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
                     <div className="space-y-6">
-                      {catalogItems.map((section) => (
+                      {catalogSections.map((section) => (
                         <div key={section.name} className="flex gap-4">
                           <img
                             alt={section.name}
                             className="w-20 h-20 object-contain mix-blend-multiply shrink-0 rounded-full"
-                            src={section.img}
+                            src={section.image || '/images/categories/8.png'}
                           />
                           <div>
-                            <Link to={`/catalog/${section.id}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
+                            <Link to={`/catalog/${section.slug}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
                             <ul className="space-y-1">
-                              {section.items.map((item) => (
+                              {(section.subcategories || []).map((item: any) => (
                                 <li key={item.name}>
                                   <Link to={`/catalog/${item.slug}`} className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item.name}</Link>
                                 </li>
