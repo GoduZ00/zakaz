@@ -129,7 +129,7 @@ export default function Header() {
             {/* Logo */}
             <div className="flex flex-col items-start shrink-0">
               <Link to="/" className="font-extrabold tracking-tight whitespace-nowrap text-xl sm:text-3xl">
-                <span className="text-[#1a3673]">ИП Байғожинов</span><span className="text-[#ef7d00]">.KZ</span>
+                <span className="text-[#1a3673]">VENDINGTRADE</span><span className="text-[#ef7d00]">.KZ</span>
               </Link>
               <span className="text-gray-500 tracking-wider text-[10px] mt-0.5">ЛУЧШИЕ РЕШЕНИЯ ДЛЯ ВАШЕГО БИЗНЕСА</span>
             </div>
