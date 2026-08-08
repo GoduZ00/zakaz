@@ -142,10 +142,10 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
             </div>
             <button
               onClick={() => onAddToCart(product, qty)}
-              className="flex-1 min-w-0 h-9 sm:h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors flex items-center justify-center gap-1.5 px-1 sm:px-2"
+              className="flex-1 min-w-0 h-9 sm:h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors flex items-center justify-center gap-1.5 px-1 sm:px-2 whitespace-nowrap"
             >
               <ShoppingCart className="w-4 h-4 shrink-0" />
-              <span className="hidden sm:inline">В корзину</span>
+              <span className="hidden lg:inline">В корзину</span>
             </button>
           </div>
         )}
