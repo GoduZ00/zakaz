@@ -14,30 +14,25 @@ export default function OKompanii() {
 
       <h1 className="text-3xl font-bold text-gray-900 mb-8">VENDINGTRADE — 1 ГОД РАЗВИТИЯ И ДОВЕРИЯ</h1>
 
-      <div className="grid md:grid-cols-2 gap-12 mb-16">
-        <div>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            Более года назад мы начали свой путь в сфере механического вендинга с простой целью — сделать запуск собственного бизнеса более доступным, понятным и эффективным.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            Сегодня Vendingtrade — это механические торговые автоматы и наполнители для них, а также решения для тех, кто хочет развивать собственное направление в сфере вендинга.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            За более года работы мы приобрели ценный опыт, выстроили отношения с клиентами и партнёрами и реализовали проекты, которые стали важной частью нашей истории.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            Мы благодарны каждому, кто выбрал Vendingtrade и доверил нам часть своего бизнеса.
-          </p>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            Для нас один год — это не итог, а первый важный этап большого пути.
-          </p>
-          <p className="text-gray-600 leading-relaxed">
-            Мы продолжаем развиваться, расширять ассортимент и создавать новые возможности для наших клиентов.
-          </p>
-        </div>
-        <div className="bg-[#f9f9f9] rounded-lg p-8 flex items-center justify-center">
-          <img src="/images/categories/10.png" alt="О компании" className="rounded-lg max-w-full h-auto" />
-        </div>
+      <div className="max-w-3xl mb-16">
+        <p className="text-gray-600 leading-relaxed mb-4">
+          Более года назад мы начали свой путь в сфере механического вендинга с простой целью — сделать запуск собственного бизнеса более доступным, понятным и эффективным.
+        </p>
+        <p className="text-gray-600 leading-relaxed mb-4">
+          Сегодня Vendingtrade — это механические торговые автоматы и наполнители для них, а также решения для тех, кто хочет развивать собственное направление в сфере вендинга.
+        </p>
+        <p className="text-gray-600 leading-relaxed mb-4">
+          За более года работы мы приобрели ценный опыт, выстроили отношения с клиентами и партнёрами и реализовали проекты, которые стали важной частью нашей истории.
+        </p>
+        <p className="text-gray-600 leading-relaxed mb-4">
+          Мы благодарны каждому, кто выбрал Vendingtrade и доверил нам часть своего бизнеса.
+        </p>
+        <p className="text-gray-600 leading-relaxed mb-4">
+          Для нас один год — это не итог, а первый важный этап большого пути.
+        </p>
+        <p className="text-gray-600 leading-relaxed">
+          Мы продолжаем развиваться, расширять ассортимент и создавать новые возможности для наших клиентов.
+        </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 mb-16">

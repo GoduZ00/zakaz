@@ -5,7 +5,6 @@ import { CartProvider } from './context/CartContext';
 import About from './components/About';
 import Categories from './components/Categories';
 import CartToast from './components/CartToast';
-import Features from './components/Features';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -74,7 +73,6 @@ function Home() {
       <Categories />
       <News />
       <About />
-      <Features />
       <Reviews />
     </>
   );
