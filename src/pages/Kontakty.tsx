@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 const contacts = [
   { icon: <Phone className="w-5 h-5" />, title: 'Телефон', value: '+7 (701) 309-9969', href: 'tel:+77013099969' },
   { icon: <Mail className="w-5 h-5" />, title: 'E-mail', value: 'b23almas@gmail.com', href: 'mailto:b23almas@gmail.com' },
-  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'Алматы қ., Асыл-Арман 20', href: 'https://go.2gis.com/DjDsW' },
+  { icon: <MapPin className="w-5 h-5" />, title: 'Адрес', value: 'г. Алматы, ЖМ АСЫЛ-АРМАН, дом 20', href: 'https://go.2gis.com/DjDsW' },
   { icon: <Clock className="w-5 h-5" />, title: 'Режим работы', value: 'Пн–Пт: 9:00 – 18:00' },
 ];
 
