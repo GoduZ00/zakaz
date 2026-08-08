@@ -1,44 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-
-interface FooterLink {
-  label: string;
-  url: string;
-}
-
-interface FooterSection {
-  id: number;
-  title: string;
-  links: FooterLink[];
-  sort_order: number;
-}
-
 export default function Footer() {
-  const [sections, setSections] = useState<FooterSection[]>([]);
-
-  useEffect(() => {
-    supabase.from('footer_sections').select('*').order('sort_order').then(({ data }) => {
-      if (data) setSections(data);
-    });
-  }, []);
-
   return (
     <footer className="bg-[#333333] text-gray-300 pt-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-
-          {sections.map((section) => (
-            <div key={section.id}>
-              <h4 className="text-white text-[11px] font-bold uppercase tracking-widest mb-6">{section.title}</h4>
-              <ul className="space-y-3 text-[13px] text-gray-400">
-                {section.links.map((link, i) => (
-                  <li key={i}>
-                    <a href={link.url} className="hover:text-white transition-colors">{link.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-10 mb-12">
 
           <div className="flex flex-col relative bg-[#3a3a3a] p-5 rounded-sm">
             <ul className="space-y-4 text-[13px]">
@@ -54,20 +18,17 @@ export default function Footer() {
               </li>
             </ul>
 
-            <div className="mt-5 pt-4 border-t border-[#4a4a4a] flex items-center gap-2 text-white text-[11px]">
-              <div className="flex gap-0.5 items-center">
-                 <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
-              </div>
-              <span className="font-bold">5,0</span>
-              <div className="flex gap-0.5 ml-1">
-                {[1,2,3,4,5].map(i => <svg key={i} className="w-3 h-3 text-[#e5c05c] fill-[#e5c05c]" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>)}
-              </div>
-            </div>
-            <div className="text-[9px] text-gray-500 mt-1">Рейтинг организации в Яндексе</div>
-
-            <button className="absolute -right-4 -top-4 w-10 h-10 bg-[#ef7d00] rounded-full flex items-center justify-center text-white hover:bg-[#d66f00] transition-colors shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-10">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-            </button>
+            <a
+              href="https://wa.me/77013099969"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[13px] text-gray-400 hover:text-[#25D366] transition-colors"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+              Написать в WhatsApp
+            </a>
           </div>
 
         </div>
