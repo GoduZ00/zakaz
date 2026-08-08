@@ -2,13 +2,6 @@ import { Link } from 'react-router-dom';
 import { Shield, Truck, Award, Users } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
-const stats = [
-  { label: 'Лет на рынке', value: '10+' },
-  { label: 'Довольных клиентов', value: '20 000+' },
-  { label: 'Товаров в каталоге', value: '500+' },
-  { label: 'Стран поставок', value: '5' },
-];
-
 export default function OKompanii() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -19,33 +12,32 @@ export default function OKompanii() {
         <span className="text-gray-900">О компании</span>
       </nav>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">О КОМПАНИИ</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">VENDINGTRADE — 1 ГОД РАЗВИТИЯ И ДОВЕРИЯ</h1>
 
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">ИП БАЙҒОЖИНОВ</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            Мы — надёжный поставщик комплектующих и наполнителей для торговых автоматов на рынке Казахстана. За годы работы мы зарекомендовали себя как ответственный партнёр, предлагающий качественную продукцию по доступным ценам.
+            Более года назад мы начали свой путь в сфере механического вендинга с простой целью — сделать запуск собственного бизнеса более доступным, понятным и эффективным.
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
-            Наш ассортимент включает механические торговые автоматы, монетоприёмники, распределители, запасные части, а также широкий выбор наполнителей: жевательную резинку, конфеты, игрушки, мячи-прыгуны, бахилы и пустые капсулы.
+            Сегодня Vendingtrade — это механические торговые автоматы и наполнители для них, а также решения для тех, кто хочет развивать собственное направление в сфере вендинга.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-4">
+            За более года работы мы приобрели ценный опыт, выстроили отношения с клиентами и партнёрами и реализовали проекты, которые стали важной частью нашей истории.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-4">
+            Мы благодарны каждому, кто выбрал Vendingtrade и доверил нам часть своего бизнеса.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-4">
+            Для нас один год — это не итог, а первый важный этап большого пути.
           </p>
           <p className="text-gray-600 leading-relaxed">
-            Мы работаем как с юридическими, так и с физическими лицами, предлагая гибкие условия оплаты и индивидуальный подход к каждому клиенту.
+            Мы продолжаем развиваться, расширять ассортимент и создавать новые возможности для наших клиентов.
           </p>
         </div>
         <div className="bg-[#f9f9f9] rounded-lg p-8 flex items-center justify-center">
           <img src="/images/categories/10.png" alt="О компании" className="rounded-lg max-w-full h-auto" />
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-        {stats.map((s) => (
-          <div key={s.label} className="text-center bg-[#f9f9f9] rounded-lg p-6">
-            <div className="text-3xl font-bold text-[#ef7d00] mb-1">{s.value}</div>
-            <div className="text-sm text-gray-500">{s.label}</div>
-          </div>
-        ))}
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 mb-16">
