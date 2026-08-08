@@ -25,14 +25,6 @@ const howToOrderItems = [
   { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе' },
 ];
 
-const aboutItems = [
-  { title: 'О нас', desc: 'Ведущий поставщик оборудования для вендинга' },
-  { title: 'Новости', desc: 'Последние новости компании и отрасли' },
-  { title: 'Вакансии', desc: 'Присоединяйтесь к нашей команде' },
-  { title: 'Реквизиты', desc: 'Юридическая информация и документы' },
-  { title: 'Отзывы', desc: 'Что говорят о нас клиенты' },
-];
-
 function UserLink() {
   const { user } = useAuth();
   return (
@@ -231,24 +223,7 @@ export default function Header() {
 
               {/* О компании */}
               <li className="flex-none">
-                <DropdownItem
-                  label={
-                    <Link to="/o-kompanii" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">О КОМПАНИИ</Link>
-                  }
-                >
-                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
-                    <ul className="space-y-3">
-                      {aboutItems.map((item) => (
-                        <li key={item.title}>
-                          <Link to={`/o-kompanii/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                            <div className="font-semibold text-sm text-gray-900">{item.title}</div>
-                            <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </DropdownItem>
+                <Link to="/o-kompanii" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">О КОМПАНИИ</Link>
               </li>
 
               {/* Контакты */}
