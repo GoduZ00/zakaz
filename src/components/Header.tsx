@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu, Zap } from 'lucide-react';
+import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -23,14 +23,6 @@ const howToOrderItems = [
   { title: 'Способы оплаты', desc: 'Наличные, банковская карта, безналичный расчет' },
   { title: 'Доставка', desc: 'Бесплатная доставка по России от 10 000 ₸' },
   { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе' },
-];
-
-const clientsItems = [
-  { title: 'Бонусная программа', desc: 'Копите бонусы и получайте скидки до 10%' },
-  { title: 'Оптовым клиентам', desc: 'Специальные условия для корпоративных клиентов' },
-  { title: 'Дилерам', desc: 'Станьте дилером и получайте лучшие цены' },
-  { title: 'Акции', desc: 'Действующие акции и специальные предложения' },
-  { title: 'Возврат товара', desc: 'Условия возврата и обмена товара' },
 ];
 
 const aboutItems = [
@@ -215,14 +207,6 @@ export default function Header() {
                 </DropdownItem>
               </li>
 
-              {/* Акции */}
-              <li className="flex-none">
-                <Link to="/aktsii" className="flex items-center justify-center hover:bg-[#d66f00] transition-colors duration-300 gap-0.5 sm:gap-1 py-2 px-1 sm:px-3">
-                  <Zap className="hidden sm:inline fill-white shrink-0 w-3 h-3" />
-                  <span>АКЦИИ</span>
-                </Link>
-              </li>
-
               {/* Как заказать */}
               <li className="flex-none">
                 <DropdownItem
@@ -235,28 +219,6 @@ export default function Header() {
                       {howToOrderItems.map((item) => (
                         <li key={item.title}>
                           <Link to={`/kak-zakazat/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                            <div className="font-semibold text-sm text-gray-900">{item.title}</div>
-                            <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </DropdownItem>
-              </li>
-
-              {/* Клиентам */}
-              <li className="flex-none">
-                <DropdownItem
-                  label={
-                    <Link to="/klientam" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КЛИЕНТАМ</Link>
-                  }
-                >
-                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
-                    <ul className="space-y-3">
-                      {clientsItems.map((item) => (
-                        <li key={item.title}>
-                          <Link to={`/klientam/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
                             <div className="font-semibold text-sm text-gray-900">{item.title}</div>
                             <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
                           </Link>
