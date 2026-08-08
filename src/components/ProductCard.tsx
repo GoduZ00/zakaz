@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ShoppingCart } from 'lucide-react';
 import type { Product } from '../types';
 
 interface ProductCardProps {
@@ -90,7 +91,7 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
         </div>
       </Link>
 
-      <div className="flex flex-col flex-1 p-4 sm:p-5">
+      <div className="flex flex-col flex-1 p-3 sm:p-5">
         <Link
           to={`/product/${product.slug}`}
           className="text-[15px] sm:text-base leading-snug text-gray-800 hover:text-[#ef7d00] transition-colors line-clamp-2 min-h-[2.6rem] mb-3"
@@ -120,30 +121,31 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
         </div>
 
         {onAddToCart && (
-          <div className="mt-4 flex items-center gap-2 flex-wrap">
-            <div className="flex items-center border border-gray-300 rounded-sm overflow-hidden h-10 shrink-0">
+          <div className="mt-3 sm:mt-4 flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center border border-gray-300 rounded-sm overflow-hidden h-9 sm:h-10 shrink-0">
               <button
                 onClick={() => setQty((q) => Math.max(minQty, q - step))}
-                className="w-9 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
+                className="w-7 sm:w-9 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
               >
                 −
               </button>
-              <span className="w-12 h-full flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">
+              <span className="w-9 sm:w-12 h-full flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">
                 {displayQty}
-                {isPack && <span className="text-[10px] text-gray-400 ml-0.5">{boxLabel}</span>}
+                {isPack && <span className="text-[10px] text-gray-400 ml-0.5 hidden sm:inline">{boxLabel}</span>}
               </span>
               <button
                 onClick={() => setQty((q) => q + step)}
-                className="w-9 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
+                className="w-7 sm:w-9 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
               >
                 +
               </button>
             </div>
             <button
               onClick={() => onAddToCart(product, qty)}
-              className="flex-1 min-w-[120px] h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors"
+              className="flex-1 min-w-0 h-9 sm:h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors flex items-center justify-center gap-1.5 px-1 sm:px-2"
             >
-              В корзину
+              <ShoppingCart className="w-4 h-4 shrink-0" />
+              <span className="hidden sm:inline">В корзину</span>
             </button>
           </div>
         )}
