@@ -25,6 +25,19 @@ export default function Catalog() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">КАТАЛОГ</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+        <Link
+          to="/catalog/all"
+          className="flex flex-col items-center group bg-white border border-gray-100 p-6 rounded hover:shadow-lg transition-shadow"
+        >
+          <div className="w-36 h-36 rounded-full bg-[#fdf4e7] flex items-center justify-center mb-6 overflow-hidden border border-[#fae5cc]">
+            <svg className="w-14 h-14 text-[#ef7d00]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </div>
+          <h3 className="text-[13px] font-medium text-center text-gray-700 leading-relaxed group-hover:text-[#ef7d00] transition-colors">
+            Все товары
+          </h3>
+        </Link>
         {categories.map((cat) => (
           <Link
             key={cat.slug}

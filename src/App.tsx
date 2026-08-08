@@ -14,6 +14,7 @@ import ScrollToTop from './components/ScrollToTop';
 import ViewedItems from './components/ViewedItems';
 
 const Catalog = lazy(() => import('./pages/Catalog'));
+const AllProducts = lazy(() => import('./pages/AllProducts'));
 const CatalogCategory = lazy(() => import('./pages/CatalogCategory'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 const Aktsii = lazy(() => import('./pages/Aktsii'));
@@ -85,6 +86,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout><Home /></Layout>} />
           <Route path="/catalog" element={<Layout>{withSuspense(<Catalog />)}</Layout>} />
+          <Route path="/catalog/all" element={<Layout>{withSuspense(<AllProducts />)}</Layout>} />
           <Route path="/catalog/:categoryId" element={<Layout>{withSuspense(<CatalogCategory />)}</Layout>} />
           <Route path="/product/:slug" element={<Layout>{withSuspense(<ProductPage />)}</Layout>} />
           <Route path="/aktsii" element={<Layout>{withSuspense(<Aktsii />)}</Layout>} />
