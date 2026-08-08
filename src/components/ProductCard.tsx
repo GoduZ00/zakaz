@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 import type { Product } from '../types';
 
 interface ProductCardProps {
@@ -62,7 +62,6 @@ function renderBlock(pricePerPiece: number, label: string, tooltip: string | und
 }
 
 export function ProductCard({ product, onAddToCart, className = '', optTooltip }: ProductCardProps) {
-  const { items, updateQuantity, removeItem } = useCart();
   const image = product.images?.[0] || '/placeholder.png';
   const stockText = getStockText(product);
   const hasWholesale = typeof product.price_wholesale === 'number';
@@ -71,13 +70,11 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
   const boxQty = product.box_quantity || 1;
   const boxLabel = product.box_label || 'упак';
   const perPiece = product.price_wholesale ?? product.price;
-
-  const cartItem = items.find((i) => !i.sku && i.product.id === product.id);
-  const cartQty = cartItem?.quantity || 0;
   const isPack = boxQty > 1;
   const step = isPack ? boxQty : 1;
   const minQty = isPack ? boxQty : 1;
-  const displayQty = isPack ? Math.floor(cartQty / boxQty) : cartQty;
+  const [qty, setQty] = useState(minQty);
+  const displayQty = Math.floor(qty / step);
 
   return (
     <div className={`group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden ${className}`}>
@@ -123,40 +120,32 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
         </div>
 
         {onAddToCart && (
-          cartQty > 0 ? (
-            <div className="mt-4 flex items-center border border-gray-300 rounded-sm overflow-hidden h-10">
+          <div className="mt-4 flex items-center gap-2 flex-wrap">
+            <div className="flex items-center border border-gray-300 rounded-sm overflow-hidden h-10 shrink-0">
               <button
-                onClick={() => {
-                  const next = cartQty - step;
-                  if (next < minQty) { removeItem(product.id); return; }
-                  updateQuantity(product.id, next);
-                }}
-                className="w-10 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
+                onClick={() => setQty((q) => Math.max(minQty, q - step))}
+                className="w-9 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
               >
                 −
               </button>
-              <span className="flex-1 h-full flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">
+              <span className="w-12 h-full flex items-center justify-center text-sm font-medium border-x border-gray-300 select-none">
                 {displayQty}
                 {isPack && <span className="text-[10px] text-gray-400 ml-0.5">{boxLabel}</span>}
               </span>
               <button
-                onClick={() => updateQuantity(product.id, cartQty + step)}
-                className="w-10 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
+                onClick={() => setQty((q) => q + step)}
+                className="w-9 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors text-lg leading-none"
               >
                 +
               </button>
             </div>
-          ) : (
             <button
-              onClick={() => {
-                const packQty = product.box_quantity && product.box_quantity > 1 ? product.box_quantity : 1;
-                onAddToCart(product, packQty);
-              }}
-              className="mt-4 w-full h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors"
+              onClick={() => onAddToCart(product, qty)}
+              className="flex-1 min-w-[120px] h-10 rounded-sm bg-[#ef7d00] text-white text-sm font-medium hover:bg-[#d66f00] transition-colors"
             >
               В корзину
             </button>
-          )
+          </div>
         )}
       </div>
     </div>
