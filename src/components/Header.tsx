@@ -119,7 +119,7 @@ export default function Header() {
             <ul className="flex flex-nowrap items-center font-bold uppercase tracking-wider overflow-visible whitespace-nowrap scrollbar-none gap-0 sm:gap-0.5 text-[8px] sm:text-[13px]">
               {/* Каталог */}
               <li className="flex-none">
-                <Link to="/catalog" className="flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 gap-0.5 sm:gap-1 py-2 px-1 sm:px-3">
+                <Link to="/katalog" className="flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 gap-0.5 sm:gap-1 py-2 px-1 sm:px-3">
                   <Menu className="hidden sm:inline shrink-0 w-4 h-4" />
                   <span>КАТАЛОГ</span>
                 </Link>
