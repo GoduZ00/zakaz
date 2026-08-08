@@ -19,10 +19,10 @@ const fallbackImages: Record<string, string> = {
 };
 
 const howToOrderItems = [
-  { title: 'Оформление заказа', desc: 'Добавьте товары в корзину и оформите заказ' },
-  { title: 'Способы оплаты', desc: 'Наличные, банковская карта, безналичный расчет' },
-  { title: 'Доставка', desc: 'Бесплатная доставка по Казахстану от 20 000 ₸' },
-  { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе' },
+  { title: 'Оформление заказа', desc: 'Добавьте товары в корзину и оформите заказ', id: 'oformlenie-zakaza' },
+  { title: 'Способы оплаты', desc: 'Наличные, банковская карта, безналичный расчет', id: 'sposoby-oplaty' },
+  { title: 'Доставка', desc: 'Бесплатная доставка по Казахстану от 20 000 ₸', id: 'dostavka' },
+  { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе', id: 'samovyvoz' },
 ];
 
 const contactsItems = [
@@ -214,7 +214,7 @@ export default function Header() {
                     <ul className="space-y-3">
                       {howToOrderItems.map((item) => (
                         <li key={item.title}>
-                          <Link to={`/kak-zakazat/${item.title.replace(/ /g, '-')}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                          <Link to={`/kak-zakazat#${item.id}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
                             <div className="font-semibold text-sm text-gray-900">{item.title}</div>
                             <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
                           </Link>
