@@ -54,27 +54,31 @@ export default function Kontakty() {
         <div className="grid sm:grid-cols-2 gap-6">
           <div>
             <div className="text-xs text-gray-400 mb-1">Наименование</div>
-            <div className="text-sm font-medium text-gray-900">ИП «VENDINGTRADE»</div>
+            <div className="text-sm font-medium text-gray-900">ИП БАЙҒОЖИНОВ (VENDINGTRADE)</div>
           </div>
           <div>
-            <div className="text-xs text-gray-400 mb-1">ИИН / БИН</div>
-            <div className="text-sm font-medium text-gray-900">—</div>
+            <div className="text-xs text-gray-400 mb-1">БИН (ИИН)</div>
+            <div className="text-sm font-medium text-gray-900">930923350721</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 mb-1">Банк</div>
-            <div className="text-sm font-medium text-gray-900">—</div>
+            <div className="text-sm font-medium text-gray-900">АО «Kaspi Bank»</div>
           </div>
           <div>
-            <div className="text-xs text-gray-400 mb-1">Расчётный счёт</div>
-            <div className="text-sm font-medium text-gray-900">—</div>
+            <div className="text-xs text-gray-400 mb-1">КБе</div>
+            <div className="text-sm font-medium text-gray-900">19</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 mb-1">БИК</div>
-            <div className="text-sm font-medium text-gray-900">—</div>
+            <div className="text-sm font-medium text-gray-900">CASPKZKA</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">Номер счёта</div>
+            <div className="text-sm font-medium text-gray-900">KZ64722S000041442813</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 mb-1">Юридический адрес</div>
-            <div className="text-sm font-medium text-gray-900">Алматы қ., Асыл-Арман 20</div>
+            <div className="text-sm font-medium text-gray-900">Карасайский район, Иргели, ЖИЛОЙ МАССИВ АСЫЛ-АРМАН, дом 20</div>
           </div>
         </div>
       </div>
