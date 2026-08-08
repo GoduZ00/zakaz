@@ -28,6 +28,13 @@ export default function About() {
               Мы благодарны каждому, кто выбрал Vendingtrade и доверил нам часть
               своего бизнеса.
             </p>
+            <p>
+              Для нас один год — это не итог, а первый важный этап большого пути.
+            </p>
+            <p>
+              Мы продолжаем развиваться, расширять ассортимент и создавать новые
+              возможности для наших клиентов.
+            </p>
           </div>
           <Link to="/o-kompanii" className="inline-block bg-[#ef7d00] text-white text-[12px] font-bold uppercase tracking-wider px-8 py-3.5 rounded-sm hover:bg-[#d66f00] transition-colors shadow-sm">
             ПОДРОБНОСТИ
