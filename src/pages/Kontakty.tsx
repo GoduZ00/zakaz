@@ -49,6 +49,36 @@ export default function Kontakty() {
         </div>
       </div>
 
+      <div id="rekvizity" className="bg-[#f9f9f9] rounded-lg p-8 mb-12">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">РЕКВИЗИТЫ</h2>
+        <div className="grid sm:grid-cols-2 gap-6">
+          <div>
+            <div className="text-xs text-gray-400 mb-1">Наименование</div>
+            <div className="text-sm font-medium text-gray-900">ИП «VENDINGTRADE»</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">ИИН / БИН</div>
+            <div className="text-sm font-medium text-gray-900">—</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">Банк</div>
+            <div className="text-sm font-medium text-gray-900">—</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">Расчётный счёт</div>
+            <div className="text-sm font-medium text-gray-900">—</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">БИК</div>
+            <div className="text-sm font-medium text-gray-900">—</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">Юридический адрес</div>
+            <div className="text-sm font-medium text-gray-900">Алматы қ., Асыл-Арман 20</div>
+          </div>
+        </div>
+      </div>
+
 
     </div>
   );

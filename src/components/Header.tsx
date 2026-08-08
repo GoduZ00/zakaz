@@ -25,6 +25,10 @@ const howToOrderItems = [
   { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе' },
 ];
 
+const contactsItems = [
+  { title: 'Реквизиты', desc: 'Юридическая информация и документы' },
+];
+
 function UserLink() {
   const { user } = useAuth();
   return (
@@ -228,7 +232,24 @@ export default function Header() {
 
               {/* Контакты */}
               <li className="flex-none">
-                <Link to="/kontakty" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КОНТАКТЫ</Link>
+                <DropdownItem
+                  label={
+                    <Link to="/kontakty" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КОНТАКТЫ</Link>
+                  }
+                >
+                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
+                    <ul className="space-y-3">
+                      {contactsItems.map((item) => (
+                        <li key={item.title}>
+                          <Link to="/kontakty#rekvizity" className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div className="font-semibold text-sm text-gray-900">{item.title}</div>
+                            <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </DropdownItem>
               </li>
             </ul>
 
