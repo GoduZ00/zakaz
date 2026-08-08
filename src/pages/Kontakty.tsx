@@ -78,7 +78,7 @@ export default function Kontakty() {
           </div>
           <div>
             <div className="text-xs text-gray-400 mb-1">Юридический адрес</div>
-            <div className="text-sm font-medium text-gray-900">Карасайский район, Иргели, ЖМ АСЫЛ-АРМАН, дом 20</div>
+            <div className="text-sm font-medium text-gray-900">г. Алматы, ЖМ АСЫЛ-АРМАН, дом 20</div>
           </div>
         </div>
       </div>
