@@ -1,33 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, User, Search, Heart, ShoppingCart, Menu } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-
-interface CatalogSection {
-  id: number;
-  name: string;
-  slug: string;
-  image: string | null;
-  subcategories: { name: string; slug: string }[];
-}
-
-const fallbackImages: Record<string, string> = {
-  'mekhanicheskie_torgovye_avtomaty_catalog': '/images/categories/8.png',
-  'napolniteli-dlya-torgovykh-avtomatov': '/images/categories/7.png',
-};
-
-const howToOrderItems = [
-  { title: 'Оформление заказа', desc: 'Добавьте товары в корзину и оформите заказ', id: 'oformlenie-zakaza' },
-  { title: 'Способы оплаты', desc: 'Наличные, банковская карта, безналичный расчет', id: 'sposoby-oplaty' },
-  { title: 'Доставка', desc: 'Бесплатная доставка по Казахстану от 20 000 ₸', id: 'dostavka' },
-  { title: 'Самовывоз', desc: 'Забрать заказ можно в нашем офисе', id: 'samovyvoz' },
-];
-
-const contactsItems = [
-  { title: 'Реквизиты', desc: 'Юридическая информация и документы' },
-];
 
 function UserLink() {
   const { user } = useAuth();
@@ -39,41 +14,16 @@ function UserLink() {
   );
 }
 
-function DropdownItem({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      {label}
-      <div
-        className={`absolute top-full left-0 z-50 pt-0 transition-all duration-200 ${
-          open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-1 pointer-events-none'
-        }`}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
-
 export default function Header() {
   const navigate = useNavigate();
   const { count } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [sticky, setSticky] = useState(false);
-  const [catalogSections, setCatalogSections] = useState<CatalogSection[]>([]);
 
   useEffect(() => {
     const onScroll = () => setSticky(window.scrollY > 36);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    supabase.from('categories').select('id, name, slug, image, subcategories(id, name, slug)').order('sort_order').then(({ data }) => {
-      if (data) setCatalogSections(data as CatalogSection[]);
-    });
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -169,60 +119,15 @@ export default function Header() {
             <ul className="flex flex-nowrap items-center font-bold uppercase tracking-wider overflow-visible whitespace-nowrap scrollbar-none gap-0 sm:gap-0.5 text-[8px] sm:text-[13px]">
               {/* Каталог */}
               <li className="flex-none">
-                <DropdownItem
-                  label={
-                    <Link to="/catalog" className="flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 gap-0.5 sm:gap-1 py-2 px-1 sm:px-3">
-                      <Menu className="hidden sm:inline shrink-0 w-4 h-4" />
-                      <span>КАТАЛОГ</span>
-                    </Link>
-                  }
-                >
-                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[600px] p-5">
-                    <div className="space-y-6">
-                      {catalogSections.map((section) => (
-                        <div key={section.name} className="flex gap-4">
-                          <img
-                            alt={section.name}
-                            className="w-20 h-20 object-contain mix-blend-multiply shrink-0 rounded-full"
-                            src={section.image || fallbackImages[section.slug] || '/images/categories/8.png'}
-                          />
-                          <div>
-                            <Link to={`/catalog/${section.slug}`} className="font-bold text-sm text-gray-900 mb-3 block hover:text-[#ef7d00] transition-colors uppercase">{section.name}</Link>
-                            <ul className="space-y-1">
-                              {(section.subcategories || []).map((item: any) => (
-                                <li key={item.name}>
-                                  <Link to={`/catalog/${item.slug}`} className="block text-xs py-0.5 text-gray-600 hover:text-[#ef7d00] transition-colors">{item.name}</Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </DropdownItem>
+                <Link to="/catalog" className="flex items-center justify-center bg-[#d66f00] hover:bg-[#c26400] transition-colors duration-300 gap-0.5 sm:gap-1 py-2 px-1 sm:px-3">
+                  <Menu className="hidden sm:inline shrink-0 w-4 h-4" />
+                  <span>КАТАЛОГ</span>
+                </Link>
               </li>
 
               {/* Как заказать */}
               <li className="flex-none">
-                <DropdownItem
-                  label={
-                    <Link to="/kak-zakazat" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КАК ЗАКАЗАТЬ</Link>
-                  }
-                >
-                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
-                    <ul className="space-y-3">
-                      {howToOrderItems.map((item) => (
-                        <li key={item.title}>
-                          <Link to={`/kak-zakazat#${item.id}`} className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                            <div className="font-semibold text-sm text-gray-900">{item.title}</div>
-                            <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </DropdownItem>
+                <Link to="/kak-zakazat" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КАК ЗАКАЗАТЬ</Link>
               </li>
 
               {/* О компании */}
@@ -232,24 +137,7 @@ export default function Header() {
 
               {/* Контакты */}
               <li className="flex-none">
-                <DropdownItem
-                  label={
-                    <Link to="/kontakty" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КОНТАКТЫ</Link>
-                  }
-                >
-                  <div className="bg-white text-gray-700 shadow-xl border border-gray-100 rounded-b-lg min-w-[400px] p-5 -ml-20">
-                    <ul className="space-y-3">
-                      {contactsItems.map((item) => (
-                        <li key={item.title}>
-                          <Link to="/kontakty#rekvizity" className="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                            <div className="font-semibold text-sm text-gray-900">{item.title}</div>
-                            <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </DropdownItem>
+                <Link to="/kontakty" className="hover:bg-[#d66f00] transition-colors duration-300 text-center block py-2 px-1 sm:px-3">КОНТАКТЫ</Link>
               </li>
             </ul>
 
