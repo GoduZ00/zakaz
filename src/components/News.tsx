@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 interface NewsItem {
@@ -34,7 +35,7 @@ export default function News() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {news.map((item) => (
-              <div key={item.id} className="bg-white rounded overflow-hidden border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer flex flex-col">
+              <Link key={item.id} to={`/news/${item.id}`} className="bg-white rounded overflow-hidden border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer flex flex-col">
                 <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 flex items-center justify-center p-4">
                   {item.image_url ? (
                     <img
@@ -61,7 +62,7 @@ export default function News() {
                     {item.title}
                   </h3>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

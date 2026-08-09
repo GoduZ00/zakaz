@@ -7,6 +7,7 @@ interface NewsItem {
   date: string;
   image_url: string | null;
   badge: string | null;
+  content: string | null;
   is_active: boolean;
 }
 
@@ -50,6 +51,7 @@ export default function AdminNews() {
       date: edit.date || new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }),
       image_url: image_url || null,
       badge: edit.badge || null,
+      content: edit.content || null,
       is_active: edit.is_active ?? true,
     };
     if (edit.id) {
@@ -100,6 +102,16 @@ export default function AdminNews() {
                 <label className="text-xs text-gray-500 mb-1 block">Бейдж (надпись на картинке)</label>
                 <input value={edit.badge || ''} onChange={(e) => setEdit({ ...edit, badge: e.target.value })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00]" />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 mb-1 block">Текст новости</label>
+                <textarea
+                  value={edit.content || ''}
+                  onChange={(e) => setEdit({ ...edit, content: e.target.value })}
+                  rows={8}
+                  placeholder="Полный текст новости. Новые абзацы — с новой строки."
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#ef7d00] resize-y"
+                />
               </div>
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Изображение</label>

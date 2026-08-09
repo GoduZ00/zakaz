@@ -23,6 +23,7 @@ const Register = lazy(() => import('./pages/Register'));
 const Profile = lazy(() => import('./pages/Profile'));
 const KakZakazat = lazy(() => import('./pages/KakZakazat'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
+const NewsDetail = lazy(() => import('./pages/NewsDetail'));
 const Klientam = lazy(() => import('./pages/Klientam'));
 const OKompanii = lazy(() => import('./pages/OKompanii'));
 const Otzyvy = lazy(() => import('./pages/Otzyvy'));
@@ -91,6 +92,7 @@ export default function App() {
           <Route path="/product/:slug" element={<Layout>{withSuspense(<ProductPage />)}</Layout>} />
           <Route path="/aktsii" element={<Layout>{withSuspense(<Aktsii />)}</Layout>} />
           <Route path="/search" element={<Layout>{withSuspense(<SearchPage />)}</Layout>} />
+          <Route path="/news/:id" element={<Layout>{withSuspense(<NewsDetail />)}</Layout>} />
           <Route path="/kak-zakazat" element={<Layout>{withSuspense(<KakZakazat />)}</Layout>} />
           <Route path="/klientam" element={<Layout>{withSuspense(<Klientam />)}</Layout>} />
           <Route path="/o-kompanii" element={<Layout>{withSuspense(<OKompanii />)}</Layout>} />
