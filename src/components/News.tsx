@@ -8,6 +8,7 @@ interface NewsItem {
   date: string;
   image_url: string | null;
   badge: string | null;
+  content: string | null;
   is_active: boolean;
 }
 
@@ -35,7 +36,7 @@ export default function News() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {news.map((item) => (
-              <Link key={item.id} to={`/news/${item.id}`} className="bg-white rounded overflow-hidden border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer flex flex-col">
+              <div key={item.id} className="bg-white rounded overflow-hidden border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer flex flex-col">
                 <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 flex items-center justify-center p-4">
                   {item.image_url ? (
                     <img
@@ -58,11 +59,16 @@ export default function News() {
                 </div>
                 <div className="p-5 flex-grow border-t border-gray-50">
                   <div className="text-[11px] text-gray-400 mb-2 uppercase tracking-wider">{item.date}</div>
-                  <h3 className="text-[13px] font-medium text-gray-800 leading-relaxed group-hover:text-[#ef7d00] transition-colors line-clamp-3">
+                  <h3 className="text-[13px] font-medium text-gray-800 leading-relaxed group-hover:text-[#ef7d00] transition-colors mb-2">
                     {item.title}
                   </h3>
+                  {item.content && (
+                    <p className="text-[13px] text-gray-500 leading-relaxed whitespace-pre-line">
+                      {item.content}
+                    </p>
+                  )}
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
