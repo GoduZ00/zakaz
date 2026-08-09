@@ -205,6 +205,7 @@ export default function ProductPage() {
           <meta name="description" content={`${product.name} — купить в Казахстане. Цена: ${displayPrice} ₸. ${product.description?.slice(0, 150) || ''}`} />
           <meta property="og:title" content={`${product.name} — Vending Trade`} />
           <meta property="og:description" content={`${product.name} — цена ${displayPrice} ₸.`} />
+          <link rel="canonical" href={`https://www.vendingtrade.kz/product/${product.slug}`} />
           {product.images?.[0] && <meta property="og:image" content={product.images[0]} />}
           <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org/',
@@ -220,6 +221,15 @@ export default function ProductPage() {
               availability: product.stock_status === 'in_stock' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
               url: `https://www.vendingtrade.kz/product/${product.slug}`,
             },
+          })}</script>
+          <script type="application/ld+json">{JSON.stringify({
+            '@context': 'https://schema.org/',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.vendingtrade.kz/' },
+              { '@type': 'ListItem', position: 2, name: 'Каталог', item: 'https://www.vendingtrade.kz/catalog' },
+              { '@type': 'ListItem', position: 3, name: product.name, item: `https://www.vendingtrade.kz/product/${product.slug}` },
+            ],
           })}</script>
         </Helmet>
       )}

@@ -10,41 +10,41 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
 const siteUrl = 'https://www.vendingtrade.kz';
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 async function main() {
   const urls: { loc: string; lastmod?: string; changefreq?: string; priority?: string }[] = [];
 
   // Static pages
   urls.push({ loc: siteUrl, changefreq: 'daily', priority: '1.0' });
   urls.push({ loc: `${siteUrl}/catalog`, changefreq: 'daily', priority: '0.9' });
+  urls.push({ loc: `${siteUrl}/catalog/all`, changefreq: 'daily', priority: '0.8' });
   urls.push({ loc: `${siteUrl}/kak-zakazat`, changefreq: 'monthly', priority: '0.6' });
-  urls.push({ loc: `${siteUrl}/klientam`, changefreq: 'monthly', priority: '0.6' });
   urls.push({ loc: `${siteUrl}/o-kompanii`, changefreq: 'monthly', priority: '0.7' });
   urls.push({ loc: `${siteUrl}/kontakty`, changefreq: 'monthly', priority: '0.5' });
-  urls.push({ loc: `${siteUrl}/aktsii`, changefreq: 'weekly', priority: '0.8' });
+  urls.push({ loc: `${siteUrl}/otzyvy`, changefreq: 'weekly', priority: '0.6' });
 
-  // Categories
-  const { data: categories } = await supabase.from('categories').select('slug, updated_at');
-  if (categories) {
-    for (const cat of categories) {
-      urls.push({ loc: `${siteUrl}/catalog/${cat.slug}`, lastmod: cat.updated_at, changefreq: 'daily', priority: '0.8' });
+  // Categories + products from DB if env is available
+  if (supabaseUrl && supabaseAnonKey) {
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const { data: categories } = await supabase.from('categories').select('slug, updated_at');
+    if (categories) {
+      for (const cat of categories) {
+        urls.push({ loc: `${siteUrl}/catalog/${cat.slug}`, lastmod: cat.updated_at, changefreq: 'daily', priority: '0.8' });
+      }
     }
-  }
 
-  // Subcategories
-  const { data: subcategories } = await supabase.from('subcategories').select('slug, updated_at');
-  if (subcategories) {
-    for (const sub of subcategories) {
-      urls.push({ loc: `${siteUrl}/catalog/${sub.slug}`, lastmod: sub.updated_at, changefreq: 'daily', priority: '0.8' });
+    const { data: subcategories } = await supabase.from('subcategories').select('slug, updated_at');
+    if (subcategories) {
+      for (const sub of subcategories) {
+        urls.push({ loc: `${siteUrl}/catalog/${sub.slug}`, lastmod: sub.updated_at, changefreq: 'daily', priority: '0.8' });
+      }
     }
-  }
 
-  // Products
-  const { data: products } = await supabase.from('products').select('slug, updated_at').eq('is_active', true);
-  if (products) {
-    for (const p of products) {
-      urls.push({ loc: `${siteUrl}/product/${p.slug}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.7' });
+    const { data: products } = await supabase.from('products').select('slug, updated_at').eq('is_active', true);
+    if (products) {
+      for (const p of products) {
+        urls.push({ loc: `${siteUrl}/product/${p.slug}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.7' });
+      }
     }
   }
 
@@ -65,4 +65,20 @@ ${urls.map((u) => `  <url>
   console.log(`Sitemap generated: ${urls.length} URLs`);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error('Sitemap generation failed, generating static sitemap instead:', err.message);
+  const outDir = path.resolve(__dirname, '..', 'public');
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+  const staticXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.vendingtrade.kz</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.vendingtrade.kz/catalog</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.vendingtrade.kz/catalog/all</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.vendingtrade.kz/kak-zakazat</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.vendingtrade.kz/o-kompanii</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.vendingtrade.kz/kontakty</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.vendingtrade.kz/otzyvy</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+</urlset>`;
+  fs.writeFileSync(path.join(outDir, 'sitemap.xml'), staticXml, 'utf-8');
+  console.log('Static sitemap generated: 7 URLs');
+});

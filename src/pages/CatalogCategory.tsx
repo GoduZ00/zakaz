@@ -271,6 +271,16 @@ export default function CatalogCategory() {
         <meta name="description" content={`${category?.name || 'Каталог'} — товары для вендинга. Купить в Казахстане с доставкой.`} />
         <meta property="og:title" content={`${category?.name || 'Каталог'} — Vending Trade`} />
         <meta property="og:description" content={`${category?.name || 'Каталог'} — все для вендинг-бизнеса.`} />
+        <link rel="canonical" href={`https://www.vendingtrade.kz/catalog/${categoryId}`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org/',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://www.vendingtrade.kz/' },
+            { '@type': 'ListItem', position: 2, name: 'Каталог', item: 'https://www.vendingtrade.kz/catalog' },
+            { '@type': 'ListItem', position: 3, name: category?.name || 'Каталог' },
+          ],
+        })}</script>
       </Helmet>
       <style>{`
         .price-range { pointer-events: none; }
