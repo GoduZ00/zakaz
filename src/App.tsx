@@ -11,6 +11,7 @@ import Hero from './components/Hero';
 import News from './components/News';
 import Reviews from './components/Reviews';
 import ScrollToTop from './components/ScrollToTop';
+import SeoText from './components/SeoText';
 import ViewedItems from './components/ViewedItems';
 
 const Catalog = lazy(() => import('./pages/Catalog'));
@@ -75,6 +76,7 @@ function Home() {
       <News />
       <About />
       <Reviews />
+      <SeoText />
     </>
   );
 }
