@@ -201,10 +201,10 @@ export default function ProductPage() {
     <div className="bg-[#f8f8f8] min-h-screen font-sans">
       {product && (
         <Helmet>
-          <title>{product.name} — Vending Trade</title>
-          <meta name="description" content={`${product.name} — купить в Казахстане. Цена: ${displayPrice} ₸. ${product.description?.slice(0, 150) || ''}`} />
-          <meta property="og:title" content={`${product.name} — Vending Trade`} />
-          <meta property="og:description" content={`${product.name} — цена ${displayPrice} ₸.`} />
+          <title>{product.name} — купить в Казахстане по цене {displayPrice} ₸ | VENDINGTRADE</title>
+          <meta name="description" content={`${product.name} — цена ${displayPrice} ₸. ${product.description?.slice(0, 140) || 'Купить с доставкой по Казахстану.'}`} />
+          <meta property="og:title" content={`${product.name} — цена ${displayPrice} ₸ | VENDINGTRADE`} />
+          <meta property="og:description" content={`${product.name} — цена ${displayPrice} ₸, доставка по Казахстану.`} />
           <link rel="canonical" href={`https://www.vendingtrade.kz/product/${product.slug}`} />
           {product.images?.[0] && <meta property="og:image" content={product.images[0]} />}
           <script type="application/ld+json">{JSON.stringify({
