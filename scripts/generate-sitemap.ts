@@ -26,21 +26,24 @@ async function main() {
   if (supabaseUrl && supabaseAnonKey) {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    const { data: categories } = await supabase.from('categories').select('slug, updated_at');
+    const { data: categories, error: catErr } = await supabase.from('categories').select('slug, created_at');
+    if (catErr) console.error('Categories query error:', catErr.message);
     if (categories) {
       for (const cat of categories) {
-        urls.push({ loc: `${siteUrl}/catalog/${cat.slug}`, lastmod: cat.updated_at, changefreq: 'daily', priority: '0.8' });
+        urls.push({ loc: `${siteUrl}/catalog/${cat.slug}`, lastmod: cat.created_at, changefreq: 'daily', priority: '0.8' });
       }
     }
 
-    const { data: subcategories } = await supabase.from('subcategories').select('slug, updated_at');
+    const { data: subcategories, error: subErr } = await supabase.from('subcategories').select('slug, created_at');
+    if (subErr) console.error('Subcategories query error:', subErr.message);
     if (subcategories) {
       for (const sub of subcategories) {
-        urls.push({ loc: `${siteUrl}/catalog/${sub.slug}`, lastmod: sub.updated_at, changefreq: 'daily', priority: '0.8' });
+        urls.push({ loc: `${siteUrl}/catalog/${sub.slug}`, lastmod: sub.created_at, changefreq: 'daily', priority: '0.8' });
       }
     }
 
-    const { data: products } = await supabase.from('products').select('slug, updated_at').eq('is_active', true);
+    const { data: products, error: prodErr } = await supabase.from('products').select('slug, updated_at').eq('is_active', true);
+    if (prodErr) console.error('Products query error:', prodErr.message);
     if (products) {
       for (const p of products) {
         urls.push({ loc: `${siteUrl}/product/${p.slug}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.7' });
