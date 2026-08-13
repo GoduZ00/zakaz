@@ -53,8 +53,8 @@ export default function AllProducts() {
   return (
     <>
       <Helmet>
-        <title>Все товары — Vending Trade</title>
-        <meta name="description" content="Весь ассортимент Vending Trade: торговые автоматы, наполнители, капсулы, игрушки и аксессуары." />
+        <title>Наполнители для вендинговых аппаратов — весь каталог | VENDINGTRADE</title>
+        <meta name="description" content="Весь каталог наполнения для вендинговых аппаратов: жевательная резинка, конфеты, игрушки в капсулах, капсулы, бахилы, монетоприёмники. Купить с доставкой по Казахстану." />
       </Helmet>
       <div className="bg-[#f8f8f8] min-h-screen font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
