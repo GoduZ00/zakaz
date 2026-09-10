@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/ProductCard';
@@ -41,7 +41,7 @@ export default function AllProducts() {
   const [activeSub, setActiveSub] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState('price_asc');
   const [charFilters, setCharFilters] = useState<Record<string, string[]>>({});
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -90,6 +90,7 @@ export default function AllProducts() {
   }, [filteredProducts, sortBy]);
 
   const hasCharFilters = Object.keys(charFilters).length > 0;
+  const selectedCount = (label: string) => (charFilters[label] || []).length;
 
   if (loading) {
     return (
@@ -156,43 +157,11 @@ export default function AllProducts() {
                     ))}
                   </ul>
                 </div>
-
-                {filterGroups.length > 0 && (
-                  <div className="border-t border-gray-200">
-                    <div className="px-4 py-3 text-sm font-medium text-gray-700">Фильтры</div>
-                    {filterGroups.map((fg) => (
-                      <div key={fg.label} className="border-t border-gray-100">
-                        <button
-                          onClick={() => setOpenGroups((p) => ({ ...p, [fg.label]: !p[fg.label] }))}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                          <span className="truncate">{fg.label}</span>
-                          {openGroups[fg.label] ? <ChevronUp className="w-4 h-4 shrink-0" /> : <ChevronDown className="w-4 h-4 shrink-0" />}
-                        </button>
-                        {openGroups[fg.label] && (
-                          <div className="px-4 pb-3 space-y-1">
-                            {fg.values.map((val) => (
-                              <label key={val} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-[#ef7d00]">
-                                <input
-                                  type="checkbox"
-                                  checked={(charFilters[fg.label] || []).includes(val)}
-                                  onChange={() => toggleChar(fg.label, val)}
-                                  className="w-3.5 h-3.5 rounded border-gray-300 text-[#ef7d00] focus:ring-[#ef7d00]"
-                                />
-                                <span className="truncate">{val}</span>
-                              </label>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             </aside>
 
             <div className="flex-1 min-w-0">
-              <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-6 flex items-center justify-between flex-wrap gap-3">
+              <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-4 flex items-center justify-between flex-wrap gap-3">
                 <span className="text-sm text-gray-500">Товаров: {sortedProducts.length}</span>
                 <div className="flex gap-2 flex-wrap items-center">
                   <button
@@ -210,16 +179,55 @@ export default function AllProducts() {
                       {sub.name}
                     </button>
                   ))}
-                  {hasCharFilters && (
-                    <button
-                      onClick={clearCharFilters}
-                      className="text-xs font-medium px-3 py-1.5 border border-red-300 text-red-500 rounded-sm hover:bg-red-50 transition-colors whitespace-nowrap"
-                    >
-                      Сбросить фильтры
-                    </button>
-                  )}
                 </div>
               </div>
+
+              {filterGroups.length > 0 && (
+                <div className="bg-white border border-gray-200 rounded-sm px-4 py-3 mb-6">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-sm font-medium text-gray-700">Фильтры:</span>
+                    {filterGroups.map((fg) => (
+                      <div key={fg.label} className="relative">
+                        <button
+                          onClick={() => setOpenGroup(openGroup === fg.label ? null : fg.label)}
+                          className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors whitespace-nowrap inline-flex items-center gap-1 ${
+                            selectedCount(fg.label) > 0
+                              ? 'bg-[#ef7d00] text-white border-[#ef7d00]'
+                              : 'text-gray-700 border-gray-300 hover:border-gray-400'
+                          }`}
+                        >
+                          {fg.label}
+                          {selectedCount(fg.label) > 0 && <span className="bg-white text-[#ef7d00] rounded-full w-4 h-4 inline-flex items-center justify-center text-[10px] font-bold">{selectedCount(fg.label)}</span>}
+                          <ChevronDown className={`w-3 h-3 transition-transform ${openGroup === fg.label ? 'rotate-180' : ''}`} />
+                        </button>
+                        {openGroup === fg.label && (
+                          <div className="absolute left-0 top-full mt-1 z-30 bg-white border border-gray-200 rounded-sm shadow-lg min-w-52 max-w-72 p-2 space-y-1 max-h-72 overflow-y-auto">
+                            {fg.values.map((val) => (
+                              <label key={val} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-[#ef7d00] px-1 py-0.5 rounded">
+                                <input
+                                  type="checkbox"
+                                  checked={(charFilters[fg.label] || []).includes(val)}
+                                  onChange={() => toggleChar(fg.label, val)}
+                                  className="w-3.5 h-3.5 rounded border-gray-300 text-[#ef7d00] focus:ring-[#ef7d00]"
+                                />
+                                <span>{val}</span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {hasCharFilters && (
+                      <button
+                        onClick={clearCharFilters}
+                        className="text-xs font-medium px-3 py-1.5 border border-red-300 text-red-500 rounded-sm hover:bg-red-50 transition-colors whitespace-nowrap inline-flex items-center gap-1"
+                      >
+                        <X className="w-3 h-3" /> Сбросить
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {sortedProducts.length === 0 ? (
                 <div className="bg-white border border-gray-200 rounded-sm p-12 text-center mb-6">
