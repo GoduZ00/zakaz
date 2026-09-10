@@ -56,7 +56,12 @@ export default function AllProducts() {
     })();
   }, []);
 
-  const filterGroups = useMemo(() => extractFilterGroups(products), [products]);
+  const baseProducts = useMemo(() => {
+    if (!activeSub) return products;
+    return products.filter((p) => p.subcategory_id === activeSub);
+  }, [products, activeSub]);
+
+  const filterGroups = useMemo(() => extractFilterGroups(baseProducts), [baseProducts]);
 
   const toggleChar = (label: string, value: string) => {
     setCharFilters((prev) => {
@@ -69,11 +74,16 @@ export default function AllProducts() {
     });
   };
 
+  const selectSub = (id: number | null) => {
+    setActiveSub(id);
+    setCharFilters({});
+    setOpenGroup(null);
+  };
+
   const clearCharFilters = () => setCharFilters({});
 
   const filteredProducts = useMemo(() => {
-    let result = products;
-    if (activeSub) result = result.filter((p) => p.subcategory_id === activeSub);
+    let result = baseProducts;
     const activeLabels = Object.keys(charFilters);
     if (activeLabels.length === 0) return result;
     return result.filter((p) =>
@@ -83,7 +93,7 @@ export default function AllProducts() {
         return selected.some((sv) => prodVals.includes(sv));
       })
     );
-  }, [products, activeSub, charFilters]);
+  }, [baseProducts, charFilters]);
 
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => sortBy === 'price_desc' ? b.price - a.price : a.price - b.price);
@@ -139,7 +149,7 @@ export default function AllProducts() {
                   <ul className="py-1">
                     <li>
                       <button
-                        onClick={() => setActiveSub(null)}
+                        onClick={() => selectSub(null)}
                         className={`w-full text-left px-4 py-2 text-sm transition-colors break-words ${!activeSub ? 'text-[#ef7d00] font-medium' : 'text-gray-600 hover:text-[#ef7d00]'}`}
                       >
                         Все товары
@@ -148,7 +158,7 @@ export default function AllProducts() {
                     {subcategories.map((sub) => (
                       <li key={sub.id}>
                         <button
-                          onClick={() => setActiveSub(activeSub === sub.id ? null : sub.id)}
+                          onClick={() => selectSub(activeSub === sub.id ? null : sub.id)}
                           className={`w-full text-left px-4 py-2 text-sm transition-colors break-words ${activeSub === sub.id ? 'text-[#ef7d00] font-medium' : 'text-gray-600 hover:text-[#ef7d00]'}`}
                         >
                           {sub.name}
@@ -165,7 +175,7 @@ export default function AllProducts() {
                 <span className="text-sm text-gray-500">Товаров: {sortedProducts.length}</span>
                 <div className="flex gap-2 flex-wrap items-center">
                   <button
-                    onClick={() => setActiveSub(null)}
+                    onClick={() => selectSub(null)}
                     className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors whitespace-nowrap ${!activeSub ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}
                   >
                     Все товары
@@ -173,7 +183,7 @@ export default function AllProducts() {
                   {subcategories.map((sub) => (
                     <button
                       key={sub.id}
-                      onClick={() => setActiveSub(activeSub === sub.id ? null : sub.id)}
+                      onClick={() => selectSub(activeSub === sub.id ? null : sub.id)}
                       className={`text-xs font-medium px-3 py-1.5 border rounded-sm transition-colors whitespace-nowrap ${activeSub === sub.id ? 'bg-[#ef7d00] text-white border-[#ef7d00]' : 'text-gray-700 border-gray-300 hover:border-gray-400'}`}
                     >
                       {sub.name}
