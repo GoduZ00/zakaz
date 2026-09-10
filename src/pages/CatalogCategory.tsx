@@ -23,27 +23,24 @@ function getCharOptions(products: Product[], cfg: FilterGroupConfig): string[] {
   return Array.from(values).sort();
 }
 
-const filterConfigByCategory: Record<string, FilterGroupConfig[]> = {
-  'napolniteli-dlya-torgovykh-avtomatov': [
-    { name: 'Диаметр капсулы', characteristicLabel: 'Диаметр капсулы', options: ['28 мм', '32 мм', '34 мм', '45 мм', '53 мм', '58 мм', '100 мм', '48 мм', '65 мм', '75 мм'] },
-    { name: 'Готовность к продаже через автомат', characteristicLabel: 'Готовность к продаже через автомат', options: ['Игрушка в капсуле', 'Требуется упаковка в капсулу', 'Не требуется упаковка в капсулу'] },
-    { name: 'Виды игрушек', characteristicLabel: 'Виды игрушек', options: ['Значки', 'Животные', 'Ластики', 'Лизуны/ Слаймы / Тянучки', 'Украшения', 'Страшилки', 'Техника', 'Прочие', 'Антистресс', 'Наклейки', 'Сквиши', 'Фигурки', 'Фигурки людей'] },
-    { name: 'Размер (кондит. изд.)', characteristicLabel: 'Размер (кондит. изд.)', options: ['22 мм', '23 мм', '24 мм', '25 мм', '27 мм', '14 мм', 'Порционные'] },
-    { name: 'Форма (кондит. изд.)', characteristicLabel: 'Форма (кондит. изд.)', options: ['Круглые', 'Фигурные', 'Овальные'] },
-    { name: 'Цвет (кондит. изд.)', characteristicLabel: 'Цвет (кондит. изд.)', options: ['Разноцветные', 'Разноцветные с рисунком', 'Одноцветные', 'Одноцветные с рисунком'] },
-    { name: 'Состав (кондит. изд.)', characteristicLabel: 'Состав (кондит. изд.)', options: ['Без начинки', 'С начинкой', 'Желейные', 'С жевательным центром'] },
-    { name: 'Размеры (мячей-прыгунов)', characteristicLabel: 'Размеры (мячей-прыгунов)', options: ['25 мм', '27 мм', '32 мм', '45 мм'] },
-    { name: 'Форма (мячей-прыгунов)', characteristicLabel: 'Форма (мячей-прыгунов)', options: ['Круглые', 'Фигурные'] },
-  ],
-};
-
-const filterConfigBySubcategory: Record<string, FilterGroupConfig[]> = {
-  'torgovye-avtomaty': [
-    { name: 'Номинал', characteristicLabel: 'Номинал', options: ['50', '100', '100+100'] },
-    { name: 'Распределитель', characteristicLabel: 'Распределитель', options: ['22мм', '25мм', '32мм', 'порционный'] },
-    { name: 'Товар', characteristicLabel: 'Товар', options: ['ЖР', 'Конфеты', 'Мяч', 'Игрушки'] },
-  ],
-};
+function buildDynamicFilterGroups(products: Product[]): FilterGroupConfig[] {
+  const map = new Map<string, Set<string>>();
+  for (const p of products) {
+    for (const c of p.characteristics || []) {
+      if (!c.label || !c.value) continue;
+      if (!map.has(c.label)) map.set(c.label, new Set());
+      map.get(c.label)!.add(c.value);
+    }
+  }
+  return Array.from(map.entries())
+    .map(([label, vals]) => ({
+      name: label,
+      characteristicLabel: label,
+      options: Array.from(vals).sort(),
+    }))
+    .filter((g) => g.options.length > 1)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
 
 interface SubCategory {
   id: number;
@@ -262,23 +259,6 @@ export default function CatalogCategory() {
           const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('category_id', cat.id).order('sort_order');
           filterData = data;
         }
-        // Fall back to hardcoded config if DB has no entries for this category
-        if (!filterData || !filterData.length) {
-          const subHardcoded = activeSubId ? filterConfigBySubcategory[subs.find((s) => s.id === activeSubId)?.slug || ''] : undefined;
-          filterData = subHardcoded || filterConfigByCategory[cat.slug];
-        }
-        setFilterGroups(filterData?.length ? filterData : null);
-
-        // Apply filters from URL query params
-        const initialFilters: Record<string, string[]> = {};
-        let hasFilter = false;
-        if (filterData?.length) {
-          for (const fg of filterData as FilterGroupConfig[]) {
-            const vals = searchParams.getAll(fg.characteristicLabel);
-            if (vals.length) { initialFilters[fg.characteristicLabel] = vals; hasFilter = true; }
-          }
-        }
-        if (hasFilter) setCharFilters(initialFilters);
 
         const subIds = subs.map((s) => s.id);
         let query = supabase.from('products').select('*').in('subcategory_id', subIds).eq('is_active', true);
@@ -287,6 +267,20 @@ export default function CatalogCategory() {
         }
         const { data: prodData } = await query.order('id', { ascending: false });
         setProducts(prodData || []);
+
+        const activeFilterData = filterData?.length ? filterData : buildDynamicFilterGroups(prodData || []);
+        setFilterGroups(activeFilterData?.length ? activeFilterData : null);
+
+        // Apply filters from URL query params
+        const initialFilters: Record<string, string[]> = {};
+        let hasFilter = false;
+        if (activeFilterData?.length) {
+          for (const fg of activeFilterData as FilterGroupConfig[]) {
+            const vals = searchParams.getAll(fg.characteristicLabel);
+            if (vals.length) { initialFilters[fg.characteristicLabel] = vals; hasFilter = true; }
+          }
+        }
+        if (hasFilter) setCharFilters(initialFilters);
       } else {
         setFilterGroups(null);
       }
