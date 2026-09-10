@@ -1,7 +1,6 @@
 import { useCart } from '../context/CartContext';
 import { useState } from 'react';
-
-const SUPABASE_URL = 'https://wrlmvvfypehesqycgfjw.supabase.co';
+import { imgUrl } from '../utils/images';
 
 export default function CartToast() {
   const { toast, clearToast } = useCart();
@@ -9,16 +8,14 @@ export default function CartToast() {
 
   if (!toast) return null;
 
-  const imgUrl = toast.image && !imgErr
-    ? `${SUPABASE_URL}/storage/v1/object/public/products/${toast.image}`
-    : null;
+  const thumb = toast.image && !imgErr ? imgUrl(toast.image, 96) : null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 transition-all duration-300">
       <div className="bg-white border border-green-200 rounded-sm shadow-lg px-4 py-3 flex items-center gap-3 animate-slide-up max-w-sm">
-        {imgUrl && (
+        {thumb && (
           <img
-            src={imgUrl}
+            src={thumb}
             alt=""
             className="w-12 h-12 object-contain rounded border border-gray-100 shrink-0"
             onError={() => setImgErr(true)}

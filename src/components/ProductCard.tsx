@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import type { Product } from '../types';
+import { imgUrl } from '../utils/images';
 
 interface ProductCardProps {
   product: Product;
@@ -83,8 +84,9 @@ export function ProductCard({ product, onAddToCart, className = '', optTooltip }
         <div className="bg-white p-3 sm:p-4 border-b border-orange-100">
           <div className="aspect-square bg-white flex items-center justify-center overflow-hidden">
             <img
-              src={image}
+              src={imgUrl(image, 400)}
               alt={product.name}
+              loading="lazy"
               className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </div>

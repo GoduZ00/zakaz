@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { trackViewed } from '../components/ViewedItems';
+import { imgUrl } from '../utils/images';
 import type { Product, SkuVariant } from '../types';
 
 const WHATSAPP_NUMBER = '77013099969';
@@ -248,7 +249,7 @@ export default function ProductPage() {
             {/* Gallery */}
             <div className="w-full lg:w-1/2 p-6 pb-0 lg:pb-6">
               <div className="relative bg-gray-50 rounded-lg flex items-center justify-center h-80 mb-3 group">
-                <img src={images[activeImg]} alt={product.name} className="max-w-full max-h-full object-contain p-4" />
+                <img src={imgUrl(images[activeImg], 800)} alt={product.name} className="max-w-full max-h-full object-contain p-4" />
                 {imagesLen > 1 && (
                   <>
                     <button onClick={prevImg} className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center text-gray-500 hover:text-gray-800 transition-all opacity-0 group-hover:opacity-100">
@@ -270,7 +271,7 @@ export default function ProductPage() {
                   {images.map((img, i) => (
                     <button key={i} onClick={() => setActiveImg(i)}
                       className={`w-16 h-16 border-2 rounded flex items-center justify-center p-1 transition-colors ${i === activeImg ? 'border-[#ef7d00]' : 'border-gray-200 hover:border-gray-400'}`}>
-                      <img src={img} alt="" className="max-w-full max-h-full object-contain" />
+                      <img src={imgUrl(img, 160)} alt="" className="max-w-full max-h-full object-contain" />
                     </button>
                   ))}
                 </div>

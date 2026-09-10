@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/ProductCard';
+import { imgUrl } from '../utils/images';
 import type { Product } from '../types';
 
 interface FilterGroupConfig {
@@ -828,7 +829,7 @@ export default function CatalogCategory() {
                 {sortedProducts.map((p) => (
                   <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow flex items-center gap-4 p-3">
                     <Link to={`/product/${p.slug}`} className="w-16 h-16 shrink-0 flex items-center justify-center">
-                      <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
+                      <img src={imgUrl(p.images?.[0], 120)} alt={p.name} className="max-w-full max-h-full object-contain" />
                     </Link>
                     <div className="flex-1 min-w-0">
                       <Link to={`/product/${p.slug}`} className="text-sm text-gray-800 leading-tight line-clamp-1 hover:text-[#ef7d00] transition-colors">{p.name}</Link>
@@ -844,7 +845,7 @@ export default function CatalogCategory() {
                 {sortedProducts.map((p) => (
                   <div key={p.id} className="bg-white border border-gray-200 rounded-sm shadow-sm hover:shadow-md transition-shadow flex gap-5 p-5">
                     <Link to={`/product/${p.slug}`} className="w-48 h-48 shrink-0 flex items-center justify-center bg-gray-50 rounded">
-                      <img src={p.images?.[0] || '/placeholder.png'} alt={p.name} className="max-w-full max-h-full object-contain" />
+                      <img src={imgUrl(p.images?.[0], 400)} alt={p.name} className="max-w-full max-h-full object-contain" />
                     </Link>
                     <div className="flex flex-col flex-1 py-1">
                       <Link to={`/product/${p.slug}`} className="text-base font-medium text-gray-900 hover:text-[#ef7d00] transition-colors">{p.name}</Link>

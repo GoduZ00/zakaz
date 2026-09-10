@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { imgUrl } from '../utils/images';
 
 export interface ViewedItem {
   id: string;
@@ -34,7 +35,7 @@ export default function ViewedItems() {
             to={item.url}
             className="flex gap-3 items-start border border-gray-200 rounded-lg p-3 min-w-[280px] shrink-0 hover:shadow-md transition-shadow bg-white"
           >
-            <img src={item.img} alt={item.name} loading="lazy" decoding="async" className="w-16 h-16 object-contain shrink-0 rounded" />
+            <img src={imgUrl(item.img, 128)} alt={item.name} loading="lazy" decoding="async" className="w-16 h-16 object-contain shrink-0 rounded" />
             <div className="min-w-0">
               <div className="text-xs text-gray-700 leading-tight line-clamp-2">{item.name}</div>
               <div className="text-sm font-bold text-gray-900 mt-1">{item.price}</div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabase';
 import { Helmet } from 'react-helmet-async';
+import { imgUrl } from '../utils/images';
 
 const WHATSAPP_NUMBER = '77013099969';
 
@@ -128,7 +129,7 @@ export default function CartPage() {
               return (
                 <div key={key} className="bg-white border border-gray-200 rounded-sm p-4 flex items-center gap-4">
                   <Link to={`/product/${item.product.slug}`} className="w-20 h-20 shrink-0 flex items-center justify-center bg-gray-50 rounded">
-                    <img src={item.product.images?.[0] || '/placeholder.png'} alt={item.product.name} className="max-w-full max-h-full object-contain" />
+                    <img src={imgUrl(item.product.images?.[0], 100)} alt={item.product.name} className="max-w-full max-h-full object-contain" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <Link to={`/product/${item.product.slug}`} className="text-sm font-medium text-gray-900 hover:text-[#ef7d00] transition-colors line-clamp-2">
