@@ -221,6 +221,38 @@ export default function CatalogCategory() {
     return opts;
   }, [filterGroups, products]);
 
+  const loadProducts = async (cat: CategoryInfo, subs: SubCategory[], subId: number | null) => {
+    let query = supabase.from('products').select('*').eq('is_active', true);
+    query = subId
+      ? query.eq('subcategory_id', subId)
+      : query.in('subcategory_id', subs.map((s) => s.id));
+    const { data: prodData } = await query.order('id', { ascending: false });
+    setProducts(prodData || []);
+
+    let filterData;
+    if (subId) {
+      const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', subId).order('sort_order');
+      filterData = data;
+    }
+    if (!filterData || !filterData.length) {
+      const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('category_id', cat.id).order('sort_order');
+      filterData = data;
+    }
+
+    const activeFilterData = filterData?.length ? filterData : buildDynamicFilterGroups(prodData || []);
+    setFilterGroups(activeFilterData?.length ? activeFilterData : null);
+
+    const initialFilters: Record<string, string[]> = {};
+    let hasFilter = false;
+    if (activeFilterData?.length) {
+      for (const fg of activeFilterData as FilterGroupConfig[]) {
+        const vals = searchParams.getAll(fg.characteristicLabel);
+        if (vals.length) { initialFilters[fg.characteristicLabel] = vals; hasFilter = true; }
+      }
+    }
+    setCharFilters(hasFilter ? initialFilters : {});
+  };
+
   useEffect(() => {
     if (!categoryId) return;
     setLoading(true);
@@ -251,37 +283,7 @@ export default function CatalogCategory() {
       setActiveSub(activeSubId);
 
       if (cat) {
-        let filterData;
-        if (activeSubId) {
-          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('subcategory_id', activeSubId).order('sort_order');
-          filterData = data;
-        }
-        if (!filterData || !filterData.length) {
-          const { data } = await supabase.from('category_filter_groups').select('name, characteristic_label, options').eq('category_id', cat.id).order('sort_order');
-          filterData = data;
-        }
-
-        const subIds = subs.map((s) => s.id);
-        let query = supabase.from('products').select('*').in('subcategory_id', subIds).eq('is_active', true);
-        if (activeSubId) {
-          query = supabase.from('products').select('*').eq('subcategory_id', activeSubId).eq('is_active', true);
-        }
-        const { data: prodData } = await query.order('id', { ascending: false });
-        setProducts(prodData || []);
-
-        const activeFilterData = filterData?.length ? filterData : buildDynamicFilterGroups(prodData || []);
-        setFilterGroups(activeFilterData?.length ? activeFilterData : null);
-
-        // Apply filters from URL query params
-        const initialFilters: Record<string, string[]> = {};
-        let hasFilter = false;
-        if (activeFilterData?.length) {
-          for (const fg of activeFilterData as FilterGroupConfig[]) {
-            const vals = searchParams.getAll(fg.characteristicLabel);
-            if (vals.length) { initialFilters[fg.characteristicLabel] = vals; hasFilter = true; }
-          }
-        }
-        if (hasFilter) setCharFilters(initialFilters);
+        await loadProducts(cat, subs, activeSubId);
       } else {
         setFilterGroups(null);
       }
@@ -327,7 +329,14 @@ export default function CatalogCategory() {
   });
 
   const handleSubClick = (subId: number) => {
-    setActiveSub((prev) => (prev === subId ? null : subId));
+    if (!category) return;
+    const next = activeSub === subId ? null : subId;
+    setActiveSub(next);
+    setOpenFilter(null);
+    setFilterStickers([]);
+    setFilterCoating([]);
+    setFilterInStock(false);
+    loadProducts(category, subcategories, next);
   };
 
   if (loading) {
