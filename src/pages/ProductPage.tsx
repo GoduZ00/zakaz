@@ -113,7 +113,7 @@ export default function ProductPage() {
           const keys = ['Номинал', 'Распределитель', 'Товар'];
           const groups: { name: string; characteristicLabel: string; options: string[] }[] = [];
           for (const key of keys) {
-            const vals = [...new Set((data.characteristics || []).filter((c: any) => c.label === key).map((c: any) => c.value))];
+            const vals = [...new Set<string>((data.characteristics || []).filter((c: any) => c.label === key).map((c: any) => c.value as string))];
             if (vals.length) groups.push({ name: key, characteristicLabel: key, options: vals });
           }
           if (groups.length) setFilterGroups(groups);
